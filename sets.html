@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>10 Sets on a Number Line</title>
+    <style>
+        * { box-sizing: border-box; font-family: system-ui, 'Segoe UI', Roboto, sans-serif; }
+
+        body {
+            background: linear-gradient(135deg, #e8f0f8 0%, #d4e4f0 100%);
+            min-height: 100vh;
+            display: flex; justify-content: center; align-items: center;
+            padding: 20px; margin: 0;
+        }
+        body.lang-ar {
+            direction: rtl;
+            font-family: 'Segoe UI', Tahoma, 'Cairo', Arial, sans-serif;
+        }
+
+        /* الأرقام دائمًا LTR */
+        .num, .eq-part, .eq-result, .tick-label, .marker-flag,
+        .highlight-text, .range-badge, .line-header h3 {
+            direction: ltr;
+            unicode-bidi: isolate;
+        }
+
+        .app-card {
+            max-width: 1250px; width: 100%;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 40px;
+            box-shadow: 0 25px 50px -8px rgba(0,20,40,0.3);
+            padding: 30px 35px;
+            position: relative;
+        }
+
+        .lang-toggle {
+            position: absolute;
+            top: 1.5rem; inset-inline-end: 1.5rem;
+            background: white;
+            border: 2px solid #1f5e87;
+            color: #1f5e87;
+            padding: 0.5rem 1rem;
+            border-radius: 30px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.85rem;
+            z-index: 10;
+            box-shadow: 0 4px 12px rgba(31,94,135,0.2);
+            transition: all 0.2s;
+        }
+        .lang-toggle:hover { background: #1f5e87; color: white; }
+
+        h1 { font-size: 1.8rem; font-weight: 700; color: #0a2e4b; margin: 0 0 4px 0; }
+        .subhead {
+            font-size: 0.95rem; color: #2c5779;
+            margin-bottom: 22px; font-weight: 500;
+            background: #d9e9f5; padding: 10px 20px;
+            border-radius: 100px; display: inline-block;
+            border: 1px solid #b7d4e8;
+        }
+
+        /* ===== TABS ===== */
+        .section-tabs { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 24px; }
+        .tab-btn {
+            background: #ffffff; color: #1f5e87;
+            border: 2px solid #aac8e0;
+            padding: 12px 24px; border-radius: 60px;
+            font-size: 0.95rem; font-weight: 600;
+            cursor: pointer; transition: 0.15s;
+            font-family: inherit;
+        }
+        .tab-btn:hover { background: #e3effa; }
+        .tab-btn.active {
+            background: #1f5e87; color: white;
+            border-color: #1f5e87;
+            box-shadow: 0 6px 16px rgba(31,94,135,0.3);
+        }
+        .tab-btn .small-badge {
+            display: block; font-size: 0.7rem;
+            font-weight: 500; opacity: 0.85; margin-top: 2px;
+            direction: ltr; unicode-bidi: isolate;
+        }
+
+        /* ===== NUMBER LINE ===== */
+        .number-line-section {
+            background: #ffffff; border-radius: 28px;
+            padding: 24px 20px 26px 20px;
+            margin-bottom: 26px;
+            box-shadow: 0 8px 24px rgba(0,20,30,0.08);
+            border: 1px solid #d0e2f0;
+        }
+        .line-header {
+            display: flex; justify-content: space-between; align-items: baseline;
+            margin-bottom: 14px; flex-wrap: wrap; gap: 10px;
+        }
+        .line-header h3 {
+            margin: 0; font-size: 1.15rem;
+            font-weight: 600; color: #1d4b6b;
+        }
+        .line-header .range-badge {
+            font-size: 0.85rem; background: #e3effa;
+            padding: 6px 18px; border-radius: 30px;
+            color: #1d4b6b; font-weight: 600;
+            border: 1px solid #b7d4e8;
+        }
+        .line-container {
+            position: relative; padding: 0;
+            overflow-x: auto; overflow-y: hidden;
+        }
+        .number-line { position: relative; height: 130px; min-width: 100%; margin: 0; }
+        .line-axis {
+            position: absolute; top: 58px; left: 0; right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #2d7aa0, #1f5e87);
+            border-radius: 4px;
+        }
+
+        .tick {
+            position: absolute; top: 46px;
+            width: 2px; height: 28px;
+            background: #2d7aa0; border-radius: 2px;
+            transform: translateX(-50%);
+        }
+        .tick.major {
+            width: 3px; height: 36px; top: 42px;
+            background: #1f5e87;
+        }
+        .tick-label {
+            position: absolute; top: 82px;
+            transform: translateX(-50%);
+            font-weight: 600; color: #0a2e4b;
+            font-size: 0.7rem;
+            background: #f0f7fe;
+            padding: 3px 9px; border-radius: 30px;
+            border: 1px solid #b7d4e8;
+            white-space: nowrap;
+        }
+        .tick-label.major {
+            background: #1f5e87; color: white;
+            border-color: #1f5e87;
+            font-weight: 700; font-size: 0.75rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+
+        .jump-arc {
+            position: absolute; top: 18px; height: 30px;
+            border-top: 3px dashed #e03a3a;
+            border-radius: 50% 50% 0 0;
+            transform: translateX(-50%);
+            pointer-events: none; opacity: 0.7;
+        }
+        .jump-label {
+            position: absolute; top: 0px;
+            transform: translateX(-50%);
+            background: #e03a3a; color: white;
+            font-size: 0.65rem; font-weight: 700;
+            padding: 2px 10px; border-radius: 30px;
+            white-space: nowrap;
+            box-shadow: 0 2px 6px rgba(200,30,30,0.35);
+            direction: ltr; unicode-bidi: isolate;
+        }
+
+        .number-marker {
+            position: absolute; top: 8px;
+            transform: translateX(-50%);
+            display: flex; flex-direction: column;
+            align-items: center; z-index: 10;
+            pointer-events: none;
+        }
+        .marker-flag {
+            background: #1f5e87; color: white;
+            font-weight: 700; font-size: 0.85rem;
+            padding: 5px 16px; border-radius: 40px;
+            box-shadow: 0 4px 12px rgba(20,60,100,0.4);
+            white-space: nowrap;
+            border: 2px solid #fff;
+        }
+        .marker-stick {
+            width: 3px; height: 50px;
+            background: #1f5e87; border-radius: 2px;
+        }
+        .marker-dot {
+            width: 14px; height: 14px;
+            background: #1f5e87; border-radius: 50%;
+            border: 3px solid white;
+            box-shadow: 0 2px 8px rgba(20,60,100,0.5);
+            margin-top: -3px;
+        }
+
+        .equation-box {
+            background: #f2f9ff; border-radius: 24px;
+            padding: 20px 26px; margin: 18px 0 6px;
+            border: 1px solid #c7ddef;
+            display: flex; align-items: center;
+            gap: 18px; flex-wrap: wrap; justify-content: center;
+        }
+        .eq-part {
+            font-size: 1.4rem; font-weight: 700; color: #0a2e4b;
+            background: white; padding: 10px 22px;
+            border-radius: 40px;
+            border: 1px solid #b7d4e8;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.04);
+        }
+        .eq-operator { font-size: 1.8rem; font-weight: 800; color: #1f5e87; }
+        .eq-result {
+            font-size: 1.5rem; font-weight: 800; color: white;
+            background: #1f5e87;
+            padding: 12px 28px; border-radius: 40px;
+            box-shadow: 0 6px 14px rgba(31,94,135,0.3);
+            text-align: center;
+        }
+        .eq-result small {
+            display: block; font-size: 0.7rem;
+            font-weight: 500; opacity: 0.9;
+            direction: rtl; unicode-bidi: isolate;
+        }
+        body:not(.lang-ar) .eq-result small {
+            direction: ltr;
+        }
+
+        .explain-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 14px; margin: 18px 0 8px;
+        }
+        .explain-card {
+            background: #ffffff; border-radius: 20px;
+            padding: 16px 20px;
+            box-shadow: 0 4px 12px rgba(0,20,30,0.05);
+            border: 1px solid #c7ddef;
+            border-inline-start: 6px solid #2d7aa0;
+        }
+        .explain-card .title {
+            font-weight: 700; color: #1d4b6b;
+            font-size: 1rem; margin-bottom: 6px;
+        }
+        .explain-card p {
+            margin: 4px 0; color: #0f2f46;
+            font-size: 0.9rem; line-height: 1.5;
+        }
+        .highlight-text {
+            background: #f9e7b3; padding: 2px 8px;
+            border-radius: 20px; font-weight: 700;
+            color: #1f3f5c;
+            display: inline-block;
+        }
+
+        .footnote {
+            font-size: 0.8rem; color: #4b6f8a;
+            text-align: end; margin-top: 22px;
+            border-top: 1px solid #bdd6ea;
+            padding-top: 14px;
+        }
+    </style>
+</head>
+<body>
+<div class="app-card">
+    <button class="lang-toggle" id="langToggle">🌐 العربية</button>
+
+    <h1 id="title">📏 10 Sets on a Number Line</h1>
+    <div class="subhead" id="subhead">
+        ⚡ 10 sets of 10 = 100 · 10 sets of 100 = 1,000 · 10 sets of 100,000 = 1 million · ...
+    </div>
+
+    <!-- TABS -->
+    <div class="section-tabs" id="tabs">
+        <button class="tab-btn active" data-scene="0">
+            <span class="tab-label">🔹 10 sets of 10</span>
+            <span class="small-badge">= 100</span>
+        </button>
+        <button class="tab-btn" data-scene="1">
+            <span class="tab-label">🔸 10 sets of 100</span>
+            <span class="small-badge">= 1,000</span>
+        </button>
+        <button class="tab-btn" data-scene="2">
+            <span class="tab-label">🔹 10 sets of 100,000</span>
+            <span class="small-badge">= 1 million</span>
+        </button>
+        <button class="tab-btn" data-scene="3">
+            <span class="tab-label">🔸 10 sets of 1,000,000</span>
+            <span class="small-badge">= 10 million</span>
+        </button>
+        <button class="tab-btn" data-scene="4">
+            <span class="tab-label">🔶 10 sets of 10,000,000</span>
+            <span class="small-badge">= 100 million</span>
+        </button>
+    </div>
+
+    <!-- NUMBER LINE -->
+    <div class="number-line-section">
+        <div class="line-header">
+            <h3 id="lineTitle">🔢 Number line: 0 → 100</h3>
+            <span class="range-badge" id="rangeBadge">0 – 100</span>
+        </div>
+        <div class="line-container">
+            <div class="number-line" id="numberLine"></div>
+        </div>
+    </div>
+
+    <!-- EQUATION -->
+    <div class="equation-box" id="equationBox"></div>
+
+    <!-- EXPLANATIONS -->
+    <div class="explain-grid" id="explainGrid"></div>
+
+    <div class="footnote" id="footnote">
+        ⚡ Each jump on the number line represents one "set". Ten equal jumps land on the result.
+    </div>
+</div>
+
+<script>
+(function() {
+    // ============================================================
+    // 🌐 الترجمة
+    // ============================================================
+    const translations = {
+        en: {
+            langBtn: '🌐 العربية',
+            title: '📏 10 Sets on a Number Line',
+            subhead: '⚡ 10 sets of 10 = 100 · 10 sets of 100 = 1,000 · 10 sets of 100,000 = 1 million · ...',
+            footnote: '⚡ Each jump on the number line represents one "set". Ten equal jumps land on the result.',
+            lineTitle: (max) => `🔢 Number line: 0 → ${max}`,
+            rangeBadge: (max) => `0 – ${max}`,
+            tabLabels: [
+                '🔹 10 sets of 10',
+                '🔸 10 sets of 100',
+                '🔹 10 sets of 100,000',
+                '🔸 10 sets of 1,000,000',
+                '🔶 10 sets of 10,000,000'
+            ],
+            tabBadges: ['= 100', '= 1,000', '= 1 million', '= 10 million', '= 100 million'],
+            eqSets: '10 sets',
+            eqResultWords: [
+                'one hundred', 'one thousand', 'one million', 'ten million', 'hundred million'
+            ],
+            explainTitles: {
+                set: '🔹 What is one set?',
+                add: '➕ Adding 10 equal sets',
+                read: '📖 How to read the result',
+                line: '📏 On the number line'
+            },
+            explainSet: (unit) => `One set = <span class="highlight-text num">${unit}</span><br>We have <strong>10 sets</strong> of this number.`,
+            explainAdd: (unit, result) => `<span class="num">${unit} × 10</span><br>= <span class="highlight-text num">${result}</span><br>This is the same as adding the number 10 times.`,
+            explainRead: (result, words) => `The result is <span class="highlight-text num">${result}</span><br>Read as: <strong>${words}</strong>`,
+            explainLine: (max, unit, result) => `The line goes from <strong class="num">0</strong> to <strong class="num">${max}</strong>.<br>Each jump of <strong class="num">${unit}</strong> is one set.<br>After 10 jumps we land on <strong class="num">${result}</strong>.`
+        },
+        ar: {
+            langBtn: '🌐 English',
+            title: '📏 ١٠ مجموعات على خط الأعداد',
+            subhead: '⚡ 10 مجموعات من 10 = 100 · 10 مجموعات من 100 = 1,000 · 10 مجموعات من 100,000 = 1 مليون · ...',
+            footnote: '⚡ كل قفزة على خط الأعداد تمثل "مجموعة". عشر قفزات متساوية تصل بك إلى النتيجة.',
+            lineTitle: (max) => `🔢 خط الأعداد: 0 → ${max}`,
+            rangeBadge: (max) => `0 – ${max}`,
+            tabLabels: [
+                '🔹 10 مجموعات من 10',
+                '🔸 10 مجموعات من 100',
+                '🔹 10 مجموعات من 100,000',
+                '🔸 10 مجموعات من 1,000,000',
+                '🔶 10 مجموعات من 10,000,000'
+            ],
+            tabBadges: ['= 100', '= 1,000', '= 1 مليون', '= 10 ملايين', '= 100 مليون'],
+            eqSets: '10 مجموعات',
+            eqResultWords: [
+                'مئة', 'ألف', 'مليون', 'عشرة ملايين', 'مئة مليون'
+            ],
+            explainTitles: {
+                set: '🔹 ما هي المجموعة؟',
+                add: '➕ جمع 10 مجموعات متساوية',
+                read: '📖 كيف تقرأ النتيجة',
+                line: '📏 على خط الأعداد'
+            },
+            explainSet: (unit) => `المجموعة الواحدة = <span class="highlight-text num">${unit}</span><br>لدينا <strong>10 مجموعات</strong> من هذا العدد.`,
+            explainAdd: (unit, result) => `<span class="num">${unit} × 10</span><br>= <span class="highlight-text num">${result}</span><br>هذا مثل جمع العدد 10 مرات.`,
+            explainRead: (result, words) => `النتيجة هي <span class="highlight-text num">${result}</span><br>تُقرأ: <strong>${words}</strong>`,
+            explainLine: (max, unit, result) => `الخط يمتد من <strong class="num">0</strong> إلى <strong class="num">${max}</strong>.<br>كل قفزة مقدارها <strong class="num">${unit}</strong> تمثل مجموعة.<br>بعد 10 قفزات نصل إلى <strong class="num">${result}</strong>.`
+        }
+    };
+
+    let currentLang = 'en';
+    const t = (key) => translations[currentLang][key];
+    const applyT = (fn) => translations[currentLang][fn] || translations.en[fn];
+
+    // ============================================================
+    // بيانات المشاهد (الأرقام إنجليزية دائمًا)
+    // ============================================================
+    const scenes = [
+        {
+            unit: 10, sets: 10, result: 100, maxValue: 100,
+            ticks: [0,10,20,30,40,50,60,70,80,90,100],
+            tickLabels: ['0','10','20','30','40','50','60','70','80','90','100']
+        },
+        {
+            unit: 100, sets: 10, result: 1000, maxValue: 1000,
+            ticks: [0,100,200,300,400,500,600,700,800,900,1000],
+            tickLabels: ['0','100','200','300','400','500','600','700','800','900','1K']
+        },
+        {
+            unit: 100000, sets: 10, result: 1000000, maxValue: 1000000,
+            ticks: [0,100000,200000,300000,400000,500000,600000,700000,800000,900000,1000000],
+            tickLabels: ['0','100K','200K','300K','400K','500K','600K','700K','800K','900K','1M']
+        },
+        {
+            unit: 1000000, sets: 10, result: 10000000, maxValue: 10000000,
+            ticks: [0,1000000,2000000,3000000,4000000,5000000,6000000,7000000,8000000,9000000,10000000],
+            tickLabels: ['0','1M','2M','3M','4M','5M','6M','7M','8M','9M','10M']
+        },
+        {
+            unit: 10000000, sets: 10, result: 100000000, maxValue: 100000000,
+            ticks: [0,10000000,20000000,30000000,40000000,50000000,60000000,70000000,80000000,90000000,100000000],
+            tickLabels: ['0','10M','20M','30M','40M','50M','60M','70M','80M','90M','100M']
+        }
+    ];
+
+    let currentScene = 0;
+
+    // ============================================================
+    // أدوات مساعدة
+    // ============================================================
+    function formatWithCommas(num) {
+        return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    }
+
+    // ============================================================
+    // Rendering
+    // ============================================================
+    const numberLineEl = document.getElementById('numberLine');
+    const lineTitle = document.getElementById('lineTitle');
+    const rangeBadge = document.getElementById('rangeBadge');
+    const equationBox = document.getElementById('equationBox');
+    const explainGrid = document.getElementById('explainGrid');
+    const tabsEl = document.getElementById('tabs');
+
+    function renderNumberLine() {
+        const scene = scenes[currentScene];
+        const maxVal = scene.maxValue;
+
+        lineTitle.textContent = t('lineTitle')(formatWithCommas(maxVal));
+        rangeBadge.textContent = t('rangeBadge')(formatWithCommas(maxVal));
+
+        numberLineEl.innerHTML = '';
+
+        // Axis
+        const axis = document.createElement('div');
+        axis.className = 'line-axis';
+        numberLineEl.appendChild(axis);
+
+        // Ticks & labels
+        scene.ticks.forEach((val, i) => {
+            const percent = (val / maxVal) * 100;
+            const tick = document.createElement('div');
+            tick.className = 'tick major';
+            tick.style.left = `${percent}%`;
+            numberLineEl.appendChild(tick);
+
+            const label = document.createElement('div');
+            label.className = 'tick-label major';
+            label.style.left = `${percent}%`;
+            label.textContent = scene.tickLabels[i];
+            numberLineEl.appendChild(label);
+        });
+
+        // Jump arcs
+        const unitPercent = (scene.unit / maxVal) * 100;
+        for (let i = 0; i < scene.sets; i++) {
+            const startPercent = i * unitPercent;
+            const endPercent = (i + 1) * unitPercent;
+            const midPercent = (startPercent + endPercent) / 2;
+
+            const arc = document.createElement('div');
+            arc.className = 'jump-arc';
+            arc.style.left = `${startPercent}%`;
+            arc.style.width = `${unitPercent}%`;
+            arc.style.transform = 'none';
+            arc.style.borderTop = '3px dashed #e03a3a';
+            arc.style.borderRadius = '50% 50% 0 0';
+            arc.style.height = '22px';
+            arc.style.top = '20px';
+            numberLineEl.appendChild(arc);
+
+            const setLabel = document.createElement('div');
+            setLabel.className = 'jump-label';
+            setLabel.style.left = `${midPercent}%`;
+            setLabel.style.top = '2px';
+            setLabel.textContent = String(i + 1);
+            setLabel.style.fontSize = '0.6rem';
+            setLabel.style.padding = '1px 7px';
+            numberLineEl.appendChild(setLabel);
+        }
+
+        // Result marker
+        const resultPercent = (scene.result / maxVal) * 100;
+        const marker = document.createElement('div');
+        marker.className = 'number-marker';
+        marker.style.left = `${resultPercent}%`;
+
+        const flag = document.createElement('div');
+        flag.className = 'marker-flag';
+        flag.textContent = formatWithCommas(scene.result);
+
+        const stick = document.createElement('div');
+        stick.className = 'marker-stick';
+
+        const dot = document.createElement('div');
+        dot.className = 'marker-dot';
+
+        marker.appendChild(flag);
+        marker.appendChild(stick);
+        marker.appendChild(dot);
+        numberLineEl.appendChild(marker);
+    }
+
+    function renderEquation() {
+        const scene = scenes[currentScene];
+        const words = t('eqResultWords')[currentScene];
+        equationBox.innerHTML = `
+            <div class="eq-part">${t('eqSets')}</div>
+            <div class="eq-operator">×</div>
+            <div class="eq-part num">${formatWithCommas(scene.unit)}</div>
+            <div class="eq-operator">=</div>
+            <div class="eq-result">
+                <span class="num">${formatWithCommas(scene.result)}</span>
+                <small>${words}</small>
+            </div>
+        `;
+    }
+
+    function renderExplanations() {
+        const scene = scenes[currentScene];
+        const words = t('eqResultWords')[currentScene];
+        const titles = t('explainTitles');
+
+        const cards = [
+            { title: titles.set, html: applyT('explainSet')(formatWithCommas(scene.unit)) },
+            { title: titles.add, html: applyT('explainAdd')(formatWithCommas(scene.unit), formatWithCommas(scene.result)) },
+            { title: titles.read, html: applyT('explainRead')(formatWithCommas(scene.result), words) },
+            { title: titles.line, html: applyT('explainLine')(formatWithCommas(scene.maxValue), formatWithCommas(scene.unit), formatWithCommas(scene.result)) }
+        ];
+
+        explainGrid.innerHTML = cards.map(c => `
+            <div class="explain-card">
+                <div class="title">${c.title}</div>
+                <p>${c.html}</p>
+            </div>
+        `).join('');
+    }
+
+    function renderTabs() {
+        const labels = t('tabLabels');
+        const badges = t('tabBadges');
+        tabsEl.querySelectorAll('.tab-btn').forEach((btn, i) => {
+            btn.querySelector('.tab-label').textContent = labels[i];
+            btn.querySelector('.small-badge').textContent = badges[i];
+            btn.classList.toggle('active', i === currentScene);
+        });
+    }
+
+    function renderAll() {
+        renderTabs();
+        renderNumberLine();
+        renderEquation();
+        renderExplanations();
+    }
+
+    // ============================================================
+    // التبديل بين المشاهد واللغة
+    // ============================================================
+    function setScene(index) {
+        currentScene = index;
+        renderAll();
+    }
+
+    tabsEl.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            setScene(parseInt(btn.dataset.scene, 10));
+        });
+    });
+
+    document.getElementById('langToggle').addEventListener('click', () => {
+        currentLang = currentLang === 'en' ? 'ar' : 'en';
+        document.documentElement.lang = currentLang;
+        document.body.classList.toggle('lang-ar', currentLang === 'ar');
+        document.body.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+
+        // ثوابت النصوص
+        document.getElementById('langToggle').textContent = t('langBtn');
+        document.getElementById('title').textContent = t('title');
+        document.getElementById('subhead').textContent = t('subhead');
+        document.getElementById('footnote').textContent = t('footnote');
+
+        renderAll();
+    });
+
+    // البدء
+    renderAll();
+})();
+</script>
+</body>
+</html>

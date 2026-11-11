@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🔢 Big Numbers Lab — مختبر الأعداد الكبيرة</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+    background: linear-gradient(135deg, #e0f2fe 0%, #fef3c7 100%);
+    min-height: 100vh;
+    padding: 1rem;
+    color: #1e3a5f;
+  }
+
+  /* لما اللغة عربي، نغير اتجاه الصفحة والخط */
+  body.lang-ar {
+    direction: rtl;
+    font-family: 'Segoe UI', Tahoma, 'Cairo', Arial, sans-serif;
+  }
+
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  header {
+    text-align: center;
+    padding: 1.5rem;
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+    color: white;
+    border-radius: 25px;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);
+    position: relative;
+  }
+
+  header h1 { font-size: 2rem; margin-bottom: 0.3rem; }
+  header p { opacity: 0.95; font-size: 1rem; }
+
+  /* زر تبديل اللغة */
+  .lang-toggle {
+    position: absolute;
+    top: 1rem;
+    inset-inline-end: 1rem;
+    background: rgba(255,255,255,0.25);
+    border: 2px solid rgba(255,255,255,0.6);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 30px;
+    font-weight: bold;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 0.95rem;
+    transition: all 0.2s;
+  }
+  .lang-toggle:hover { background: rgba(255,255,255,0.4); }
+
+  /* ===== Tool Tabs ===== */
+  .tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    background: white;
+    padding: 0.5rem;
+    border-radius: 20px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    flex-wrap: wrap;
+  }
+
+  .tab-btn {
+    flex: 1;
+    min-width: 150px;
+    padding: 0.9rem 1rem;
+    border: none;
+    background: transparent;
+    color: #64748b;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 15px;
+    transition: all 0.3s;
+    font-family: inherit;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .tab-btn:hover { background: #f1f5f9; color: #3b82f6; }
+
+  .tab-btn.active {
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+    color: white;
+    box-shadow: 0 5px 15px rgba(59, 130, 246, 0.4);
+  }
+
+  /* ===== Tool Content ===== */
+  .tool {
+    background: white;
+    border-radius: 25px;
+    padding: 2rem;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.08);
+    display: none;
+  }
+
+  .tool.active { display: block; animation: fadeIn 0.4s; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .tool h2 {
+    color: #3b82f6;
+    margin-bottom: 0.5rem;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .tool .desc {
+    color: #64748b;
+    margin-bottom: 1.5rem;
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+
+  /* ============================================
+     🛠️ Tool 1: Zero Lab
+     ============================================ */
+  .zero-lab {
+    background: #f8fafc;
+    border-radius: 20px;
+    padding: 2rem 1.5rem;
+    border: 3px dashed #cbd5e1;
+  }
+
+  .zero-slider {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .slider-label {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #1e3a5f;
+  }
+
+  input[type="range"] {
+    width: 100%;
+    max-width: 400px;
+    height: 12px;
+    border-radius: 10px;
+    background: linear-gradient(90deg, #93c5fd, #8b5cf6, #ec4899);
+    outline: none;
+    cursor: pointer;
+    -webkit-appearance: none;
+  }
+
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: white;
+    border: 4px solid #3b82f6;
+    cursor: pointer;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+  }
+
+  .zeros-display {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    min-height: 80px;
+    align-items: center;
+  }
+
+  .zero-bubble {
+    width: 45px;
+    height: 45px;
+    background: linear-gradient(135deg, #fbbf24, #f59e0b);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    box-shadow: 0 4px 0 #b45309, 0 8px 15px rgba(251, 191, 36, 0.3);
+    animation: pop 0.3s;
+  }
+
+  @keyframes pop {
+    0% { transform: scale(0); }
+    70% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+  }
+
+  .group-separator {
+    color: #94a3b8;
+    font-size: 1.5rem;
+    font-weight: bold;
+    padding: 0 0.3rem;
+  }
+
+  .number-result {
+    text-align: center;
+    background: white;
+    border-radius: 20px;
+    padding: 1.5rem;
+    border: 3px solid #3b82f6;
+    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.15);
+  }
+
+  .number-formatted {
+    font-size: 2rem;
+    font-weight: 900;
+    color: #1e3a5f;
+    letter-spacing: 3px;
+    margin-bottom: 0.5rem;
+    direction: ltr;      /* الأرقام دائمًا LTR */
+    unicode-bidi: isolate;
+    word-break: break-all;
+  }
+
+  .number-name {
+    font-size: 1.3rem;
+    color: #8b5cf6;
+    font-weight: bold;
+    padding: 0.5rem 1.5rem;
+    background: #f3e8ff;
+    border-radius: 30px;
+    display: inline-block;
+  }
+
+  .groups-legend {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.85rem;
+    color: #64748b;
+  }
+
+  .legend-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+  }
+
+  /* ============================================
+     🛠️ Tool 2: Number Line
+     ============================================ */
+  .line-tool {
+    background: #f0f9ff;
+    border-radius: 20px;
+    padding: 2rem 1.5rem;
+    border: 3px dashed #7dd3fc;
+  }
+
+  .number-input-area {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+    align-items: center;
+  }
+
+  .number-input-area label {
+    font-weight: bold;
+    color: #0369a1;
+  }
+
+  .number-input-area input {
+    padding: 0.7rem 1rem;
+    border: 2px solid #7dd3fc;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-family: inherit;
+    width: 200px;
+    direction: ltr;      /* الأرقام دائمًا LTR */
+    text-align: center;
+  }
+
+  .number-input-area input:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+  }
+
+  .line-display {
+    position: relative;
+    margin: 3rem 0 2rem;
+    padding: 0 1rem;
+  }
+
+  .line-axis {
+    position: relative;
+    height: 6px;
+    background: #0369a1;
+    border-radius: 5px;
+    box-shadow: 0 3px 0 #075985;
+  }
+
+  .line-axis::after {
+    content: "";
+    position: absolute;
+    right: -8px;
+    top: -9px;
+    border-right: 20px solid #0369a1;
+    border-top: 12px solid transparent;
+    border-bottom: 12px solid transparent;
+  }
+
+  .line-ticks {
+    position: relative;
+    height: 60px;
+  }
+
+  .line-tick {
+    position: absolute;
+    top: 0;
+    width: 3px;
+    height: 20px;
+    background: #0369a1;
+    transform: translateX(-50%);
+  }
+
+  .line-tick-label {
+    position: absolute;
+    top: 25px;
+    transform: translateX(-50%);
+    font-size: 0.8rem;
+    color: #0369a1;
+    font-weight: bold;
+    white-space: nowrap;
+    background: white;
+    padding: 2px 6px;
+    border-radius: 8px;
+    border: 1px solid #bae6fd;
+    direction: ltr;
+  }
+
+  .line-rocket {
+    position: absolute;
+    top: -55px;
+    font-size: 2.5rem;
+    transform: translateX(-50%);
+    transition: left 0.8s cubic-bezier(0.34, 1.4, 0.64, 1);
+    filter: drop-shadow(0 5px 10px rgba(0,0,0,0.2));
+    z-index: 10;
+  }
+
+  .line-info {
+    text-align: center;
+    background: white;
+    padding: 1rem;
+    border-radius: 15px;
+    border: 2px solid #bae6fd;
+    margin-top: 1rem;
+    font-size: 1.1rem;
+    color: #0369a1;
+    font-weight: bold;
+    line-height: 1.6;
+  }
+
+  /* ============================================
+     🛠️ Tool 3: Comparison
+     ============================================ */
+  .compare-tool {
+    background: #fef3c7;
+    border-radius: 20px;
+    padding: 2rem 1.5rem;
+    border: 3px dashed #fbbf24;
+  }
+
+  .compare-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .num-box {
+    background: white;
+    padding: 1rem 1.5rem;
+    border-radius: 15px;
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #1e3a5f;
+    border: 3px solid #94a3b8;
+    box-shadow: 0 4px 0 #94a3b8;
+    direction: ltr;      /* الأرقام دائمًا LTR */
+    unicode-bidi: isolate;
+    min-width: 140px;
+    text-align: center;
+  }
+
+  .num-box.highlight {
+    border-color: #10b981;
+    box-shadow: 0 4px 0 #10b981;
+    color: #065f46;
+    background: #ecfdf5;
+  }
+
+  .sign-btn {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    border: 3px solid #94a3b8;
+    background: white;
+    font-size: 2rem;
+    font-weight: bold;
+    color: #64748b;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+    box-shadow: 0 5px 0 #94a3b8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .sign-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 0 #94a3b8;
+  }
+
+  .sign-btn.correct {
+    background: #10b981;
+    color: white;
+    border-color: #047857;
+    box-shadow: 0 5px 0 #047857;
+    animation: bounce 0.5s;
+  }
+
+  .sign-btn.wrong {
+    background: #ef4444;
+    color: white;
+    border-color: #b91c1c;
+    box-shadow: 0 5px 0 #b91c1c;
+    animation: shake 0.5s;
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-15px); }
+  }
+
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-10px); }
+    75% { transform: translateX(10px); }
+  }
+
+  .compare-feedback {
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: bold;
+    padding: 1rem;
+    border-radius: 15px;
+    margin-top: 1rem;
+    min-height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s;
+  }
+
+  .compare-feedback.success {
+    background: #d1fae5;
+    color: #065f46;
+  }
+
+  .compare-feedback.error {
+    background: #fee2e2;
+    color: #991b1b;
+  }
+
+  .new-question {
+    display: block;
+    margin: 1.5rem auto 0;
+    padding: 0.9rem 2rem;
+    background: linear-gradient(135deg, #f59e0b, #ef4444);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    font-family: inherit;
+    box-shadow: 0 5px 0 #b45309;
+    transition: all 0.2s;
+  }
+
+  .new-question:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 0 #b45309;
+  }
+
+  .new-question:active {
+    transform: translateY(3px);
+    box-shadow: 0 2px 0 #b45309;
+  }
+
+  /* Responsive */
+  @media (max-width: 700px) {
+    header h1 { font-size: 1.4rem; }
+    .tool { padding: 1.2rem; }
+    .number-formatted { font-size: 1.3rem; letter-spacing: 1px; }
+    .num-box { font-size: 1rem; padding: 0.7rem 1rem; min-width: 100px; }
+    .sign-btn { width: 55px; height: 55px; font-size: 1.5rem; }
+    .zero-bubble { width: 35px; height: 35px; font-size: 1.1rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <header>
+    <button class="lang-toggle" id="langToggle">🌐 العربية</button>
+    <h1 data-i18n="title">🔢 Big Numbers Lab</h1>
+    <p data-i18n="subtitle">3 simple tools to master large numbers!</p>
+  </header>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <button class="tab-btn active" data-tool="zeros" data-i18n="tabZeros">🧪 Zero Lab</button>
+    <button class="tab-btn" data-tool="line" data-i18n="tabLine">🚀 Number Line</button>
+    <button class="tab-btn" data-tool="compare" data-i18n="tabCompare">⚖️ Compare</button>
+  </div>
+
+  <!-- ============================================
+       🛠️ Tool 1: Zero Lab
+       ============================================ -->
+  <div class="tool active" id="tool-zeros">
+    <h2 data-i18n="zerosTitle">🧪 Zero Lab</h2>
+    <p class="desc" data-i18n-html="zerosDesc">
+      Move the slider and see how every <strong>3 zeros</strong> create a new number name!
+    </p>
+
+    <div class="zero-lab">
+
+      <div class="zero-slider">
+        <div class="slider-label" data-i18n="sliderLabel">Move to change the number of zeros 👇</div>
+        <input type="range" id="zeroSlider" min="3" max="15" value="6" step="3">
+        <div style="color:#64748b; font-size:0.9rem;">
+          <span data-i18n="zerosCountLabel">Number of zeros:</span>
+          <strong id="zerosCount" style="color:#f59e0b; font-size:1.2rem;">6</strong>
+        </div>
+      </div>
+
+      <div class="zeros-display" id="zerosDisplay"></div>
+
+      <div class="number-result">
+        <div class="number-formatted" id="formattedNumber">1,000,000</div>
+        <div class="number-name" id="numberName">Million</div>
+      </div>
+
+      <div class="groups-legend">
+        <div class="legend-item">
+          <div class="legend-dot" style="background:#10b981;"></div>
+          <span data-i18n="legendOnes">Group 1 (Ones)</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot" style="background:#3b82f6;"></div>
+          <span data-i18n="legendThousands">Group 2 (Thousands)</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot" style="background:#8b5cf6;"></div>
+          <span data-i18n="legendMillions">Group 3 (Millions)</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot" style="background:#ec4899;"></div>
+          <span data-i18n="legendBillions">Group 4 (Billions)</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot" style="background:#f59e0b;"></div>
+          <span data-i18n="legendTrillions">Group 5 (Trillions)</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============================================
+       🛠️ Tool 2: Number Line
+       ============================================ -->
+  <div class="tool" id="tool-line">
+    <h2 data-i18n="lineTitle">🚀 Number Line</h2>
+    <p class="desc" data-i18n="lineDesc">
+      Type any big number, and we'll draw it on a number line to see where the rocket stops!
+    </p>
+
+    <div class="line-tool">
+
+      <div class="number-input-area">
+        <label data-i18n="enterNumber">Enter a number:</label>
+        <input type="text" id="numberInput" value="300000000" placeholder="e.g. 300000000">
+        <button class="new-question" style="margin:0; padding: 0.7rem 1.5rem;" id="drawBtn" data-i18n="drawBtn">🚀 Draw!</button>
+      </div>
+
+      <div class="line-display">
+        <div class="line-rocket" id="lineRocket" style="left: 0%;">🚀</div>
+        <div class="line-axis"></div>
+        <div class="line-ticks" id="lineTicks"></div>
+      </div>
+
+      <div class="line-info" id="lineInfo" data-i18n="lineInfoDefault">
+        Type a number and press "Draw"
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============================================
+       🛠️ Tool 3: Comparison
+       ============================================ -->
+  <div class="tool" id="tool-compare">
+    <h2 data-i18n="compareTitle">⚖️ Compare</h2>
+    <p class="desc" data-i18n-html="compareDesc">
+      Compare two numbers and pick the correct sign: <strong>&gt;</strong> (greater than),
+      <strong>&lt;</strong> (less than), or <strong>=</strong> (equal to).
+    </p>
+
+    <div class="compare-tool">
+      <div class="compare-row">
+        <div class="num-box" id="numLeft">110,950,000</div>
+        <button class="sign-btn" data-sign="&gt;" id="btnGt">&gt;</button>
+        <button class="sign-btn" data-sign="&lt;" id="btnLt">&lt;</button>
+        <button class="sign-btn" data-sign="=" id="btnEq">=</button>
+        <div class="num-box" id="numRight">111,095,000</div>
+      </div>
+
+      <div class="compare-feedback" id="compareFeedback" data-i18n="comparePick">
+        Pick the correct sign 👆
+      </div>
+
+      <button class="new-question" id="newQuestionBtn" data-i18n="newQuestion">🎲 New Question</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // ============================================
+  // 🌐 الترجمة / i18n
+  // ============================================
+  const translations = {
+    en: {
+      title: '🔢 Big Numbers Lab',
+      subtitle: '3 simple tools to master large numbers!',
+      tabZeros: '🧪 Zero Lab',
+      tabLine: '🚀 Number Line',
+      tabCompare: '⚖️ Compare',
+      zerosTitle: '🧪 Zero Lab',
+      zerosDesc: 'Move the slider and see how every <strong>3 zeros</strong> create a new number name!',
+      sliderLabel: 'Move to change the number of zeros 👇',
+      zerosCountLabel: 'Number of zeros:',
+      legendOnes: 'Group 1 (Ones)',
+      legendThousands: 'Group 2 (Thousands)',
+      legendMillions: 'Group 3 (Millions)',
+      legendBillions: 'Group 4 (Billions)',
+      legendTrillions: 'Group 5 (Trillions)',
+      lineTitle: '🚀 Number Line',
+      lineDesc: "Type any big number, and we'll draw it on a number line to see where the rocket stops!",
+      enterNumber: 'Enter a number:',
+      drawBtn: '🚀 Draw!',
+      lineInfoDefault: 'Type a number and press "Draw"',
+      compareTitle: '⚖️ Compare',
+      compareDesc: 'Compare two numbers and pick the correct sign: <strong>&gt;</strong> (greater than), <strong>&lt;</strong> (less than), or <strong>=</strong> (equal to).',
+      comparePick: 'Pick the correct sign 👆',
+      newQuestion: '🎲 New Question',
+      // أسماء الأعداد
+      thousand: 'Thousand',
+      million: 'Million',
+      billion: 'Billion',
+      trillion: 'Trillion',
+      quadrillion: 'Quadrillion',
+      // رسائل
+      invalidNumber: '⚠️ Please enter a valid number greater than zero',
+      numberOnScale: (formatted, scaleName, percent) =>
+        `🎯 The number <strong>${formatted}</strong> on a scale from 0 to <strong>${scaleName}</strong><br>The rocket has traveled <strong>${percent}%</strong> of the journey`,
+      correctMsg: '🎉 Correct! You are a genius!',
+      wrongMsg: (sign) => `❌ Try again! The correct sign is ${sign}`,
+      langBtn: '🌐 العربية',
+    },
+    ar: {
+      title: '🔢 مختبر الأعداد الكبيرة',
+      subtitle: '٣ أدوات بسيطة لإتقان الأعداد الكبيرة!',
+      tabZeros: '🧪 مختبر الأصفار',
+      tabLine: '🚀 خط الأعداد',
+      tabCompare: '⚖️ قارن',
+      zerosTitle: '🧪 مختبر الأصفار',
+      zerosDesc: 'حرّك المؤشر وشاهد كيف كل <strong>٣ أصفار</strong> تصنع اسم عدد جديد!',
+      sliderLabel: 'حرّك لتغيير عدد الأصفار 👇',
+      zerosCountLabel: 'عدد الأصفار:',
+      legendOnes: 'المجموعة ١ (الآحاد)',
+      legendThousands: 'المجموعة ٢ (الآلاف)',
+      legendMillions: 'المجموعة ٣ (الملايين)',
+      legendBillions: 'المجموعة ٤ (المليارات)',
+      legendTrillions: 'المجموعة ٥ (التريليونات)',
+      lineTitle: '🚀 خط الأعداد',
+      lineDesc: 'اكتب أي عدد كبير، وسنرسمه على خط الأعداد لنرى أين يتوقف الصاروخ!',
+      enterNumber: 'أدخل عددًا:',
+      drawBtn: '🚀 ارسم!',
+      lineInfoDefault: 'اكتب عددًا واضغط "ارسم"',
+      compareTitle: '⚖️ قارن',
+      compareDesc: 'قارن بين عددين واختر الإشارة الصحيحة: <strong>&gt;</strong> (أكبر من)، <strong>&lt;</strong> (أصغر من)، أو <strong>=</strong> (يساوي).',
+      comparePick: 'اختر الإشارة الصحيحة 👆',
+      newQuestion: '🎲 سؤال جديد',
+      thousand: 'ألف',
+      million: 'مليون',
+      billion: 'مليار',
+      trillion: 'تريليون',
+      quadrillion: 'كوادريليون',
+      invalidNumber: '⚠️ من فضلك أدخل عددًا صحيحًا أكبر من صفر',
+      numberOnScale: (formatted, scaleName, percent) =>
+        `🎯 العدد <strong>${formatted}</strong> على مقياس من 0 إلى <strong>${scaleName}</strong><br>قطع الصاروخ <strong>${percent}%</strong> من الرحلة`,
+      correctMsg: '🎉 إجابة صحيحة! أنت عبقري!',
+      wrongMsg: (sign) => `❌ حاول مرة أخرى! الإشارة الصحيحة هي ${sign}`,
+      langBtn: '🌐 English',
+    }
+  };
+
+  let currentLang = 'en';
+  const t = (key) => translations[currentLang][key];
+
+  function applyLanguage(lang) {
+    currentLang = lang;
+    document.documentElement.lang = lang;
+    document.body.classList.toggle('lang-ar', lang === 'ar');
+    document.body.dir = lang === 'ar' ? 'rtl' : 'ltr';
+
+    // النصوص العادية
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.dataset.i18n;
+      if (translations[lang][key] !== undefined) {
+        el.textContent = translations[lang][key];
+      }
+    });
+    // النصوص التي تحتوي HTML
+    document.querySelectorAll('[data-i18n-html]').forEach(el => {
+      const key = el.dataset.i18nHtml;
+      if (translations[lang][key] !== undefined) {
+        el.innerHTML = translations[lang][key];
+      }
+    });
+
+    // زر اللغة
+    document.getElementById('langToggle').textContent = t('langBtn');
+
+    // إعادة رسم العناصر الديناميكية باللغة الجديدة
+    updateZeros();
+    drawNumberLine();
+    generateQuestion(true); // true = لا نعيد اختيار أرقام جديدة، فقط نعيد تطبيق النصوص
+  }
+
+  document.getElementById('langToggle').addEventListener('click', () => {
+    applyLanguage(currentLang === 'en' ? 'ar' : 'en');
+  });
+
+  // ============================================
+  // 🎯 Tabs
+  // ============================================
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tool').forEach(t => t.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('tool-' + btn.dataset.tool).classList.add('active');
+    });
+  });
+
+  // ============================================
+  // 🛠️ Tool 1: Zero Lab
+  // ============================================
+  const zeroSlider = document.getElementById('zeroSlider');
+  const zerosCount = document.getElementById('zerosCount');
+  const zerosDisplay = document.getElementById('zerosDisplay');
+  const formattedNumber = document.getElementById('formattedNumber');
+  const numberName = document.getElementById('numberName');
+
+  const groupColors = [
+    { bg: 'linear-gradient(135deg, #10b981, #059669)', shadow: '0 4px 0 #047857' },
+    { bg: 'linear-gradient(135deg, #3b82f6, #2563eb)', shadow: '0 4px 0 #1d4ed8' },
+    { bg: 'linear-gradient(135deg, #8b5cf6, #7c3aed)', shadow: '0 4px 0 #6d28d9' },
+    { bg: 'linear-gradient(135deg, #ec4899, #db2777)', shadow: '0 4px 0 #be185d' },
+    { bg: 'linear-gradient(135deg, #f59e0b, #d97706)', shadow: '0 4px 0 #b45309' }
+  ];
+
+  // مفاتيح أسماء الأعداد حسب عدد الأصفار
+  const numberNameKeys = {
+    3:  'thousand',
+    6:  'million',
+    9:  'billion',
+    12: 'trillion',
+    15: 'quadrillion'
+  };
+
+  function updateZeros() {
+    const count = parseInt(zeroSlider.value);
+    // الأرقام دائمًا إنجليزية (Western digits)
+    zerosCount.textContent = String(count);
+
+    zerosDisplay.innerHTML = '';
+
+    const groups = count / 3;
+
+    for (let g = 0; g < groups; g++) {
+      for (let i = 0; i < 3; i++) {
+        const bubble = document.createElement('div');
+        bubble.className = 'zero-bubble';
+        bubble.textContent = '0';
+        const colorIndex = groups - 1 - g;
+        bubble.style.background = groupColors[colorIndex].bg;
+        bubble.style.boxShadow = groupColors[colorIndex].shadow;
+        bubble.style.animationDelay = (g * 3 + i) * 0.05 + 's';
+        zerosDisplay.appendChild(bubble);
+      }
+
+      if (g < groups - 1) {
+        const sep = document.createElement('div');
+        sep.className = 'group-separator';
+        sep.textContent = ',';
+        zerosDisplay.appendChild(sep);
+      }
+    }
+
+    const numStr = '1' + '0'.repeat(count);
+    formattedNumber.textContent = formatWithCommas(numStr);
+
+    const key = numberNameKeys[count];
+    numberName.textContent = key ? t(key) : '...';
+  }
+
+  function formatWithCommas(numStr) {
+    // نستخدم الأرقام الإنجليزية دائمًا
+    return numStr.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  }
+
+  zeroSlider.addEventListener('input', updateZeros);
+
+  // ============================================
+  // 🛠️ Tool 2: Number Line
+  // ============================================
+  const numberInput = document.getElementById('numberInput');
+  const drawBtn = document.getElementById('drawBtn');
+  const lineTicks = document.getElementById('lineTicks');
+  const lineRocket = document.getElementById('lineRocket');
+  const lineInfo = document.getElementById('lineInfo');
+
+  // أسماء المقاييس حسب اللغة
+  const scaleNames = {
+    en: {
+      b1: '1 Billion', b2: '2 Billion', b5: '5 Billion', b10: '10 Billion',
+      m1: '1 Million', m10: '10 Million', m100: '100 Million', mB: '1 Billion',
+      t10: '10 Thousand', t100: '100 Thousand', tM: '1 Million',
+      hundred: '100'
+    },
+    ar: {
+      b1: 'مليار واحد', b2: 'ملياران', b5: '٥ مليارات', b10: '١٠ مليارات',
+      m1: 'مليون واحد', m10: '١٠ ملايين', m100: '١٠٠ مليون', mB: 'مليار واحد',
+      t10: '١٠ آلاف', t100: '١٠٠ ألف', tM: 'مليون واحد',
+      hundred: '١٠٠'
+    }
+  };
+
+  function drawNumberLine() {
+    let num = parseFloat(numberInput.value.replace(/,/g, ''));
+
+    if (isNaN(num) || num <= 0) {
+      lineInfo.textContent = t('invalidNumber');
+      return;
+    }
+
+    let max, step, scaleKey;
+
+    if (num >= 1_000_000_000) {
+      const billions = num / 1_000_000_000;
+      if (billions <= 1) { max = 1_000_000_000; step = 200_000_000; scaleKey = 'b1'; }
+      else if (billions <= 2) { max = 2_000_000_000; step = 400_000_000; scaleKey = 'b2'; }
+      else if (billions <= 5) { max = 5_000_000_000; step = 1_000_000_000; scaleKey = 'b5'; }
+      else { max = 10_000_000_000; step = 2_000_000_000; scaleKey = 'b10'; }
+    } else if (num >= 1_000_000) {
+      const millions = num / 1_000_000;
+      if (millions <= 1) { max = 1_000_000; step = 200_000; scaleKey = 'm1'; }
+      else if (millions <= 10) { max = 10_000_000; step = 1_000_000; scaleKey = 'm10'; }
+      else if (millions <= 100) { max = 100_000_000; step = 10_000_000; scaleKey = 'm100'; }
+      else { max = 1_000_000_000; step = 100_000_000; scaleKey = 'mB'; }
+    } else if (num >= 1_000) {
+      const thousands = num / 1_000;
+      if (thousands <= 10) { max = 10_000; step = 2_000; scaleKey = 't10'; }
+      else if (thousands <= 100) { max = 100_000; step = 20_000; scaleKey = 't100'; }
+      else { max = 1_000_000; step = 200_000; scaleKey = 'tM'; }
+    } else {
+      max = 100; step = 20; scaleKey = 'hundred';
+    }
+
+    const scaleName = scaleNames[currentLang][scaleKey];
+
+    lineTicks.innerHTML = '';
+    const tickCount = max / step;
+    for (let i = 0; i <= tickCount; i++) {
+      const value = i * step;
+      const percent = (value / max) * 100;
+
+      const tick = document.createElement('div');
+      tick.className = 'line-tick';
+      tick.style.left = percent + '%';
+      lineTicks.appendChild(tick);
+
+      const label = document.createElement('div');
+      label.className = 'line-tick-label';
+      label.style.left = percent + '%';
+      label.textContent = formatShort(value);
+      lineTicks.appendChild(label);
+    }
+
+    const rocketPercent = Math.min(100, Math.max(0, (num / max) * 100));
+    lineRocket.style.left = rocketPercent + '%';
+
+    const percentOfScale = Math.round((num / max) * 100);
+    // الأرقام دائمًا إنجليزية
+    lineInfo.innerHTML = t('numberOnScale')(formatWithCommas(String(num)), scaleName, percentOfScale);
+  }
+
+  function formatShort(num) {
+    // نستخدم الاختصارات الإنجليزية دائمًا (K, M, B) للحفاظ على الأرقام لاتينية
+    if (num >= 1_000_000_000) return (num / 1_000_000_000) + 'B';
+    if (num >= 1_000_000) return (num / 1_000_000) + 'M';
+    if (num >= 1_000) return (num / 1_000) + 'K';
+    return num.toString();
+  }
+
+  drawBtn.addEventListener('click', drawNumberLine);
+  numberInput.addEventListener('keypress', e => {
+    if (e.key === 'Enter') drawNumberLine();
+  });
+
+  // ============================================
+  // 🛠️ Tool 3: Comparison
+  // ============================================
+  const numLeft = document.getElementById('numLeft');
+  const numRight = document.getElementById('numRight');
+  const compareFeedback = document.getElementById('compareFeedback');
+  const signBtns = document.querySelectorAll('.sign-btn');
+  const newQuestionBtn = document.getElementById('newQuestionBtn');
+
+  let currentAnswer = null;
+  let currentPair = null;
+
+  const numberPairs = [
+    [110950000, 111095000],
+    [213610000, 203161000],
+    [5000000, 5000000],
+    [900000000, 899999999],
+    [1500000000, 1500000000],
+    [75000000, 750000000],
+    [1000000, 999999],
+    [2500000000, 2500000000]
+  ];
+
+  function generateQuestion(keepPair = false) {
+    if (!keepPair || !currentPair) {
+      currentPair = numberPairs[Math.floor(Math.random() * numberPairs.length)];
+    }
+    const [left, right] = currentPair;
+
+    // الأرقام دائمًا إنجليزية
+    numLeft.textContent = formatWithCommas(String(left));
+    numRight.textContent = formatWithCommas(String(right));
+
+    if (left > right) currentAnswer = '>';
+    else if (left < right) currentAnswer = '<';
+    else currentAnswer = '=';
+
+    signBtns.forEach(btn => {
+      btn.classList.remove('correct', 'wrong');
+    });
+
+    compareFeedback.textContent = t('comparePick');
+    compareFeedback.className = 'compare-feedback';
+  }
+
+  signBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const chosen = btn.dataset.sign;
+      signBtns.forEach(b => b.classList.remove('correct', 'wrong'));
+
+      if (chosen === currentAnswer) {
+        btn.classList.add('correct');
+        compareFeedback.textContent = t('correctMsg');
+        compareFeedback.className = 'compare-feedback success';
+      } else {
+        btn.classList.add('wrong');
+        const correctBtn = Array.from(signBtns).find(b => b.dataset.sign === currentAnswer);
+        if (correctBtn) correctBtn.classList.add('correct');
+        compareFeedback.textContent = t('wrongMsg')(currentAnswer);
+        compareFeedback.className = 'compare-feedback error';
+      }
+    });
+  });
+
+  newQuestionBtn.addEventListener('click', () => generateQuestion(false));
+
+  // ============================================
+  // 🚀 التهيئة الأولى
+  // ============================================
+  applyLanguage('en');
+  setTimeout(() => { drawNumberLine(); }, 100);
+</script>
+</body>
+</html>

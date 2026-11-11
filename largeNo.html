@@ -1,0 +1,2089 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🔢 Large Numbers · Grade 4 · Exam</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.0.1/dist/chartjs-plugin-annotation.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+      background: linear-gradient(135deg, #e0f2fe 0%, #fef3c7 100%);
+      min-height: 100vh;
+      padding: 1rem;
+      color: #1e3a5f;
+      transition: background 0.3s;
+    }
+    body.lang-ar {
+      direction: rtl;
+      font-family: 'Segoe UI', Tahoma, 'Cairo', Arial, sans-serif;
+    }
+
+    /* ===== الأرقام دائمًا LTR ===== */
+    .num, .big-number, .calc-display, .digit-value, input[type="text"],
+    input[type="password"], input[type="number"], .num-box, .chart-edit-input {
+      direction: ltr !important;
+      unicode-bidi: isolate;
+    }
+
+    /* ============ Login ============ */
+    .login-wrapper {
+      position: fixed; inset: 0;
+      background: linear-gradient(135deg, #e0f2fe 0%, #fef3c7 100%);
+      display: flex; justify-content: center; align-items: center;
+      z-index: 1000; padding: 1rem;
+    }
+    .login-card {
+      background: white;
+      border-radius: 28px;
+      padding: 2.5rem 2rem;
+      max-width: 460px; width: 100%;
+      box-shadow: 0 20px 50px rgba(30,58,95,0.15);
+      border: 1px solid #e2e8f0;
+      text-align: center;
+      position: relative;
+    }
+    .login-card::before {
+      content: '🎓';
+      position: absolute;
+      top: -28px; left: 50%;
+      transform: translateX(-50%);
+      font-size: 3rem;
+      filter: drop-shadow(0 6px 10px rgba(0,0,0,0.15));
+    }
+    .login-card h2 {
+      font-size: 1.9rem; color: #1e3a5f;
+      margin: 0.8rem 0 0.4rem;
+    }
+    .login-card p.subtitle { color: #64748b; margin-bottom: 1.8rem; font-size: 1rem; }
+
+    .login-field { margin-bottom: 1rem; text-align: start; }
+    .login-field label {
+      display: block; font-weight: 600; color: #334155;
+      margin-bottom: 0.4rem; font-size: 0.95rem;
+    }
+    .login-field input {
+      width: 100%; padding: 0.8rem 1rem;
+      border-radius: 14px;
+      border: 2px solid #cbd5e1;
+      font-size: 1rem;
+      background: #f8fafc;
+      outline: none; transition: all 0.2s;
+      font-family: inherit;
+    }
+    .login-field input:focus {
+      border-color: #3b82f6;
+      background: white;
+      box-shadow: 0 0 0 4px rgba(59,130,246,0.12);
+    }
+
+    .login-btn {
+      width: 100%; margin-top: 0.8rem;
+      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+      color: white; border: none;
+      padding: 0.95rem; border-radius: 14px;
+      font-size: 1.1rem; font-weight: 700;
+      cursor: pointer; font-family: inherit;
+      box-shadow: 0 6px 20px rgba(59,130,246,0.35);
+      transition: all 0.15s;
+    }
+    .login-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(59,130,246,0.45); }
+    .login-btn:active { transform: translateY(1px); }
+
+    .login-error {
+      color: #b91c1c; font-weight: 600;
+      margin-top: 0.8rem; min-height: 1.3rem; font-size: 0.9rem;
+    }
+    .login-hint {
+      margin-top: 1.3rem; font-size: 0.85rem; color: #64748b;
+      background: #f8fafc; padding: 0.9rem 1rem;
+      border-radius: 14px; line-height: 1.7;
+      border: 1px dashed #cbd5e1;
+    }
+
+    /* ============ App ============ */
+    .app-container {
+      max-width: 1200px; width: 100%;
+      margin: 0 auto;
+      background: white;
+      border-radius: 28px;
+      padding: 1.8rem 1.5rem;
+      box-shadow: 0 20px 50px rgba(30,58,95,0.12);
+      border: 1px solid #e2e8f0;
+      display: none;
+    }
+    .app-container.visible { display: block; animation: fadeUp 0.5s ease; }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .user-bar {
+      display: flex; justify-content: space-between; align-items: center;
+      background: #f8fafc;
+      padding: 0.7rem 1.2rem; border-radius: 16px;
+      margin-bottom: 1.2rem;
+      flex-wrap: wrap; gap: 0.5rem;
+      border: 1px solid #e2e8f0;
+    }
+    .user-bar .welcome { font-weight: 600; color: #1e3a5f; font-size: 1rem; }
+    .logout-btn {
+      background: #ef4444; color: white;
+      border: none; padding: 0.55rem 1.2rem;
+      border-radius: 12px; font-weight: 600; cursor: pointer;
+      font-family: inherit; font-size: 0.9rem;
+      transition: all 0.15s;
+    }
+    .logout-btn:hover { background: #dc2626; }
+
+    .lang-toggle {
+      position: fixed;
+      top: 1rem; inset-inline-end: 1rem;
+      background: white;
+      border: 2px solid #3b82f6;
+      color: #3b82f6;
+      padding: 0.55rem 1rem;
+      border-radius: 30px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 0.9rem;
+      z-index: 1500;
+      box-shadow: 0 4px 15px rgba(59,130,246,0.2);
+      transition: all 0.2s;
+    }
+    .lang-toggle:hover { background: #3b82f6; color: white; }
+
+    h1 {
+      font-size: 2rem; text-align: center; color: #1e3a5f;
+      margin-bottom: 1.2rem; font-weight: 800;
+    }
+    h1 span {
+      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+      color: white; padding: 0.1rem 0.9rem;
+      border-radius: 12px; display: inline-block;
+    }
+
+    /* Progress */
+    .progress-container {
+      background: #f1f5f9; border-radius: 14px;
+      padding: 0.6rem 1rem; margin-bottom: 1.5rem;
+      display: flex; align-items: center; gap: 0.8rem;
+      font-weight: 700; color: #334155; font-size: 0.95rem;
+    }
+    .progress-bar-bg {
+      flex: 1; height: 14px; background: #e2e8f0;
+      border-radius: 10px; overflow: hidden;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+      border-radius: 10px;
+      transition: width 0.6s cubic-bezier(0.34,1.56,0.64,1);
+      width: 0%;
+    }
+
+    /* Section title */
+    .section-title {
+      font-size: 1.35rem; font-weight: 800; color: #1e3a5f;
+      display: flex; align-items: center; gap: 0.6rem;
+      margin-bottom: 1.2rem;
+      padding-bottom: 0.6rem;
+      border-bottom: 2px solid #e2e8f0;
+    }
+
+    /* ===== Place Value Chart ===== */
+    .chart-section {
+      background: #f8fafc;
+      border-radius: 20px;
+      padding: 1.5rem 1.2rem;
+      margin-bottom: 1.5rem;
+      border: 1px solid #e2e8f0;
+    }
+    .place-chart {
+      display: flex; flex-wrap: wrap; justify-content: center;
+      gap: 0.75rem 0.5rem; direction: ltr;
+    }
+    .place-group {
+      display: flex; flex-direction: column;
+      background: white;
+      border-radius: 14px; padding: 0.45rem;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 3px 10px rgba(30,58,95,0.06);
+      transition: transform 0.2s;
+    }
+    .place-group:hover { transform: translateY(-3px); }
+    .group-label {
+      font-size: 0.8rem; font-weight: 700; text-align: center;
+      color: white; background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+      border-radius: 8px; padding: 0.25rem 0.6rem;
+      margin-bottom: 0.3rem;
+      text-transform: uppercase; letter-spacing: 0.5px;
+    }
+    .digits-row { display: flex; gap: 0.25rem; }
+    .digit-box {
+      width: 3.6rem; height: 4.2rem;
+      background: #f8fafc;
+      border-radius: 10px;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      border: 1px solid #e2e8f0;
+      transition: all 0.2s;
+    }
+    .digit-box:hover {
+      transform: translateY(-2px);
+      border-color: #3b82f6;
+      background: #eff6ff;
+    }
+    .digit-value {
+      font-size: 2rem; font-weight: 800; color: #1e3a5f;
+      line-height: 1; margin-bottom: 0.1rem;
+    }
+    .place-name {
+      font-size: 0.62rem; font-weight: 700;
+      color: #64748b; text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .current-number-box { text-align: center; margin: 1.5rem 0 1rem; }
+    .big-number {
+      font-size: 2.5rem; font-weight: 900;
+      background: linear-gradient(135deg, #1e3a5f, #3b82f6);
+      color: white;
+      display: inline-block; padding: 0.4rem 2rem;
+      border-radius: 18px; letter-spacing: 3px;
+      box-shadow: 0 10px 25px rgba(59,130,246,0.3);
+      word-break: break-word;
+    }
+
+    .buttons-panel {
+      display: flex; flex-wrap: wrap; justify-content: center;
+      gap: 0.7rem; margin-top: 1rem;
+    }
+
+    /* ===== Buttons ===== */
+    .btn {
+      background: white; color: #1e3a5f;
+      border: 2px solid #cbd5e1;
+      padding: 0.65rem 1.3rem;
+      border-radius: 12px; font-size: 0.95rem; font-weight: 700;
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      cursor: pointer; font-family: inherit;
+      transition: all 0.15s;
+    }
+    .btn:hover { border-color: #3b82f6; color: #3b82f6; transform: translateY(-2px); }
+    .btn:active { transform: translateY(0); }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .btn-green {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: white; border: none;
+      box-shadow: 0 4px 12px rgba(16,185,129,0.3);
+    }
+    .btn-green:hover { color: white; box-shadow: 0 6px 18px rgba(16,185,129,0.4); }
+
+    .btn-blue {
+      background: linear-gradient(135deg, #3b82f6, #2563eb);
+      color: white; border: none;
+      box-shadow: 0 4px 12px rgba(59,130,246,0.3);
+    }
+    .btn-blue:hover { color: white; box-shadow: 0 6px 18px rgba(59,130,246,0.4); }
+
+    .btn-purple {
+      background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+      color: white; border: none;
+      box-shadow: 0 4px 12px rgba(139,92,246,0.3);
+    }
+    .btn-purple:hover { color: white; box-shadow: 0 6px 18px rgba(139,92,246,0.4); }
+
+    .btn-red {
+      background: linear-gradient(135deg, #ef4444, #dc2626);
+      color: white; border: none;
+      box-shadow: 0 4px 12px rgba(239,68,68,0.3);
+    }
+    .btn-red:hover { color: white; box-shadow: 0 6px 18px rgba(239,68,68,0.4); }
+
+    .btn-small { font-size: 0.85rem; padding: 0.55rem 1rem; }
+
+    /* ===== Four cards ===== */
+    .four-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr);
+      gap: 1.2rem;
+    }
+    .card {
+      background: white;
+      border-radius: 20px; padding: 1.5rem 1.3rem;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 4px 15px rgba(30,58,95,0.06);
+      transition: all 0.2s;
+    }
+    .card:hover { box-shadow: 0 8px 25px rgba(30,58,95,0.1); }
+    .card h2 {
+      font-size: 1.2rem; color: #1e3a5f;
+      display: flex; align-items: center; gap: 0.5rem;
+      margin-bottom: 1rem; font-weight: 800;
+      padding-bottom: 0.6rem;
+      border-bottom: 2px solid #f1f5f9;
+    }
+    .card-content { color: #334155; line-height: 1.6; }
+
+    /* ===== Builder ===== */
+    .builder-instructions {
+      background: #eff6ff; padding: 0.8rem 1rem;
+      border-radius: 12px; font-weight: 600;
+      margin-bottom: 0.9rem; font-size: 0.9rem;
+      color: #1e40af; border-inline-start: 4px solid #3b82f6;
+      line-height: 1.55;
+    }
+    .build-area {
+      background: #f0f9ff;
+      border: 2px dashed #7dd3fc;
+      border-radius: 14px; padding: 0.8rem;
+      min-height: 70px; margin-bottom: 0.8rem;
+      display: flex; flex-wrap: wrap; gap: 0.4rem;
+      align-items: center;
+      transition: all 0.2s;
+    }
+    .build-area:empty::before {
+      content: '📝 Drop words here to build the number...';
+      color: #94a3b8; font-weight: 600; font-size: 0.85rem;
+      padding: 0.3rem;
+    }
+    body.lang-ar .build-area:empty::before { content: '📝 أسقط الكلمات هنا لبناء العدد...'; }
+    .build-area.correct {
+      background: #ecfdf5; border-color: #10b981;
+      animation: successPulse 0.6s;
+    }
+    .build-area.wrong {
+      background: #fef2f2; border-color: #ef4444;
+      animation: shake 0.5s;
+    }
+    @keyframes successPulse {
+      0%,100% { transform: scale(1); }
+      50% { transform: scale(1.02); box-shadow: 0 0 25px rgba(16,185,129,0.4); }
+    }
+    @keyframes shake {
+      0%,100% { transform: translateX(0); }
+      25% { transform: translateX(-6px); }
+      75% { transform: translateX(6px); }
+    }
+
+    .word-bank {
+      background: #f8fafc;
+      border: 2px dashed #cbd5e1;
+      border-radius: 14px; padding: 0.8rem;
+      display: flex; flex-wrap: wrap; gap: 0.4rem;
+      margin-bottom: 0.8rem;
+      min-height: 70px;
+    }
+    .word-chip {
+      background: linear-gradient(135deg, #fbbf24, #f59e0b);
+      color: #78350f;
+      padding: 0.5rem 0.9rem; border-radius: 10px;
+      font-weight: 700; font-size: 0.9rem;
+      cursor: grab; user-select: none;
+      box-shadow: 0 2px 6px rgba(245,158,11,0.3);
+      transition: all 0.15s;
+      display: inline-flex; align-items: center;
+    }
+    .word-chip:hover { transform: translateY(-2px); box-shadow: 0 5px 12px rgba(245,158,11,0.4); }
+    .word-chip.placed {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: white;
+      box-shadow: 0 2px 6px rgba(16,185,129,0.3);
+    }
+    .word-chip.comma {
+      background: linear-gradient(135deg, #6ec8e8, #4ab3d8);
+      color: #092c38;
+    }
+
+    .builder-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.8rem; }
+
+    .builder-feedback {
+      background: #f8fafc; padding: 0.8rem 1rem;
+      border-radius: 12px; font-weight: 600;
+      min-height: 2rem; font-size: 0.9rem;
+      border-inline-start: 4px solid #94a3b8;
+      color: #475569;
+      transition: all 0.2s;
+    }
+    .builder-feedback.success {
+      background: #ecfdf5; border-inline-start-color: #10b981; color: #065f46;
+    }
+    .builder-feedback.fail {
+      background: #fef2f2; border-inline-start-color: #ef4444; color: #991b1b;
+    }
+
+    .reveal-box {
+      margin-top: 0.9rem;
+      background: #eff6ff;
+      border-radius: 14px; padding: 1rem 1.1rem;
+      border-inline-start: 4px solid #3b82f6;
+      display: none;
+    }
+    .reveal-box.visible { display: block; animation: fadeUp 0.4s ease; }
+    .reveal-box .label {
+      font-size: 0.85rem; font-weight: 700;
+      color: #1e40af; margin-bottom: 0.4rem;
+    }
+    .reveal-box .answer-text {
+      font-size: 1rem; font-weight: 700;
+      color: #1e3a5f; line-height: 1.6;
+      background: white; padding: 0.7rem 0.9rem;
+      border-radius: 10px;
+      border: 1px solid #bfdbfe;
+      word-break: break-word;
+    }
+
+    .expanded-form {
+      background: #f8fafc; padding: 0.9rem 1rem;
+      border-radius: 12px;
+      font-family: 'Courier New', monospace; font-size: 1rem;
+      word-break: break-word;
+      border-inline-start: 4px solid #6ec8e8;
+      font-weight: 700; color: #1e3a5f;
+    }
+    .calc-display {
+      background: #1e293b; color: #fbbf24;
+      border-radius: 14px; padding: 0.8rem 1.2rem;
+      font-size: 1.7rem; font-weight: 800;
+      text-align: center; margin-bottom: 0.7rem;
+      letter-spacing: 2px;
+      border: 1px solid #334155;
+    }
+    .calc-buttons { display: flex; flex-wrap: wrap; gap: 0.4rem; justify-content: center; }
+    .quiz-question {
+      font-size: 1rem; font-weight: 700; margin-bottom: 0.9rem;
+      background: #eff6ff; padding: 0.9rem 1rem;
+      border-radius: 12px;
+      border-inline-start: 4px solid #3b82f6;
+      color: #1e40af; line-height: 1.5;
+    }
+    .quiz-options { display: flex; flex-direction: column; gap: 0.5rem; margin: 0.8rem 0; }
+    .quiz-option {
+      background: #f8fafc; padding: 0.7rem 1rem;
+      border-radius: 12px;
+      border: 2px solid #e2e8f0; font-weight: 600;
+      cursor: pointer; transition: all 0.15s;
+      display: flex; align-items: center; gap: 0.5rem;
+      color: #334155;
+    }
+    .quiz-option:hover { border-color: #3b82f6; background: #eff6ff; }
+    .quiz-option.selected {
+      background: #eff6ff; border-color: #3b82f6; color: #1e40af;
+    }
+    .quiz-option.correct {
+      background: #ecfdf5; border-color: #10b981; color: #065f46;
+      animation: successPulse 0.5s;
+    }
+    .quiz-option.wrong {
+      background: #fef2f2; border-color: #ef4444; color: #991b1b;
+      animation: shake 0.4s;
+    }
+    .quiz-feedback { font-size: 0.95rem; font-weight: 700; margin-top: 0.6rem; min-height: 1.5rem; }
+    .green-text { color: #059669; }
+    .red-text { color: #dc2626; }
+
+    /* ===== Zoo ===== */
+    .zoo-section {
+      background: #f8fafc;
+      border-radius: 20px; padding: 1.5rem 1.2rem;
+      margin-top: 1.5rem;
+      border: 1px solid #e2e8f0;
+    }
+    .zoo-description {
+      background: white; padding: 0.9rem 1.2rem; border-radius: 14px;
+      margin-bottom: 1.2rem; font-size: 0.95rem; font-weight: 600;
+      color: #334155;
+      border-inline-start: 4px solid #10b981;
+      box-shadow: 0 2px 10px rgba(30,58,95,0.05);
+      line-height: 1.6;
+    }
+    .animal-cards {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 0.8rem; margin-bottom: 1.2rem;
+    }
+    .animal-card {
+      background: white; border-radius: 16px; padding: 0.9rem;
+      text-align: center; border: 2px solid #e2e8f0;
+      box-shadow: 0 3px 10px rgba(30,58,95,0.05);
+      transition: all 0.2s; cursor: pointer;
+    }
+    .animal-card:hover { transform: translateY(-4px); border-color: #10b981; }
+    .animal-card.active {
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 4px rgba(59,130,246,0.15), 0 6px 18px rgba(59,130,246,0.15);
+      transform: translateY(-4px);
+    }
+    .animal-emoji { font-size: 2.4rem; line-height: 1; }
+    .animal-name { font-weight: 700; color: #1e3a5f; margin: 0.3rem 0; font-size: 0.95rem; }
+    .animal-count-display {
+      background: #f1f5f9;
+      border-radius: 10px;
+      padding: 0.5rem; font-size: 1.2rem; font-weight: 800;
+      color: #1e3a5f; min-height: 2.2rem;
+      display: flex; align-items: center; justify-content: center;
+      border: 2px solid transparent;
+      transition: all 0.2s;
+    }
+    .animal-count-display.correct {
+      background: #ecfdf5; border-color: #10b981; color: #065f46;
+    }
+    .animal-count-display.wrong {
+      background: #fef2f2; border-color: #ef4444; color: #991b1b;
+    }
+    .zoo-chart-container {
+      background: white; border-radius: 16px; padding: 0.8rem;
+      margin-bottom: 1.2rem; height: 380px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 3px 10px rgba(30,58,95,0.05);
+      position: relative;
+    }
+    .zoo-hint {
+      background: #fffbeb; padding: 0.8rem 1rem;
+      border-radius: 12px; margin-bottom: 1rem;
+      font-weight: 600; color: #92400e;
+      border-inline-start: 4px solid #f59e0b;
+      font-size: 0.9rem;
+    }
+    .zoo-actions { display: flex; flex-wrap: wrap; gap: 0.8rem; justify-content: center; margin-top: 0.8rem; }
+    .zoo-feedback { text-align: center; font-size: 1.05rem; font-weight: 700; margin-top: 0.8rem; min-height: 1.5rem; }
+
+    .chart-edit-input {
+      position: absolute;
+      background: white;
+      border: 2px solid #3b82f6;
+      border-radius: 10px;
+      padding: 0.4rem 0.7rem;
+      font-size: 1.1rem; font-weight: 800;
+      color: #1e3a5f;
+      width: 110px; text-align: center;
+      outline: none;
+      box-shadow: 0 6px 20px rgba(59,130,246,0.3);
+      z-index: 10;
+      transform: translate(-50%, -50%);
+      font-family: inherit;
+    }
+    .chart-edit-input:focus { box-shadow: 0 0 0 4px rgba(59,130,246,0.2); }
+
+    /* ===== Exam ===== */
+    .exam-section {
+      background: linear-gradient(135deg, #eff6ff, #fdf4ff);
+      border-radius: 20px; padding: 1.5rem 1.2rem;
+      margin-top: 1.5rem;
+      border: 1px solid #e2e8f0;
+      text-align: center;
+    }
+    .exam-section .section-title {
+      justify-content: center; border-bottom: none; padding-bottom: 0;
+    }
+    .exam-status { font-size: 1rem; font-weight: 600; color: #475569; margin: 0.8rem 0; line-height: 1.6; }
+    .finish-btn {
+      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+      color: white; border: none;
+      padding: 0.95rem 2.2rem; border-radius: 14px;
+      font-size: 1.15rem; font-weight: 800; cursor: pointer;
+      box-shadow: 0 8px 25px rgba(59,130,246,0.35);
+      transition: all 0.15s;
+      font-family: inherit;
+    }
+    .finish-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(59,130,246,0.45); }
+    .finish-btn:active { transform: translateY(1px); }
+
+    /* ===== Result ===== */
+    .result-overlay {
+      position: fixed; inset: 0; background: rgba(15,23,42,0.55);
+      display: none; justify-content: center; align-items: center;
+      z-index: 2000; padding: 1rem; backdrop-filter: blur(4px);
+    }
+    .result-overlay.visible { display: flex; }
+    .result-card {
+      background: white;
+      border-radius: 24px;
+      padding: 2rem 1.8rem; max-width: 560px; width: 100%;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.3);
+      border: 1px solid #e2e8f0;
+      text-align: center;
+      animation: fadeUp 0.5s ease;
+    }
+    .result-card h2 { font-size: 1.8rem; color: #1e3a5f; margin-bottom: 0.4rem; }
+    .result-emoji { font-size: 4rem; margin: 0.4rem 0; display: inline-block; }
+    .result-score {
+      font-size: 2.8rem; font-weight: 900;
+      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin: 0.4rem 0;
+    }
+    .result-details {
+      background: #f8fafc; padding: 1rem; border-radius: 14px;
+      margin: 0.9rem 0; text-align: start; font-size: 0.9rem;
+      color: #334155; font-weight: 600; line-height: 1.8;
+      border: 1px solid #e2e8f0;
+    }
+    .result-details span { color: #059669; font-weight: 800; }
+    .result-message { font-size: 1.1rem; font-weight: 700; margin: 0.8rem 0; color: #475569; }
+    .result-buttons { display: flex; gap: 0.8rem; justify-content: center; flex-wrap: wrap; margin-top: 1rem; }
+
+    /* Confetti / stars */
+    .confetti {
+      position: fixed; width: 10px; height: 10px;
+      top: -20px; z-index: 3000; pointer-events: none;
+      border-radius: 2px;
+    }
+    @keyframes confettiFall {
+      0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+    }
+    .star-burst {
+      position: fixed; font-size: 2.5rem;
+      pointer-events: none; z-index: 3000;
+      animation: starBurst 1s ease-out forwards;
+    }
+    @keyframes starBurst {
+      0% { transform: scale(0) rotate(0deg); opacity: 1; }
+      100% { transform: scale(2) rotate(180deg); opacity: 0; }
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .four-grid { grid-template-columns: 1fr; }
+      .app-container { padding: 1.2rem 1rem; }
+      h1 { font-size: 1.5rem; }
+      .digit-box { width: 3rem; height: 3.6rem; }
+      .digit-value { font-size: 1.6rem; }
+      .place-name { font-size: 0.55rem; }
+      .big-number { font-size: 1.8rem; padding: 0.35rem 1.2rem; letter-spacing: 2px; }
+      .section-title { font-size: 1.15rem; }
+      .card h2 { font-size: 1.05rem; }
+      .calc-display { font-size: 1.3rem; }
+    }
+    @media (max-width: 550px) {
+      .digit-box { width: 2.4rem; height: 3rem; }
+      .digit-value { font-size: 1.3rem; }
+      .place-name { font-size: 0.5rem; }
+      .group-label { font-size: 0.65rem; }
+      .zoo-chart-container { height: 300px; }
+      .word-chip { font-size: 0.8rem; padding: 0.4rem 0.7rem; }
+      .btn { font-size: 0.85rem; padding: 0.55rem 1rem; }
+      h1 { font-size: 1.3rem; }
+      .big-number { font-size: 1.4rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- زر تبديل اللغة (ثابت) -->
+<button class="lang-toggle" id="langToggle">🌐 العربية</button>
+
+<!-- ============ LOGIN ============ -->
+<div class="login-wrapper" id="loginWrapper">
+  <div class="login-card">
+    <h2 data-i18n="loginTitle">Welcome! 🎁 Grade 4</h2>
+    <p class="subtitle" data-i18n="loginSubtitle">🔓 Sign in to start the fun exam</p>
+
+    <div class="login-field">
+      <label for="loginUser" data-i18n="loginUserLabel">👤 Username</label>
+      <input type="text" id="loginUser" placeholder="Enter your username" autocomplete="off">
+    </div>
+    <div class="login-field">
+      <label for="loginPass" data-i18n="loginPassLabel">🔑 Password</label>
+      <input type="password" id="loginPass" placeholder="Enter your password">
+    </div>
+    <button class="login-btn" id="loginBtn" data-i18n="loginBtn">🚀 Let's Go!</button>
+    <div class="login-error" id="loginError"></div>
+    <div class="login-hint">
+      <strong data-i18n="loginHintTitle">🎁 Grade 4:</strong><br>
+      { username: student4, password: 12345 }<br>
+      <span data-i18n="loginHintMade">👩‍🏫 Made By Eng. Marina Ayman (Teacher)</span>
+    </div>
+  </div>
+</div>
+
+<!-- ============ APP ============ -->
+<div class="app-container" id="appContainer">
+
+  <div class="user-bar">
+    <div class="welcome" id="welcomeMsg">👋 Welcome!</div>
+    <button class="logout-btn" id="logoutBtn" data-i18n="logoutBtn">↩ Logout</button>
+  </div>
+
+  <h1>🔢 <span data-i18n="appTitle">Large Numbers</span> 🎯</h1>
+
+  <div class="progress-container">
+    <span data-i18n="progressLabel">🚀 Progress:</span>
+    <div class="progress-bar-bg"><div class="progress-bar-fill" id="progressFill"></div></div>
+    <span id="progressText">0%</span>
+  </div>
+
+  <!-- Place Value Chart -->
+  <div class="chart-section">
+    <div class="section-title"><i>📊</i> <span data-i18n="placeChartTitle">Place Value Chart</span></div>
+    <div class="place-chart" id="placeValueChart"></div>
+    <div class="current-number-box">
+      <div class="big-number" id="currentNumberDisplay">1,234,567,890</div>
+    </div>
+    <div class="buttons-panel">
+      <button class="btn btn-blue" id="btnHundredMillion" data-i18n="btnHundredMillion">🔹 100 Million</button>
+      <button class="btn btn-green" id="btnBillion" data-i18n="btnBillion">🌟 1 Billion</button>
+      <button class="btn btn-purple" id="btnRandom" data-i18n="btnRandom">🎲 Random</button>
+      <button class="btn" id="btnIncrement" data-i18n="btnIncrement">➕ +1 Million</button>
+      <button class="btn btn-small" id="btnDecrement" data-i18n="btnDecrement">➖ -1 Million</button>
+    </div>
+  </div>
+
+  <!-- Four cards -->
+  <div class="four-grid">
+    <!-- English builder -->
+    <div class="card">
+      <h2><i>🗣️</i> <span data-i18n="englishTitle">English Reading</span></h2>
+      <div class="card-content">
+        <div class="builder-instructions" data-i18n-html="builderInstructions">
+          🔊 <strong>Listen</strong> first, then <strong>build the number</strong> by clicking or dragging the word chips into the blue box!
+        </div>
+
+        <div style="margin-bottom:0.9rem;display:flex;flex-wrap:wrap;gap:0.5rem;">
+          <button class="btn btn-blue btn-small" id="listenBtn" data-i18n="listenBtn">🔊 Listen</button>
+        </div>
+
+        <div class="build-area" id="buildArea"></div>
+        <div class="word-bank" id="wordBank"></div>
+
+        <div class="builder-actions">
+          <button class="btn btn-green btn-small" id="checkBuildBtn" data-i18n="checkBuildBtn">✅ Check My Answer</button>
+          <button class="btn btn-small" id="resetBuildBtn" data-i18n="resetBuildBtn">🔄 Reset</button>
+          <button class="btn btn-small" id="undoBuildBtn" data-i18n="undoBuildBtn">↩ Undo</button>
+        </div>
+
+        <div class="builder-feedback" id="builderFeedback" data-i18n="builderFeedbackDefault">
+          💡 Click the word chips below to add them to the box. You can also drag them!
+        </div>
+
+        <div class="reveal-box" id="revealBox">
+          <div class="label" data-i18n="revealLabel">✅ Correct Answer:</div>
+          <div class="answer-text" id="revealAnswer">—</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2><i>🧩</i> <span data-i18n="expandedTitle">Expanded Form</span></h2>
+      <div class="card-content">
+        <div id="expandedForm" class="expanded-form">—</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2><i>🧮</i> <span data-i18n="calcTitle">Calculating Large Numbers</span></h2>
+      <div class="card-content">
+        <div class="calc-display" id="calcDisplay">1,234,567,890</div>
+        <div class="calc-buttons">
+          <button class="btn btn-small" id="calcAddMillion" data-i18n="calcAddMillion">+ 1,000,000</button>
+          <button class="btn btn-small" id="calcSubMillion" data-i18n="calcSubMillion">- 1,000,000</button>
+          <button class="btn btn-small" id="calcAddBillion" data-i18n="calcAddBillion">+ 1,000,000,000</button>
+          <button class="btn btn-small" id="calcReset" data-i18n="calcReset">↺ Reset</button>
+        </div>
+        <div style="margin-top:0.9rem;font-size:0.9rem;color:#475569;font-weight:600;" id="calcMessage" data-i18n="calcMessageDefault">
+          ✅ Current number is ready
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2><i>❓</i> <span data-i18n="quizTitle">Mini Quiz</span></h2>
+      <div class="card-content">
+        <div class="quiz-question" id="quizQuestion">—</div>
+        <div class="quiz-options" id="quizOptions"></div>
+        <button class="btn btn-green btn-small" id="checkQuizBtn" data-i18n="checkQuizBtn">✅ Check Answer</button>
+        <div class="quiz-feedback" id="quizFeedback"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Zoo -->
+  <div class="zoo-section">
+    <div class="section-title"><i>🦁</i> <span data-i18n="zooTitle">Zoo Chart Training</span></div>
+
+    <div class="zoo-description" data-i18n-html="zooDescription">
+      🏞️ <strong>Welcome to the zoo!</strong> Click on an animal, then <strong>click on the chart</strong> to answer, and <strong>edit your answer by clicking the orange box</strong> that pops up!
+    </div>
+
+    <div class="animal-cards" id="animalCards"></div>
+
+    <div class="zoo-hint" id="zooHint" data-i18n="zooHintDefault">
+      🖱️ Click on the chart at the height that matches the number. Then click the orange box to edit it.
+    </div>
+
+    <div class="zoo-chart-container" id="zooChartContainer">
+      <canvas id="zooChart"></canvas>
+    </div>
+
+    <div class="zoo-actions">
+      <button class="btn btn-green" id="checkZooBtn" data-i18n="checkZooBtn">✅ Check Answers</button>
+      <button class="btn btn-blue" id="resetZooBtn" data-i18n="resetZooBtn">🔄 New Numbers</button>
+    </div>
+
+    <div class="zoo-feedback" id="zooFeedback"></div>
+  </div>
+
+  <!-- Exam -->
+  <div class="exam-section">
+    <div class="section-title"><i>🏁</i> <span data-i18n="examTitle">Finish Exam</span></div>
+    <div class="exam-status" id="examStatus" data-i18n="examStatusDefault">
+      🎯 Answer quiz questions, build the English reading, and complete the zoo training. Then click below to see your result!
+    </div>
+    <button class="finish-btn" id="finishBtn" data-i18n="finishBtn">🎓 Show My Result</button>
+  </div>
+</div>
+
+<!-- RESULT MODAL -->
+<div class="result-overlay" id="resultOverlay">
+  <div class="result-card">
+    <div class="result-emoji" id="resultEmoji">🎉</div>
+    <h2 id="resultTitle" data-i18n="resultTitleDefault">Exam Completed!</h2>
+    <div class="result-score" id="resultScore">0 / 100</div>
+    <div class="result-message" id="resultMessage"></div>
+    <div class="result-details" id="resultDetails"></div>
+    <div class="result-buttons">
+      <button class="btn btn-green" id="tryAgainBtn" data-i18n="tryAgainBtn">🔄 Try Again</button>
+      <button class="btn" id="closeResultBtn" data-i18n="closeResultBtn">❌ Close</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   🌐 الترجمة / i18n
+============================================================ */
+const translations = {
+  en: {
+    loginTitle: 'Welcome! 🎁 Grade 4',
+    loginSubtitle: '🔓 Sign in to start the fun exam',
+    loginUserLabel: '👤 Username',
+    loginPassLabel: '🔑 Password',
+    loginBtn: "🚀 Let's Go!",
+    loginHintTitle: '🎁 Grade 4:',
+    loginHintMade: '👩‍🏫 Made By Eng. Marina Ayman (Teacher)',
+    logoutBtn: '↩ Logout',
+    appTitle: 'Large Numbers',
+    progressLabel: '🚀 Progress:',
+    placeChartTitle: 'Place Value Chart',
+    btnHundredMillion: '🔹 100 Million',
+    btnBillion: '🌟 1 Billion',
+    btnRandom: '🎲 Random',
+    btnIncrement: '➕ +1 Million',
+    btnDecrement: '➖ -1 Million',
+    englishTitle: 'English Reading',
+    builderInstructions: '🔊 <strong>Listen</strong> first, then <strong>build the number</strong> by clicking or dragging the word chips into the blue box!',
+    listenBtn: '🔊 Listen',
+    checkBuildBtn: '✅ Check My Answer',
+    resetBuildBtn: '🔄 Reset',
+    undoBuildBtn: '↩ Undo',
+    builderFeedbackDefault: '💡 Click the word chips below to add them to the box. You can also drag them!',
+    revealLabel: '✅ Correct Answer:',
+    expandedTitle: 'Expanded Form',
+    calcTitle: 'Calculating Large Numbers',
+    calcAddMillion: '+ 1,000,000',
+    calcSubMillion: '- 1,000,000',
+    calcAddBillion: '+ 1,000,000,000',
+    calcReset: '↺ Reset',
+    calcMessageDefault: '✅ Current number is ready',
+    quizTitle: 'Mini Quiz',
+    checkQuizBtn: '✅ Check Answer',
+    zooTitle: 'Zoo Chart Training',
+    zooDescription: '🏞️ <strong>Welcome to the zoo!</strong> Click on an animal, then <strong>click on the chart</strong> to answer, and <strong>edit your answer by clicking the orange box</strong> that pops up!',
+    zooHintDefault: '🖱️ Click on the chart at the height that matches the number. Then click the orange box to edit it.',
+    checkZooBtn: '✅ Check Answers',
+    resetZooBtn: '🔄 New Numbers',
+    examTitle: 'Finish Exam',
+    examStatusDefault: '🎯 Answer quiz questions, build the English reading, and complete the zoo training. Then click below to see your result!',
+    finishBtn: '🎓 Show My Result',
+    resultTitleDefault: 'Exam Completed!',
+    tryAgainBtn: '🔄 Try Again',
+    closeResultBtn: '❌ Close',
+    langBtn: '🌐 العربية',
+    // dynamic
+    welcomeUser: (name) => `👋 Welcome, ${name}! 🎉`,
+    loginErrorEmpty: '⚠️ Please enter username and password.',
+    loginErrorWrong: '❌ Wrong username or password. Please try again.',
+    placeGroups: { billions: 'Billions', millions: 'Millions', thousands: 'Thousands', ones: 'Ones' },
+    placeNames: { hundred: 'Hundred', ten: 'Ten', one: 'One' },
+    quizQuestion: (digit, num) => `What is the place value of the digit ${digit} in ${num}?`,
+    quizFeedbackSelect: '⚠️ Please select an answer first!',
+    quizFeedbackCorrect: '🎉 Correct! Amazing job!',
+    quizFeedbackWrong: (ans) => `❌ Oops! The correct answer is "${ans}"`,
+    quizPlaceNames: ['ones','tens','hundreds','thousands','ten thousands','hundred thousands',
+      'millions','ten millions','hundred millions','billions','ten billions','hundred billions'],
+    zooHintAnimal: (emoji, name) => `🖱️ Now click on the chart at the height for ${emoji} ${name}!`,
+    zooFeedbackPerfect: (n) => `🎉 PERFECT! All ${n} animals counted correctly! 🏆`,
+    zooFeedbackPartial: (c, t) => `📝 You got ${c} out of ${t} correct. Click the chart to fix wrong answers!`,
+    zooHintReset: '🖱️ Click on the chart at the height that matches the number you want to answer.',
+    builderFeedbackEmpty: '⚠️ Add some words first!',
+    builderFeedbackCorrect: '🎉 Perfect! You built the number correctly!',
+    builderFeedbackWrong: '❌ Not quite! Compare with the correct answer above, then click Reset to try again.',
+    listening: '🔊 Listening...',
+    listenedNowBuild: '✅ Now build the number by clicking the words below!',
+    speechNotSupported: '❌ Speech synthesis not supported.',
+    calcMessageSet: (num) => `✅ Number set to ${num}`,
+    finishWarning: '⚠️ Please try the quiz, English reading, and zoo training before finishing!',
+    resultStudent: '👤 <strong>Student:</strong>',
+    resultQuiz: '❓ <strong>Quiz:</strong>',
+    resultZoo: '🦁 <strong>Zoo:</strong>',
+    resultEnglish: '🗣️ <strong>English:</strong>',
+    resultDate: '📅 <strong>Date:</strong>',
+    resultCorrect: 'correct',
+    resultSkills: 'skills',
+    resultPts: 'pts',
+    resultTitles: {
+      outstanding: 'Outstanding!',
+      great: 'Great Job!',
+      good: 'Good Effort!',
+      keep: 'Keep Practicing!'
+    },
+    resultMessages: {
+      outstanding: 'You are a Large Numbers champion! 🌟',
+      great: 'You did very well! Keep it up! 💪',
+      good: "A little more practice and you'll be a pro! 🚀",
+      keep: 'Review the place value chart and try again! 💡'
+    }
+  },
+  ar: {
+    loginTitle: 'مرحبًا! 🎁 الصف الرابع',
+    loginSubtitle: '🔓 سجّل الدخول لبدء الامتحان الممتع',
+    loginUserLabel: '👤 اسم المستخدم',
+    loginPassLabel: '🔑 كلمة المرور',
+    loginBtn: '🚀 هيا بنا!',
+    loginHintTitle: '🎁 الصف الرابع:',
+    loginHintMade: '👩‍🏫 إعداد: م. مارينا أيمن (المعلمة)',
+    logoutBtn: '↩ خروج',
+    appTitle: 'الأعداد الكبيرة',
+    progressLabel: '🚀 التقدم:',
+    placeChartTitle: 'جدول القيم المكانية',
+    btnHundredMillion: '🔹 100 مليون',
+    btnBillion: '🌟 مليار',
+    btnRandom: '🎲 عشوائي',
+    btnIncrement: '➕ +1 مليون',
+    btnDecrement: '➖ -1 مليون',
+    englishTitle: 'القراءة الإنجليزية',
+    builderInstructions: '🔊 <strong>استمع</strong> أولًا، ثم <strong>ابنِ العدد</strong> بالضغط على بطاقات الكلمات أو سحبها إلى المربع الأزرق!',
+    listenBtn: '🔊 استمع',
+    checkBuildBtn: '✅ تحقق من إجابتي',
+    resetBuildBtn: '🔄 إعادة',
+    undoBuildBtn: '↩ تراجع',
+    builderFeedbackDefault: '💡 اضغط على بطاقات الكلمات بالأسفل لإضافتها إلى المربع. يمكنك أيضًا سحبها!',
+    revealLabel: '✅ الإجابة الصحيحة:',
+    expandedTitle: 'الصيغة الموسعة',
+    calcTitle: 'حساب الأعداد الكبيرة',
+    calcAddMillion: '+ 1,000,000',
+    calcSubMillion: '- 1,000,000',
+    calcAddBillion: '+ 1,000,000,000',
+    calcReset: '↺ إعادة',
+    calcMessageDefault: '✅ العدد الحالي جاهز',
+    quizTitle: 'اختبار سريع',
+    checkQuizBtn: '✅ تحقق من الإجابة',
+    zooTitle: 'تدريب مخطط الحديقة',
+    zooDescription: '🏞️ <strong>مرحبًا بك في حديقة الحيوانات!</strong> اضغط على حيوان، ثم <strong>اضغط على المخطط</strong> للإجابة، و<strong>عدّل إجابتك بالضغط على المربع البرتقالي</strong> الذي يظهر!',
+    zooHintDefault: '🖱️ اضغط على المخطط عند الارتفاع المطابق للعدد. ثم اضغط على المربع البرتقالي لتعديله.',
+    checkZooBtn: '✅ تحقق من الإجابات',
+    resetZooBtn: '🔄 أعداد جديدة',
+    examTitle: 'إنهاء الامتحان',
+    examStatusDefault: '🎯 أجب عن أسئلة الاختبار، وابنِ القراءة الإنجليزية، وأكمل تدريب الحديقة. ثم اضغط بالأسفل لرؤية نتيجتك!',
+    finishBtn: '🎓 أظهر نتيجتي',
+    resultTitleDefault: 'اكتمل الامتحان!',
+    tryAgainBtn: '🔄 حاول مجددًا',
+    closeResultBtn: '❌ إغلاق',
+    langBtn: '🌐 English',
+    welcomeUser: (name) => `👋 مرحبًا، ${name}! 🎉`,
+    loginErrorEmpty: '⚠️ من فضلك أدخل اسم المستخدم وكلمة المرور.',
+    loginErrorWrong: '❌ اسم المستخدم أو كلمة المرور غير صحيحة. حاول مجددًا.',
+    placeGroups: { billions: 'المليارات', millions: 'الملايين', thousands: 'الآلاف', ones: 'الآحاد' },
+    placeNames: { hundred: 'مئات', ten: 'عشرات', one: 'آحاد' },
+    quizQuestion: (digit, num) => `ما القيمة المكانية للرقم ${digit} في العدد ${num}؟`,
+    quizFeedbackSelect: '⚠️ من فضلك اختر إجابة أولًا!',
+    quizFeedbackCorrect: '🎉 صحيح! عمل رائع!',
+    quizFeedbackWrong: (ans) => `❌ للأسف! الإجابة الصحيحة هي "${ans}"`,
+    quizPlaceNames: ['الآحاد','العشرات','المئات','الآلاف','عشرات الآلاف','مئات الآلاف',
+      'الملايين','عشرات الملايين','مئات الملايين','المليارات','عشرات المليارات','مئات المليارات'],
+    zooHintAnimal: (emoji, name) => `🖱️ الآن اضغط على المخطط عند ارتفاع ${emoji} ${name}!`,
+    zooFeedbackPerfect: (n) => `🎉 ممتاز! تم عدّ جميع الحيوانات (${n}) بشكل صحيح! 🏆`,
+    zooFeedbackPartial: (c, t) => `📝 حصلت على ${c} من ${t} صحيحة. اضغط على المخطط لتصحيح الإجابات الخاطئة!`,
+    zooHintReset: '🖱️ اضغط على المخطط عند الارتفاع المطابق للعدد الذي تريد الإجابة عنه.',
+    builderFeedbackEmpty: '⚠️ أضف بعض الكلمات أولًا!',
+    builderFeedbackCorrect: '🎉 ممتاز! لقد بنيت العدد بشكل صحيح!',
+    builderFeedbackWrong: '❌ ليس تمامًا! قارن مع الإجابة الصحيحة بالأعلى، ثم اضغط إعادة للمحاولة مجددًا.',
+    listening: '🔊 جارٍ الاستماع...',
+    listenedNowBuild: '✅ الآن ابنِ العدد بالضغط على الكلمات بالأسفل!',
+    speechNotSupported: '❌ تحويل النص إلى كلام غير مدعوم.',
+    calcMessageSet: (num) => `✅ تم ضبط العدد على ${num}`,
+    finishWarning: '⚠️ من فضلك جرّب الاختبار والقراءة الإنجليزية وتدريب الحديقة قبل الإنهاء!',
+    resultStudent: '👤 <strong>الطالب:</strong>',
+    resultQuiz: '❓ <strong>الاختبار:</strong>',
+    resultZoo: '🦁 <strong>الحديقة:</strong>',
+    resultEnglish: '🗣️ <strong>الإنجليزية:</strong>',
+    resultDate: '📅 <strong>التاريخ:</strong>',
+    resultCorrect: 'صحيحة',
+    resultSkills: 'مهارات',
+    resultPts: 'نقطة',
+    resultTitles: {
+      outstanding: 'متميز!',
+      great: 'عمل رائع!',
+      good: 'مجهود جيد!',
+      keep: 'استمر في التدريب!'
+    },
+    resultMessages: {
+      outstanding: 'أنت بطل الأعداد الكبيرة! 🌟',
+      great: 'أداء جيد جدًا! استمر! 💪',
+      good: 'قليل من التدريب وستصبح محترفًا! 🚀',
+      keep: 'راجع جدول القيم المكانية وحاول مجددًا! 💡'
+    }
+  }
+};
+
+let currentLang = 'en';
+const t = (key) => translations[currentLang][key];
+
+function applyLanguage(lang) {
+  currentLang = lang;
+  document.documentElement.lang = lang;
+  document.body.classList.toggle('lang-ar', lang === 'ar');
+  document.body.dir = lang === 'ar' ? 'rtl' : 'ltr';
+
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.dataset.i18n;
+    if (translations[lang][key] !== undefined && typeof translations[lang][key] === 'string') {
+      el.textContent = translations[lang][key];
+    }
+  });
+  document.querySelectorAll('[data-i18n-html]').forEach(el => {
+    const key = el.dataset.i18nHtml;
+    if (translations[lang][key] !== undefined) {
+      el.innerHTML = translations[lang][key];
+    }
+  });
+
+  document.getElementById('langToggle').textContent = t('langBtn');
+  document.getElementById('loginUser').placeholder = lang === 'ar' ? 'أدخل اسم المستخدم' : 'Enter your username';
+  document.getElementById('loginPass').placeholder = lang === 'ar' ? 'أدخل كلمة المرور' : 'Enter your password';
+
+  // إعادة بناء العناصر الديناميكية باللغة الجديدة
+  if (appContainer.classList.contains('visible')) {
+    buildPlaceChart();
+    updateAllFromNumber();
+    buildZooCards();
+    renderZooChart();
+    if (currentUser) {
+      welcomeMsg.textContent = t('welcomeUser')(currentUser.split('@')[0]);
+    }
+  }
+}
+
+document.getElementById('langToggle').addEventListener('click', () => {
+  applyLanguage(currentLang === 'en' ? 'ar' : 'en');
+});
+
+/* ============================================================
+   Confetti / stars
+============================================================ */
+function launchConfetti(count = 100) {
+  const colors = ['#3b82f6', '#8b5cf6', '#10b981', '#f59e0b', '#ef4444', '#6ec8e8'];
+  for (let i = 0; i < count; i++) {
+    const conf = document.createElement('div');
+    conf.className = 'confetti';
+    conf.style.left = Math.random() * 100 + 'vw';
+    conf.style.background = colors[Math.floor(Math.random() * colors.length)];
+    conf.style.animation = `confettiFall ${2 + Math.random() * 3}s linear forwards`;
+    conf.style.animationDelay = Math.random() * 0.5 + 's';
+    conf.style.width = (8 + Math.random() * 8) + 'px';
+    conf.style.height = (8 + Math.random() * 8) + 'px';
+    if (Math.random() > 0.5) conf.style.borderRadius = '50%';
+    document.body.appendChild(conf);
+    setTimeout(() => conf.remove(), 6000);
+  }
+}
+function starBurst(x, y) {
+  const stars = ['⭐', '🌟', '✨', '💫'];
+  for (let i = 0; i < 6; i++) {
+    const star = document.createElement('div');
+    star.className = 'star-burst';
+    star.textContent = stars[Math.floor(Math.random() * stars.length)];
+    star.style.left = x + 'px';
+    star.style.top = y + 'px';
+    star.style.animationDelay = (i * 0.05) + 's';
+    document.body.appendChild(star);
+    setTimeout(() => star.remove(), 1200);
+  }
+}
+
+/* ============================================================
+   Global state
+============================================================ */
+let currentUser = '';
+let currentNumber = 1234567890;
+
+const examState = {
+  quizAttempted: false,
+  quizCorrectCount: 0,
+  quizTotal: 0,
+  zooAttempted: false,
+  zooCorrectCount: 0,
+  zooTotal: 4,
+  englishListened: false,
+  englishBuiltCorrect: false,
+  englishAttempts: 0,
+  totalScore: 0
+};
+
+let zooAnimals = [];
+let zooChartMax = 600;
+let zooChartStep = 50;
+let zooUserCounts = [];
+let activeAnimalIndex = 0;
+let zooChartInstance = null;
+let floatingInput = null;
+
+let wordBankWords = [];
+let placedWords = [];
+let wordIdCounter = 0;
+
+/* ============================================================
+   Zoo
+============================================================ */
+function generateRandomZooAnimals() {
+  const pickFrom = (arr) => arr[Math.floor(Math.random() * arr.length)];
+  zooAnimals = [
+    { name: 'Rabbits', nameAr: 'أرانب', emoji: '🐰', correct: pickFrom([0, 20, 40, 60, 80, 100, 120, 140, 160, 180, 200, 220, 240, 260, 280, 300]) },
+    { name: 'Chickens', nameAr: 'دجاج', emoji: '🐔', correct: pickFrom([100, 120, 140, 160, 180, 200, 220, 240, 260, 280, 300]) },
+    { name: 'Ducks', nameAr: 'بط', emoji: '🦆', correct: pickFrom([40, 60, 80, 100, 120, 140, 160, 180, 80, 100]) },
+    { name: 'Turtles', nameAr: 'سلاحف', emoji: '🐢', correct: pickFrom([0, 20, 40, 60, 160, 180, 200, 220, 80, 100, 120, 140]) }
+  ];
+}
+
+function computeChartScale() {
+  const maxCorrect = Math.max(...zooAnimals.map(a => a.correct));
+  if (maxCorrect <= 100) { zooChartMax = 120; zooChartStep = 10; }
+  else if (maxCorrect <= 200) { zooChartMax = 220; zooChartStep = 20; }
+  else if (maxCorrect <= 300) { zooChartMax = 320; zooChartStep = 20; }
+  else if (maxCorrect <= 500) { zooChartMax = 520; zooChartStep = 50; }
+  else { zooChartMax = 600; zooChartStep = 50; }
+}
+
+const VALID_USERS = [
+  { username: 'student4', password: '12345' },
+  { username: 'Marina@teacher', password: 'Marina777#' }
+];
+
+/* ============================================================
+   DOM refs
+============================================================ */
+const loginWrapper = document.getElementById('loginWrapper');
+const appContainer = document.getElementById('appContainer');
+const loginUser = document.getElementById('loginUser');
+const loginPass = document.getElementById('loginPass');
+const loginBtn = document.getElementById('loginBtn');
+const loginError = document.getElementById('loginError');
+const welcomeMsg = document.getElementById('welcomeMsg');
+const logoutBtn = document.getElementById('logoutBtn');
+
+const chartContainer = document.getElementById('placeValueChart');
+const currentNumberDisplay = document.getElementById('currentNumberDisplay');
+const expandedFormEl = document.getElementById('expandedForm');
+const calcDisplay = document.getElementById('calcDisplay');
+const calcMessage = document.getElementById('calcMessage');
+
+const btnHundredMillion = document.getElementById('btnHundredMillion');
+const btnBillion = document.getElementById('btnBillion');
+const btnRandom = document.getElementById('btnRandom');
+const btnIncrement = document.getElementById('btnIncrement');
+const btnDecrement = document.getElementById('btnDecrement');
+
+const calcAddMillion = document.getElementById('calcAddMillion');
+const calcSubMillion = document.getElementById('calcSubMillion');
+const calcAddBillion = document.getElementById('calcAddBillion');
+const calcReset = document.getElementById('calcReset');
+
+const quizQuestion = document.getElementById('quizQuestion');
+const quizOptions = document.getElementById('quizOptions');
+const checkQuizBtn = document.getElementById('checkQuizBtn');
+const quizFeedback = document.getElementById('quizFeedback');
+
+const listenBtn = document.getElementById('listenBtn');
+const buildArea = document.getElementById('buildArea');
+const wordBank = document.getElementById('wordBank');
+const checkBuildBtn = document.getElementById('checkBuildBtn');
+const resetBuildBtn = document.getElementById('resetBuildBtn');
+const undoBuildBtn = document.getElementById('undoBuildBtn');
+const builderFeedback = document.getElementById('builderFeedback');
+const revealBox = document.getElementById('revealBox');
+const revealAnswer = document.getElementById('revealAnswer');
+
+const animalCards = document.getElementById('animalCards');
+const zooChartCanvas = document.getElementById('zooChart');
+const zooChartContainer = document.getElementById('zooChartContainer');
+const checkZooBtn = document.getElementById('checkZooBtn');
+const resetZooBtn = document.getElementById('resetZooBtn');
+const zooFeedback = document.getElementById('zooFeedback');
+const zooHint = document.getElementById('zooHint');
+
+const progressFill = document.getElementById('progressFill');
+const progressText = document.getElementById('progressText');
+
+const finishBtn = document.getElementById('finishBtn');
+const examStatus = document.getElementById('examStatus');
+
+const resultOverlay = document.getElementById('resultOverlay');
+const resultEmoji = document.getElementById('resultEmoji');
+const resultTitle = document.getElementById('resultTitle');
+const resultScore = document.getElementById('resultScore');
+const resultMessage = document.getElementById('resultMessage');
+const resultDetails = document.getElementById('resultDetails');
+const tryAgainBtn = document.getElementById('tryAgainBtn');
+const closeResultBtn = document.getElementById('closeResultBtn');
+
+/* ============================================================
+   Login
+============================================================ */
+loginBtn.addEventListener('click', handleLogin);
+loginPass.addEventListener('keydown', e => { if (e.key === 'Enter') handleLogin(); });
+loginUser.addEventListener('keydown', e => { if (e.key === 'Enter') loginPass.focus(); });
+
+function handleLogin() {
+  const user = loginUser.value.trim();
+  const pass = loginPass.value.trim();
+  if (!user || !pass) { loginError.textContent = t('loginErrorEmpty'); return; }
+
+  const valid = VALID_USERS.find(u => u.username === user && u.password === pass);
+  if (valid) {
+    currentUser = user;
+    loginError.textContent = '';
+    loginWrapper.style.display = 'none';
+    appContainer.classList.add('visible');
+    welcomeMsg.textContent = t('welcomeUser')(user.split('@')[0]);
+    launchConfetti(80);
+    initApp();
+  } else {
+    loginError.textContent = t('loginErrorWrong');
+    loginPass.value = '';
+  }
+}
+
+logoutBtn.addEventListener('click', () => {
+  currentUser = '';
+  appContainer.classList.remove('visible');
+  loginWrapper.style.display = 'flex';
+  loginUser.value = '';
+  loginPass.value = '';
+  loginError.textContent = '';
+  resetExamState();
+});
+
+/* ============================================================
+   Place value chart
+============================================================ */
+const placeGroupsDef = [
+  { key: 'billions', places: [{ key: 'hundred', power: 11 }, { key: 'ten', power: 10 }, { key: 'one', power: 9 }] },
+  { key: 'millions', places: [{ key: 'hundred', power: 8 }, { key: 'ten', power: 7 }, { key: 'one', power: 6 }] },
+  { key: 'thousands', places: [{ key: 'hundred', power: 5 }, { key: 'ten', power: 4 }, { key: 'one', power: 3 }] },
+  { key: 'ones', places: [{ key: 'hundred', power: 2 }, { key: 'ten', power: 1 }, { key: 'one', power: 0 }] }
+];
+
+function buildPlaceChart() {
+  chartContainer.innerHTML = '';
+  const gNames = t('placeGroups');
+  const pNames = t('placeNames');
+  placeGroupsDef.forEach(group => {
+    const groupDiv = document.createElement('div');
+    groupDiv.className = 'place-group';
+    const labelDiv = document.createElement('div');
+    labelDiv.className = 'group-label';
+    labelDiv.textContent = gNames[group.key];
+    groupDiv.appendChild(labelDiv);
+    const digitsRow = document.createElement('div');
+    digitsRow.className = 'digits-row';
+    group.places.forEach(place => {
+      const box = document.createElement('div');
+      box.className = 'digit-box';
+      const valSpan = document.createElement('span');
+      valSpan.className = 'digit-value';
+      valSpan.id = `digit-${place.power}`;
+      valSpan.textContent = '0';
+      const nameSpan = document.createElement('span');
+      nameSpan.className = 'place-name';
+      nameSpan.textContent = pNames[place.key];
+      box.appendChild(valSpan);
+      box.appendChild(nameSpan);
+      digitsRow.appendChild(box);
+    });
+    groupDiv.appendChild(digitsRow);
+    chartContainer.appendChild(groupDiv);
+  });
+}
+
+/* ============================================================
+   Number helpers (English words always)
+============================================================ */
+function numberToEnglishWords(num) {
+  if (num === 0) return ['zero'];
+  const ones = ['', 'one','two','three','four','five','six','seven','eight','nine',
+    'ten','eleven','twelve','thirteen','fourteen','fifteen','sixteen','seventeen','eighteen','nineteen'];
+  const tens = ['', '', 'twenty','thirty','forty','fifty','sixty','seventy','eighty','ninety'];
+
+  function convert(n) {
+    if (n === 0) return [];
+    let words = [];
+    if (n >= 100) {
+      words.push(ones[Math.floor(n / 100)], 'hundred');
+      n %= 100;
+    }
+    if (n >= 20) {
+      const t10 = Math.floor(n / 10);
+      const o = n % 10;
+      if (o > 0) words.push(tens[t10] + '-' + ones[o]);
+      else words.push(tens[t10]);
+    } else if (n > 0) {
+      words.push(ones[n]);
+    }
+    return words;
+  }
+
+  const billion = Math.floor(num / 1_000_000_000);
+  const million = Math.floor((num % 1_000_000_000) / 1_000_000);
+  const thousand = Math.floor((num % 1_000_000) / 1000);
+  const remainder = num % 1000;
+
+  const parts = [];
+  if (billion > 0) parts.push(...convert(billion), 'billion');
+  if (million > 0) parts.push(...convert(million), 'million');
+  if (thousand > 0) parts.push(...convert(thousand), 'thousand');
+  if (remainder > 0) parts.push(...convert(remainder));
+  return parts;
+}
+
+function numberToEnglish(num) {
+  return numberToEnglishWords(num).join(' ');
+}
+
+function expandedForm(num) {
+  if (num === 0) return '0';
+  const numStr = num.toString();
+  const parts = [];
+  const len = numStr.length;
+  for (let i = 0; i < len; i++) {
+    const digit = parseInt(numStr[i]);
+    if (digit === 0) continue;
+    const placeValue = Math.pow(10, len - i - 1);
+    parts.push((digit * placeValue).toLocaleString('en-US'));
+  }
+  return parts.join(' + ');
+}
+
+/* ============================================================
+   English builder
+============================================================ */
+function buildWordBank() {
+  const correctWords = numberToEnglishWords(currentNumber);
+  const wordsWithCommas = [];
+  for (let i = 0; i < correctWords.length; i++) {
+    wordsWithCommas.push(correctWords[i]);
+    if (['billion', 'million', 'thousand'].includes(correctWords[i]) && i < correctWords.length - 1) {
+      wordsWithCommas.push(',');
+    }
+  }
+
+  const bankSet = new Map();
+  wordsWithCommas.forEach(w => {
+    bankSet.set(w, (bankSet.get(w) || 0) + 1);
+  });
+
+  const distractors = ['hundred', 'thousand', 'million', 'billion', 'ten', 'twenty', 'thirty',
+    'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety', 'one', 'two', 'three', 'four',
+    'five', 'six', 'seven', 'eight', 'nine', 'zero'];
+  const presentWords = new Set([...bankSet.keys()]);
+  let distractorsAdded = 0;
+  while (distractorsAdded < 4) {
+    const d = distractors[Math.floor(Math.random() * distractors.length)];
+    if (!presentWords.has(d) && d !== ',') {
+      bankSet.set(d, (bankSet.get(d) || 0) + 1);
+      distractorsAdded++;
+    }
+  }
+
+  wordBankWords = [];
+  wordIdCounter = 0;
+  bankSet.forEach((count, word) => {
+    for (let i = 0; i < count; i++) {
+      wordBankWords.push({ id: 'w' + (wordIdCounter++), word, placed: false });
+    }
+  });
+
+  for (let i = wordBankWords.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [wordBankWords[i], wordBankWords[j]] = [wordBankWords[j], wordBankWords[i]];
+  }
+
+  placedWords = [];
+  renderBuilder();
+}
+
+function renderBuilder() {
+  wordBank.innerHTML = '';
+  wordBankWords.forEach(w => {
+    if (w.placed) return;
+    const chip = document.createElement('div');
+    chip.className = 'word-chip' + (w.word === ',' ? ' comma' : '');
+    chip.textContent = w.word === ',' ? '،' : w.word;
+    chip.dataset.id = w.id;
+    chip.draggable = true;
+    chip.addEventListener('click', () => placeWord(w.id));
+    chip.addEventListener('dragstart', (e) => e.dataTransfer.setData('text/plain', w.id));
+    wordBank.appendChild(chip);
+  });
+
+  if (wordBank.children.length === 0) {
+    wordBank.innerHTML = '<div style="color:#94a3b8;font-weight:600;padding:0.4rem;">🎉</div>';
+  }
+
+  buildArea.innerHTML = '';
+  placedWords.forEach(w => {
+    const chip = document.createElement('div');
+    chip.className = 'word-chip placed' + (w.word === ',' ? ' comma' : '');
+    chip.textContent = w.word === ',' ? '،' : w.word;
+    chip.dataset.id = w.id;
+    chip.draggable = true;
+    chip.addEventListener('click', () => removeWord(w.id));
+    chip.addEventListener('dragstart', (e) => e.dataTransfer.setData('text/plain', w.id));
+    buildArea.appendChild(chip);
+  });
+}
+
+function placeWord(id) {
+  const w = wordBankWords.find(x => x.id === id);
+  if (!w || w.placed) return;
+  w.placed = true;
+  placedWords.push(w);
+  renderBuilder();
+}
+function removeWord(id) {
+  const idx = placedWords.findIndex(x => x.id === id);
+  if (idx === -1) return;
+  placedWords[idx].placed = false;
+  placedWords.splice(idx, 1);
+  renderBuilder();
+}
+
+buildArea.addEventListener('dragover', (e) => {
+  e.preventDefault();
+  buildArea.style.background = '#dbeafe';
+});
+buildArea.addEventListener('dragleave', () => { buildArea.style.background = ''; });
+buildArea.addEventListener('drop', (e) => {
+  e.preventDefault();
+  buildArea.style.background = '';
+  const id = e.dataTransfer.getData('text/plain');
+  if (!id) return;
+  const w = wordBankWords.find(x => x.id === id);
+  if (w && !w.placed) placeWord(id);
+});
+wordBank.addEventListener('dragover', (e) => e.preventDefault());
+wordBank.addEventListener('drop', (e) => {
+  e.preventDefault();
+  const id = e.dataTransfer.getData('text/plain');
+  if (!id) return;
+  removeWord(id);
+});
+
+undoBuildBtn.addEventListener('click', () => {
+  if (placedWords.length === 0) return;
+  removeWord(placedWords[placedWords.length - 1].id);
+});
+
+resetBuildBtn.addEventListener('click', () => {
+  buildWordBank();
+  builderFeedback.textContent = t('builderFeedbackDefault');
+  builderFeedback.className = 'builder-feedback';
+  revealBox.classList.remove('visible');
+  buildArea.classList.remove('correct', 'wrong');
+  examState.englishBuiltCorrect = false;
+  examState.englishAttempts = 0;
+  updateProgress();
+});
+
+checkBuildBtn.addEventListener('click', (e) => {
+  if (placedWords.length === 0) {
+    builderFeedback.textContent = t('builderFeedbackEmpty');
+    builderFeedback.className = 'builder-feedback fail';
+    return;
+  }
+  examState.englishAttempts++;
+
+  const userWords = placedWords.map(w => w.word);
+  const correctWords = numberToEnglishWords(currentNumber);
+  const correctWithCommas = [];
+  for (let i = 0; i < correctWords.length; i++) {
+    correctWithCommas.push(correctWords[i]);
+    if (['billion', 'million', 'thousand'].includes(correctWords[i]) && i < correctWords.length - 1) {
+      correctWithCommas.push(',');
+    }
+  }
+
+  const isCorrect = userWords.join(' ').toLowerCase() === correctWithCommas.join(' ').toLowerCase();
+
+  revealAnswer.textContent = numberToEnglish(currentNumber);
+  revealBox.classList.add('visible');
+
+  if (isCorrect) {
+    buildArea.classList.remove('wrong');
+    buildArea.classList.add('correct');
+    builderFeedback.textContent = t('builderFeedbackCorrect');
+    builderFeedback.className = 'builder-feedback success';
+    examState.englishBuiltCorrect = true;
+    launchConfetti(50);
+    starBurst(e.clientX, e.clientY);
+    updateProgress();
+  } else {
+    buildArea.classList.remove('correct');
+    buildArea.classList.add('wrong');
+    builderFeedback.textContent = t('builderFeedbackWrong');
+    builderFeedback.className = 'builder-feedback fail';
+  }
+});
+
+/* ============================================================
+   Listen
+============================================================ */
+listenBtn.addEventListener('click', () => {
+  if (!('speechSynthesis' in window)) {
+    builderFeedback.textContent = t('speechNotSupported');
+    return;
+  }
+  window.speechSynthesis.cancel();
+  const text = numberToEnglish(currentNumber);
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = 'en-US';
+  utterance.rate = 0.4;
+
+  utterance.onstart = () => {
+    builderFeedback.textContent = t('listening');
+    builderFeedback.className = 'builder-feedback';
+  };
+  utterance.onend = () => {
+    builderFeedback.textContent = t('listenedNowBuild');
+    builderFeedback.className = 'builder-feedback success';
+    examState.englishListened = true;
+    updateProgress();
+  };
+  window.speechSynthesis.speak(utterance);
+});
+
+/* ============================================================
+   Update number
+============================================================ */
+function updateAllFromNumber() {
+  for (let power = 0; power <= 11; power++) {
+    const digitSpan = document.getElementById(`digit-${power}`);
+    if (!digitSpan) continue;
+    digitSpan.textContent = Math.floor(currentNumber / Math.pow(10, power)) % 10;
+  }
+  const formatted = currentNumber.toLocaleString('en-US');
+  currentNumberDisplay.textContent = formatted;
+  calcDisplay.textContent = formatted;
+  expandedFormEl.textContent = expandedForm(currentNumber);
+
+  buildWordBank();
+
+  revealBox.classList.remove('visible');
+  buildArea.classList.remove('correct', 'wrong');
+  builderFeedback.textContent = t('builderFeedbackDefault');
+  builderFeedback.className = 'builder-feedback';
+  examState.englishBuiltCorrect = false;
+  examState.englishAttempts = 0;
+
+  generateQuizQuestion();
+}
+
+function setNumber(newNum) {
+  if (newNum < 0) newNum = 0;
+  if (newNum > 999_999_999_999) newNum = 999_999_999_999;
+  currentNumber = Math.floor(newNum);
+  updateAllFromNumber();
+  calcMessage.textContent = t('calcMessageSet')(currentNumber.toLocaleString('en-US'));
+}
+
+/* ============================================================
+   Quiz
+============================================================ */
+let currentQuizCorrectAnswer = '';
+let currentQuizSelected = null;
+let currentQuizPower = 0;
+
+function generateQuizQuestion() {
+  let power = Math.floor(Math.random() * 12);
+  let digit = Math.floor(currentNumber / Math.pow(10, power)) % 10;
+  let attempts = 0;
+  while (digit === 0 && attempts < 20) {
+    power = Math.floor(Math.random() * 12);
+    digit = Math.floor(currentNumber / Math.pow(10, power)) % 10;
+    attempts++;
+  }
+  currentQuizPower = power;
+
+  const placeNames = t('quizPlaceNames');
+  const placeName = placeNames[power];
+
+  quizQuestion.textContent = t('quizQuestion')(digit, currentNumber.toLocaleString('en-US'));
+  currentQuizCorrectAnswer = placeName;
+
+  const optionsSet = new Set([placeName]);
+  while (optionsSet.size < 4) optionsSet.add(placeNames[Math.floor(Math.random() * placeNames.length)]);
+  const optionsArray = Array.from(optionsSet);
+  for (let i = optionsArray.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [optionsArray[i], optionsArray[j]] = [optionsArray[j], optionsArray[i]];
+  }
+
+  quizOptions.innerHTML = '';
+  currentQuizSelected = null;
+  quizFeedback.textContent = '';
+
+  optionsArray.forEach(opt => {
+    const optDiv = document.createElement('div');
+    optDiv.className = 'quiz-option';
+    optDiv.dataset.value = opt;
+    optDiv.innerHTML = `<span>💡</span> ${opt}`;
+    optDiv.addEventListener('click', () => {
+      if (examState.quizAttempted) return;
+      document.querySelectorAll('.quiz-option').forEach(el => el.classList.remove('selected'));
+      optDiv.classList.add('selected');
+      currentQuizSelected = opt;
+    });
+    quizOptions.appendChild(optDiv);
+  });
+}
+
+checkQuizBtn.addEventListener('click', (e) => {
+  if (!currentQuizSelected) {
+    quizFeedback.textContent = t('quizFeedbackSelect');
+    quizFeedback.className = 'quiz-feedback red-text';
+    return;
+  }
+  if (examState.quizAttempted) return;
+
+  examState.quizAttempted = true;
+  examState.quizTotal++;
+
+  document.querySelectorAll('.quiz-option').forEach(el => {
+    if (el.dataset.value === currentQuizCorrectAnswer) el.classList.add('correct');
+    else if (el.classList.contains('selected')) el.classList.add('wrong');
+    el.style.cursor = 'default';
+  });
+
+  if (currentQuizSelected === currentQuizCorrectAnswer) {
+    quizFeedback.textContent = t('quizFeedbackCorrect');
+    quizFeedback.className = 'quiz-feedback green-text';
+    examState.quizCorrectCount++;
+    starBurst(e.clientX, e.clientY);
+  } else {
+    quizFeedback.textContent = t('quizFeedbackWrong')(currentQuizCorrectAnswer);
+    quizFeedback.className = 'quiz-feedback red-text';
+  }
+  updateProgress();
+
+  setTimeout(() => {
+    if (currentUser) {
+      examState.quizAttempted = false;
+      generateQuizQuestion();
+    }
+  }, 2500);
+});
+
+/* ============================================================
+   Zoo
+============================================================ */
+function buildZooCards() {
+  animalCards.innerHTML = '';
+  zooAnimals.forEach((animal, idx) => {
+    const card = document.createElement('div');
+    card.className = 'animal-card';
+    card.id = `animal-card-${idx}`;
+    const displayName = currentLang === 'ar' ? animal.nameAr : animal.name;
+    card.innerHTML = `
+      <div class="animal-emoji">${animal.emoji}</div>
+      <div class="animal-name">${displayName}</div>
+      <div class="animal-count-display" id="zoo-display-${idx}">${animal.correct}</div>
+    `;
+    card.addEventListener('click', () => {
+      activeAnimalIndex = idx;
+      highlightActiveCard();
+      zooHint.textContent = t('zooHintAnimal')(animal.emoji, displayName);
+      if (zooUserCounts[idx] != null) {
+        setTimeout(() => openFloatingInput(idx), 100);
+      }
+    });
+    animalCards.appendChild(card);
+  });
+  highlightActiveCard();
+}
+
+function highlightActiveCard() {
+  zooAnimals.forEach((_, idx) => {
+    const card = document.getElementById(`animal-card-${idx}`);
+    if (!card) return;
+    card.classList.toggle('active', idx === activeAnimalIndex);
+  });
+}
+
+function renderZooChart() {
+  computeChartScale();
+  const labels = zooAnimals.map(a => a.emoji + ' ' + (currentLang === 'ar' ? a.nameAr : a.name));
+  const values = zooAnimals.map((_, idx) => zooUserCounts[idx] || 0);
+  const colors = ['#f59e0b', '#fbbf24', '#10b981', '#6ec8e8'];
+
+  if (zooChartInstance) zooChartInstance.destroy();
+
+  const annotations = {};
+  zooAnimals.forEach((animal, idx) => {
+    const val = zooUserCounts[idx];
+    if (val == null) return;
+    annotations[`line-${idx}`] = {
+      type: 'line',
+      yMin: val, yMax: val,
+      xMin: idx - 0.45, xMax: idx + 0.45,
+      borderColor: '#ef4444',
+      borderWidth: 3,
+      borderDash: [6, 4],
+      label: {
+        display: true,
+        content: `${val} ✏️`,
+        position: 'end',
+        backgroundColor: '#f59e0b',
+        color: '#fff',
+        font: { weight: 'bold', size: 12 },
+        padding: 5,
+        borderRadius: 8
+      }
+    };
+  });
+
+  zooChartInstance = new Chart(zooChartCanvas.getContext('2d'), {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [{
+        label: currentLang === 'ar' ? 'إجابتك' : 'Your Answer',
+        data: values,
+        backgroundColor: colors,
+        borderRadius: 10,
+        borderSkipped: false,
+        borderWidth: 2,
+        borderColor: '#fff'
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      animation: { duration: 500 },
+      onClick: (event, elements, chart) => {
+        const yScale = chart.scales.y;
+        const canvasY = event.native.offsetY;
+        const value = yScale.getValueForPixel(canvasY);
+        if (value == null) return;
+        const rounded = Math.max(0, Math.round(value / zooChartStep) * zooChartStep);
+        zooUserCounts[activeAnimalIndex] = rounded;
+        updateZooDisplay(activeAnimalIndex);
+        renderZooChart();
+        setTimeout(() => openFloatingInput(activeAnimalIndex), 150);
+      },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#1e293b',
+          titleFont: { weight: 'bold', size: 13 },
+          bodyFont: { weight: 'bold', size: 12 },
+          padding: 10,
+          cornerRadius: 8,
+          callbacks: { label: (ctx) => `${currentLang === 'ar' ? 'إجابتك' : 'Your answer'}: ${ctx.raw}` }
+        },
+        annotation: { annotations }
+      },
+      scales: {
+        y: {
+          beginAtZero: true, max: zooChartMax,
+          ticks: { font: { size: 12, weight: 'bold' }, stepSize: zooChartStep, color: '#475569' },
+          title: {
+            display: true,
+            text: currentLang === 'ar' ? '🐾 عدد الحيوانات' : '🐾 Number of Animals',
+            font: { size: 13, weight: 'bold' }, color: '#475569'
+          },
+          grid: { color: '#f1f5f9' }
+        },
+        x: {
+          ticks: { font: { size: 13, weight: 'bold' }, color: '#334155' },
+          grid: { display: false }
+        }
+      }
+    }
+  });
+}
+
+function openFloatingInput(idx) {
+  closeFloatingInput();
+  if (!zooChartInstance) return;
+  const val = zooUserCounts[idx];
+  if (val == null) return;
+
+  const chart = zooChartInstance;
+  const xPixel = chart.scales.x.getPixelForValue(idx);
+  const yPixel = chart.scales.y.getPixelForValue(val);
+
+  const containerRect = zooChartContainer.getBoundingClientRect();
+  const canvasRect = zooChartCanvas.getBoundingClientRect();
+  const offsetX = canvasRect.left - containerRect.left;
+  const offsetY = canvasRect.top - containerRect.top;
+
+  const input = document.createElement('input');
+  input.type = 'number';
+  input.className = 'chart-edit-input';
+  input.value = val;
+  input.min = 0;
+  input.style.left = (offsetX + xPixel) + 'px';
+  input.style.top = (offsetY + yPixel - 20) + 'px';
+
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') commitFloatingInput(idx, input.value);
+    else if (e.key === 'Escape') closeFloatingInput();
+  });
+  input.addEventListener('blur', () => {
+    setTimeout(() => {
+      if (floatingInput === input) commitFloatingInput(idx, input.value);
+    }, 100);
+  });
+
+  zooChartContainer.appendChild(input);
+  floatingInput = input;
+  input.focus();
+  input.select();
+}
+
+function commitFloatingInput(idx, rawValue) {
+  const num = parseInt(rawValue);
+  if (!isNaN(num) && num >= 0) {
+    zooUserCounts[idx] = num;
+    updateZooDisplay(idx);
+  }
+  closeFloatingInput();
+  renderZooChart();
+}
+
+function closeFloatingInput() {
+  if (floatingInput && floatingInput.parentNode) floatingInput.parentNode.removeChild(floatingInput);
+  floatingInput = null;
+}
+
+function updateZooDisplay(idx) {
+  const display = document.getElementById(`zoo-display-${idx}`);
+  if (display) display.classList.remove('correct', 'wrong');
+}
+
+checkZooBtn.addEventListener('click', (e) => {
+  examState.zooAttempted = true;
+  let correct = 0;
+  zooAnimals.forEach((animal, idx) => {
+    const display = document.getElementById(`zoo-display-${idx}`);
+    display.classList.remove('correct', 'wrong');
+    if (zooUserCounts[idx] === animal.correct) {
+      display.classList.add('correct');
+      correct++;
+    } else {
+      display.classList.add('wrong');
+    }
+  });
+  examState.zooCorrectCount = correct;
+
+  if (correct === zooAnimals.length) {
+    zooFeedback.textContent = t('zooFeedbackPerfect')(correct);
+    zooFeedback.className = 'zoo-feedback green-text';
+    launchConfetti(120);
+    starBurst(e.clientX, e.clientY);
+  } else {
+    zooFeedback.textContent = t('zooFeedbackPartial')(correct, zooAnimals.length);
+    zooFeedback.className = 'zoo-feedback red-text';
+  }
+  updateProgress();
+});
+
+resetZooBtn.addEventListener('click', () => {
+  closeFloatingInput();
+  generateRandomZooAnimals();
+  zooUserCounts = zooAnimals.map(() => null);
+  activeAnimalIndex = 0;
+  buildZooCards();
+  renderZooChart();
+  zooFeedback.textContent = '';
+  zooHint.textContent = t('zooHintReset');
+  examState.zooAttempted = false;
+  examState.zooCorrectCount = 0;
+  updateProgress();
+});
+
+/* ============================================================
+   Progress & score
+============================================================ */
+function updateProgress() {
+  const quizPart = Math.min(examState.quizCorrectCount, 5) / 5 * 35;
+  const zooPart = (examState.zooAttempted ? examState.zooCorrectCount / examState.zooTotal : 0) * 40;
+  const englishPart = ((examState.englishListened ? 1 : 0) + (examState.englishBuiltCorrect ? 1 : 0)) / 2 * 25;
+  const total = Math.round(quizPart + zooPart + englishPart);
+  progressFill.style.width = total + '%';
+  progressText.textContent = total + '%';
+}
+
+function calculateFinalScore() {
+  const quizScore = Math.min(examState.quizCorrectCount, 5) * 7;
+  const zooScore = examState.zooAttempted ? Math.round((examState.zooCorrectCount / examState.zooTotal) * 40) : 0;
+  const englishScore = ((examState.englishListened ? 1 : 0) + (examState.englishBuiltCorrect ? 1 : 0)) / 2 * 25;
+  return Math.round(quizScore + zooScore + englishScore);
+}
+
+finishBtn.addEventListener('click', () => {
+  if (examState.quizCorrectCount === 0 && !examState.zooAttempted && !examState.englishListened) {
+    examStatus.textContent = t('finishWarning');
+    examStatus.style.color = '#dc2626';
+    return;
+  }
+  showResult();
+});
+
+function showResult() {
+  const score = calculateFinalScore();
+  examState.totalScore = score;
+
+  let emoji = '🎉', titleKey = 'good', messageKey = 'good';
+  if (score >= 90) { emoji = '🏆'; titleKey = 'outstanding'; messageKey = 'outstanding'; }
+  else if (score >= 70) { emoji = '🌟'; titleKey = 'great'; messageKey = 'great'; }
+  else if (score >= 50) { emoji = '👍'; titleKey = 'good'; messageKey = 'good'; }
+  else { emoji = '📚'; titleKey = 'keep'; messageKey = 'keep'; }
+
+  resultEmoji.textContent = emoji;
+  resultTitle.textContent = t('resultTitles')[titleKey];
+  resultScore.textContent = `${score} / 100`;
+  resultMessage.textContent = t('resultMessages')[messageKey];
+
+  const quizPts = Math.min(examState.quizCorrectCount, 5) * 7;
+  const zooPts = examState.zooAttempted ? Math.round((examState.zooCorrectCount / examState.zooTotal) * 40) : 0;
+  const engPts = Math.round(((examState.englishListened ? 1 : 0) + (examState.englishBuiltCorrect ? 1 : 0)) / 2 * 25);
+
+  resultDetails.innerHTML = `
+    <div>${t('resultStudent')} <span>${currentUser.split('@')[0]}</span></div>
+    <div>${t('resultQuiz')} <span>${Math.min(examState.quizCorrectCount, 5)} / 5 ${t('resultCorrect')} (${quizPts} ${t('resultPts')})</span></div>
+    <div>${t('resultZoo')} <span>${examState.zooCorrectCount} / ${examState.zooTotal} ${t('resultCorrect')} (${zooPts} ${t('resultPts')})</span></div>
+    <div>${t('resultEnglish')} <span>${(examState.englishListened ? 1 : 0) + (examState.englishBuiltCorrect ? 1 : 0)} / 2 ${t('resultSkills')} (${engPts} ${t('resultPts')})</span></div>
+    <div>${t('resultDate')} <span>${new Date().toLocaleString('en-US')}</span></div>
+  `;
+
+  resultOverlay.classList.add('visible');
+  launchConfetti(150);
+  sendResultEmail(score, emoji, resultTitle.textContent);
+}
+
+/* ============================================================
+   Email
+============================================================ */
+function sendResultEmail(score, emoji, title) {
+  const EMAILJS_SERVICE_ID = 'YOUR_SERVICE_ID';
+  const EMAILJS_TEMPLATE_ID = 'YOUR_TEMPLATE_ID';
+  const EMAILJS_PUBLIC_KEY = 'YOUR_PUBLIC_KEY';
+
+  if (EMAILJS_SERVICE_ID === 'YOUR_SERVICE_ID') {
+    console.log('📧 Email not sent — EmailJS not configured.');
+    return;
+  }
+  const templateParams = {
+    to_email: 'marinaaymanae777@gmail.com',
+    student_name: currentUser,
+    score: score + ' / 100',
+    result_title: title,
+    emoji,
+    quiz_score: `${Math.min(examState.quizCorrectCount, 5)} / 5`,
+    zoo_score: `${examState.zooCorrectCount} / ${examState.zooTotal}`,
+    english_score: `${(examState.englishListened ? 1 : 0) + (examState.englishBuiltCorrect ? 1 : 0)} / 2`,
+    exam_date: new Date().toLocaleString('en-US'),
+    message: `Student ${currentUser} scored ${score}/100 on the Large Numbers exam.`
+  };
+  emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams, EMAILJS_PUBLIC_KEY)
+    .then(() => console.log('✅ Email sent!'))
+    .catch(err => console.error('❌ Email error:', err));
+}
+
+/* ============================================================
+   Result modal buttons
+============================================================ */
+closeResultBtn.addEventListener('click', () => resultOverlay.classList.remove('visible'));
+
+tryAgainBtn.addEventListener('click', () => {
+  resultOverlay.classList.remove('visible');
+  resetExamState();
+  currentNumber = 1234567890;
+  updateAllFromNumber();
+  resetZooBtn.click();
+  revealBox.classList.remove('visible');
+  examStatus.textContent = t('examStatusDefault');
+  examStatus.style.color = '#475569';
+  updateProgress();
+});
+
+function resetExamState() {
+  examState.quizAttempted = false;
+  examState.quizCorrectCount = 0;
+  examState.quizTotal = 0;
+  examState.zooAttempted = false;
+  examState.zooCorrectCount = 0;
+  examState.englishListened = false;
+  examState.englishBuiltCorrect = false;
+  examState.englishAttempts = 0;
+  examState.totalScore = 0;
+  updateProgress();
+}
+
+/* ============================================================
+   Init
+============================================================ */
+function initApp() {
+  buildPlaceChart();
+  generateRandomZooAnimals();
+  zooUserCounts = zooAnimals.map(() => null);
+  activeAnimalIndex = 0;
+  buildZooCards();
+  updateAllFromNumber();
+  renderZooChart();
+  resetExamState();
+}
+
+// الأزرار تُربط مرة واحدة فقط (خارج initApp لتجنب تكرار المستمعين)
+btnHundredMillion.addEventListener('click', () => setNumber(100_000_000));
+btnBillion.addEventListener('click', () => setNumber(1_000_000_000));
+btnRandom.addEventListener('click', () => setNumber(Math.floor(Math.random() * 999_999_999_999) + 1_000_000));
+btnIncrement.addEventListener('click', () => setNumber(currentNumber + 1_000_000));
+btnDecrement.addEventListener('click', () => setNumber(Math.max(0, currentNumber - 1_000_000)));
+
+calcAddMillion.addEventListener('click', () => setNumber(currentNumber + 1_000_000));
+calcSubMillion.addEventListener('click', () => setNumber(Math.max(0, currentNumber - 1_000_000)));
+calcAddBillion.addEventListener('click', () => setNumber(currentNumber + 1_000_000_000));
+calcReset.addEventListener('click', () => setNumber(1234567890));
+
+window.addEventListener('resize', () => {
+  if (floatingInput) closeFloatingInput();
+});
+
+if (typeof emailjs !== 'undefined') {
+  emailjs.init({ publicKey: 'YOUR_PUBLIC_KEY' });
+}
+
+// التهيئة الأولى للغة
+applyLanguage('en');
+</script>
+</body>
+</html>

@@ -1,749 +1,2027 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مغامر الرياضيات - الصف الرابع الابتدائي</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MathKids - Learn • Play • Grow</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+/* ============ RESET & VARIABLES ============ */
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        brand: {
-                            purple: '#7C3AED', pink: '#EC4899', blue: '#0EA5E9',
-                            yellow: '#F59E0B', green: '#10B981', bg: '#F3F4F6'
-                        }
-                    },
-                    fontFamily: { cairo: ['Cairo', 'sans-serif'] },
-                    animation: {
-                        'float': 'float 3s ease-in-out infinite',
-                        'bounce-slow': 'bounce 2s infinite',
-                        'pulse-glow': 'pulseGlow 2s infinite',
-                    },
-                    keyframes: {
-                        float: {
-                            '0%, 100%': { transform: 'translateY(0px)' },
-                            '50%': { transform: 'translateY(-10px)' },
-                        },
-                        pulseGlow: {
-                            '0%, 100%': { boxShadow: '0 0 15px rgba(124, 58, 237, 0.5)' },
-                            '50%': { boxShadow: '0 0 25px rgba(236, 72, 153, 0.8)' }
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        body {
-            font-family: 'Cairo', sans-serif;
-            background-color: #fef6ff;
-            background-image: 
-                radial-gradient(circle at 20% 20%, rgba(236, 72, 153, 0.08) 0%, transparent 40%),
-                radial-gradient(circle at 80% 80%, rgba(124, 58, 237, 0.08) 0%, transparent 40%),
-                radial-gradient(#e2e8f0 1.5px, transparent 1.5px);
-            background-size: 100% 100%, 100% 100%, 24px 24px;
-        }
-        header {
-            background: linear-gradient(135deg, rgba(255,255,255,0.98), rgba(254,246,255,0.98)) !important;
-            border-bottom: 4px solid transparent !important;
-            border-image: linear-gradient(90deg, #7C3AED, #EC4899, #F59E0B, #10B981) 1 !important;
-        }
-        .glass-card {
-            background: rgba(255, 255, 255, 0.98);
-            backdrop-filter: blur(10px);
-            border: 2px solid rgba(255, 255, 255, 0.8);
-            border-radius: 2rem;
-            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-            position: relative;
-            overflow: hidden;
-        }
-        .glass-card::before {
-            content: '';
-            position: absolute;
-            top: 0; right: 0;
-            width: 80px; height: 80px;
-            background: radial-gradient(circle, rgba(124,58,237,0.08), transparent 70%);
-            border-radius: 0 0 0 100%;
-        }
-        .glass-card:hover {
-            transform: translateY(-3px) scale(1.005);
-            box-shadow: 0 12px 28px rgba(124, 58, 237, 0.15) !important;
-            border-color: rgba(124, 58, 237, 0.3);
-        }
-        .btn-fun {
-            background: linear-gradient(135deg, #7C3AED 0%, #EC4899 50%, #F59E0B 100%);
-            background-size: 200% 200%;
-            animation: gradientShift 3s ease infinite;
-            box-shadow: 0 6px 0 rgba(124, 58, 237, 0.35), 0 8px 20px rgba(236, 72, 153, 0.3);
-            transition: all 0.15s ease;
-        }
-        .btn-fun:hover { transform: translateY(-2px); box-shadow: 0 8px 0 rgba(124,58,237,0.35), 0 12px 24px rgba(236,72,153,0.4); }
-        .btn-fun:active { transform: translateY(3px); box-shadow: 0 2px 0 rgba(124,58,237,0.35), 0 4px 10px rgba(236,72,153,0.3); }
-        @keyframes gradientShift {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-        }
-        input[type="number"] {
-            background: linear-gradient(135deg, #faf5ff, #fef6ff);
-            transition: all 0.25s ease;
-        }
-        input[type="number"]:focus {
-            transform: scale(1.02);
-            box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.15);
-        }
-        .shake {
-            animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
-            border-color: #ef4444 !important;
-            background: #fef2f2 !important;
-        }
-        @keyframes shake {
-            10%, 90% { transform: translate3d(-2px, 0, 0); }
-            20%, 80% { transform: translate3d(3px, 0, 0); }
-            30%, 50%, 70% { transform: translate3d(-6px, 0, 0); }
-            40%, 60% { transform: translate3d(6px, 0, 0); }
-        }
-        .pop-success {
-            animation: popSuccess 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-            border-color: #10b981 !important;
-            background: linear-gradient(135deg, #ecfdf5, #f0fdf4) !important;
-        }
-        @keyframes popSuccess {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.03); }
-            100% { transform: scale(1); }
-        }
-        .floating-star {
-            position: fixed;
-            font-size: 2rem;
-            pointer-events: none;
-            z-index: 9999;
-            animation: floatUp 1.2s ease-out forwards;
-        }
-        @keyframes floatUp {
-            0% { transform: translateY(0) scale(0.5) rotate(0deg); opacity: 1; }
-            100% { transform: translateY(-150px) scale(1.5) rotate(360deg); opacity: 0; }
-        }
-        #overall-progress {
-            background: linear-gradient(90deg, #0EA5E9, #7C3AED, #EC4899, #F59E0B, #10B981);
-            background-size: 300% 100%;
-            animation: progressGlow 3s linear infinite;
-            box-shadow: 0 0 12px rgba(236, 72, 153, 0.6);
-        }
-        @keyframes progressGlow {
-            0% { background-position: 0% 50%; }
-            100% { background-position: 300% 50%; }
-        }
-        .star-glow { filter: drop-shadow(0 0 8px #f59e0b); }
-        #sections-nav button { transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1); }
-        #sections-nav button:hover { transform: translateX(-4px); box-shadow: 0 4px 12px rgba(124, 58, 237, 0.15); }
-        #section-header::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.15), transparent 60%);
-            pointer-events: none;
-        }
-        ::-webkit-scrollbar { width: 10px; }
-        ::-webkit-scrollbar-track { background: #faf5ff; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb {
-            background: linear-gradient(180deg, #7C3AED, #EC4899);
-            border-radius: 10px;
-            border: 2px solid #faf5ff;
-        }
-        ::-webkit-scrollbar-thumb:hover { background: linear-gradient(180deg, #EC4899, #F59E0B); }
-        @keyframes floaty {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-8px); }
-        }
-        .floaty { animation: floaty 3s ease-in-out infinite; }
-        .emoji-bounce {
-            display: inline-block;
-            animation: emojiBounce 1.5s ease-in-out infinite;
-        }
-        @keyframes emojiBounce {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            25% { transform: translateY(-4px) rotate(-5deg); }
-            75% { transform: translateY(-4px) rotate(5deg); }
-        }
-    </style>
+:root {
+  --purple: #7C5CFC;
+  --purple-dark: #5B3FD6;
+  --purple-light: #EDE8FF;
+  --pink: #FF6B9D;
+  --yellow: #FFD93D;
+  --orange: #FF9F43;
+  --green: #4CD97B;
+  --blue: #4A9EFF;
+  --red: #FF5C5C;
+  --dark: #2D2A5B;
+  --gray: #6B6B8A;
+  --bg: #F8F7FF;
+  --white: #ffffff;
+  --shadow-sm: 0 4px 15px rgba(124, 92, 252, 0.08);
+  --shadow-md: 0 10px 30px rgba(124, 92, 252, 0.12);
+  --shadow-lg: 0 20px 50px rgba(124, 92, 252, 0.18);
+  --radius: 20px;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Nunito', sans-serif;
+  background: var(--bg);
+  color: var(--dark);
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+
+h1, h2, h3, h4, h5 { font-family: 'Baloo 2', cursive; font-weight: 700; line-height: 1.2; }
+
+a { text-decoration: none; color: inherit; }
+ul { list-style: none; }
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* ============ NAVBAR ============ */
+.navbar {
+  background: rgba(255,255,255,0.98);
+  backdrop-filter: blur(12px);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  padding: 14px 0;
+  box-shadow: 0 2px 20px rgba(0,0,0,0.04);
+  animation: slideDown 0.6s ease;
+}
+
+@keyframes slideDown {
+  from { transform: translateY(-100%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.nav-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'Baloo 2', cursive;
+  font-weight: 800;
+  font-size: 1.5rem;
+  color: var(--dark);
+}
+
+.logo-icon {
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, var(--yellow), var(--orange));
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 1.3rem;
+  animation: rotateStar 4s ease-in-out infinite;
+  box-shadow: 0 4px 10px rgba(255,159,67,0.4);
+}
+
+@keyframes rotateStar {
+  0%, 100% { transform: rotate(0) scale(1); }
+  50% { transform: rotate(20deg) scale(1.1); }
+}
+
+.logo .math { color: var(--purple); }
+.logo .kids { color: var(--dark); }
+
+.nav-links {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.nav-links > li > a {
+  padding: 10px 16px;
+  border-radius: 12px;
+  font-weight: 700;
+  color: var(--dark);
+  font-size: 0.92rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.3s ease;
+  position: relative;
+  cursor: pointer;
+}
+
+.nav-links > li > a:hover {
+  color: var(--purple);
+  background: var(--purple-light);
+}
+
+.nav-links > li > a.active {
+  color: var(--purple);
+}
+
+.nav-links > li > a.active::after {
+  content: '';
+  position: absolute;
+  bottom: 2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 30px;
+  height: 3px;
+  background: var(--purple);
+  border-radius: 3px;
+}
+
+.login-btn {
+  background: var(--purple);
+  color: white !important;
+  padding: 10px 24px;
+  border-radius: 30px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 6px 18px rgba(124,92,252,0.35);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.login-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(124,92,252,0.5);
+  background: var(--purple-dark);
+}
+
+/* Dropdown */
+.dropdown { position: relative; }
+.dropdown-menu {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 0;
+  background: white;
+  border-radius: 16px;
+  box-shadow: var(--shadow-lg);
+  padding: 10px;
+  min-width: 180px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: all 0.3s ease;
+  z-index: 100;
+}
+.dropdown:hover .dropdown-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+.dropdown-menu a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--dark);
+  transition: all 0.25s;
+}
+.dropdown-menu a:hover {
+  background: var(--purple-light);
+  color: var(--purple);
+  transform: translateX(4px);
+}
+.dropdown-menu a.active {
+  background: var(--purple-light);
+  color: var(--purple);
+}
+
+.mobile-toggle {
+  display: none;
+  font-size: 1.6rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--purple);
+}
+
+/* ============ HERO ============ */
+.hero {
+  position: relative;
+  padding: 50px 0 60px;
+  background: linear-gradient(180deg, #EDE9FF 0%, #F8F7FF 100%);
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -100px; right: -100px;
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(255,217,61,0.4), transparent 70%);
+  border-radius: 50%;
+  animation: float 8s ease-in-out infinite;
+}
+
+.hero::after {
+  content: '';
+  position: absolute;
+  bottom: -150px; left: -100px;
+  width: 350px; height: 350px;
+  background: radial-gradient(circle, rgba(124,92,252,0.2), transparent 70%);
+  border-radius: 50%;
+  animation: float 10s ease-in-out infinite reverse;
+}
+
+@keyframes float {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(30px, -30px); }
+}
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.1fr;
+  gap: 30px;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+}
+
+.hero-content { animation: fadeInLeft 1s ease; }
+
+@keyframes fadeInLeft {
+  from { opacity: 0; transform: translateX(-40px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.hero h1 {
+  font-size: clamp(2.4rem, 5vw, 4rem);
+  font-weight: 800;
+  color: var(--dark);
+  margin-bottom: 18px;
+  line-height: 1.05;
+  font-family: 'Baloo 2', cursive;
+}
+
+.hero h1 .highlight-purple {
+  color: var(--purple);
+  position: relative;
+  display: inline-block;
+}
+
+.hero h1 .highlight-pink {
+  color: var(--pink);
+  position: relative;
+  display: inline-block;
+}
+
+.hero p {
+  font-size: 1.05rem;
+  color: var(--gray);
+  margin-bottom: 28px;
+  max-width: 460px;
+}
+
+.hero-buttons {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-bottom: 32px;
+}
+
+.btn {
+  padding: 14px 26px;
+  border-radius: 40px;
+  font-family: 'Baloo 2', cursive;
+  font-weight: 700;
+  font-size: 1rem;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary {
+  background: var(--purple);
+  color: white;
+  box-shadow: 0 8px 22px rgba(124,92,252,0.4);
+}
+
+.btn-primary:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 30px rgba(124,92,252,0.55);
+}
+
+.btn-outline {
+  background: white;
+  color: var(--dark);
+  border: 2px solid #E8E5FF;
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-outline:hover {
+  transform: translateY(-4px);
+  border-color: var(--purple);
+  color: var(--purple);
+  box-shadow: 0 14px 30px rgba(124,92,252,0.2);
+}
+
+.hero-features {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.hero-features .feat {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--dark);
+  line-height: 1.3;
+}
+
+.hero-features .feat-icon {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: white;
+  display: grid;
+  place-items: center;
+  font-size: 1rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  flex-shrink: 0;
+}
+
+/* Hero Image */
+.hero-image {
+  position: relative;
+  animation: fadeInRight 1s ease;
+}
+
+@keyframes fadeInRight {
+  from { opacity: 0; transform: translateX(40px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.hero-scene {
+  width: 100%;
+  height: 420px;
+  position: relative;
+  border-radius: 30px;
+  overflow: hidden;
+}
+
+/* Sky Background */
+.sky-bg {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, #E8F4FF 0%, #F0F8FF 40%, #FFF4D6 100%);
+}
+
+/* Clouds */
+.cloud {
+  position: absolute;
+  background: white;
+  border-radius: 50px;
+  opacity: 0.85;
+  animation: cloudMove 20s linear infinite;
+}
+
+.cloud::before, .cloud::after {
+  content: '';
+  position: absolute;
+  background: white;
+  border-radius: 50%;
+}
+
+.cloud-1 { top: 40px; left: 10%; width: 80px; height: 24px; }
+.cloud-1::before { width: 36px; height: 36px; top: -18px; left: 12px; }
+.cloud-1::after { width: 28px; height: 28px; top: -12px; left: 40px; }
+
+.cloud-2 { top: 80px; right: 10%; width: 90px; height: 26px; animation-delay: -10s; }
+.cloud-2::before { width: 40px; height: 40px; top: -20px; left: 15px; }
+.cloud-2::after { width: 30px; height: 30px; top: -14px; left: 45px; }
+
+@keyframes cloudMove {
+  0% { transform: translateX(-20px); }
+  50% { transform: translateX(20px); }
+  100% { transform: translateX(-20px); }
+}
+
+/* Trees */
+.tree {
+  position: absolute;
+  bottom: 60px;
+  width: 60px;
+  height: 100px;
+  background: #4CD97B;
+  border-radius: 50% 50% 20% 20%;
+  animation: treeSway 4s ease-in-out infinite;
+}
+
+.tree::after {
+  content: '';
+  position: absolute;
+  bottom: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 12px;
+  height: 40px;
+  background: #8B5A2B;
+  border-radius: 3px;
+}
+
+.tree-left { left: -10px; background: linear-gradient(135deg, #6DDB92, #4CD97B); }
+.tree-right { right: -10px; background: linear-gradient(135deg, #6DDB92, #4CD97B); }
+
+@keyframes treeSway {
+  0%, 100% { transform: rotate(-2deg); }
+  50% { transform: rotate(2deg); }
+}
+
+/* Desk */
+.desk {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background: linear-gradient(180deg, #C8956A 0%, #A67C52 100%);
+  border-top: 6px solid #8B5A2B;
+  box-shadow: inset 0 4px 10px rgba(0,0,0,0.15);
+}
+
+/* Books on desk */
+.book {
+  position: absolute;
+  bottom: 60px;
+  border-radius: 4px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+.book-1 {
+  right: 40px;
+  width: 60px;
+  height: 12px;
+  background: #FFD93D;
+  border: 2px solid #E0B800;
+}
+
+.book-2 {
+  right: 35px;
+  bottom: 74px;
+  width: 70px;
+  height: 14px;
+  background: #FF6B9D;
+  border: 2px solid #E0557F;
+}
+
+/* Pencil */
+.pencil {
+  position: absolute;
+  bottom: 55px;
+  right: 130px;
+  width: 50px;
+  height: 8px;
+  background: #FFD93D;
+  border-radius: 4px;
+  transform: rotate(-15deg);
+  box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+}
+.pencil::before {
+  content: '';
+  position: absolute;
+  right: -8px;
+  top: 0;
+  width: 0;
+  height: 0;
+  border-top: 4px solid transparent;
+  border-bottom: 4px solid transparent;
+  border-left: 8px solid #F5A623;
+}
+.pencil::after {
+  content: '';
+  position: absolute;
+  right: -12px;
+  top: 2px;
+  width: 4px;
+  height: 4px;
+  background: #333;
+  border-radius: 50%;
+}
+
+/* Chalkboard */
+.board {
+  position: absolute;
+  top: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 300px;
+  height: 200px;
+  background: #2D5A3D;
+  border: 14px solid #A67C52;
+  border-radius: 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+  padding: 24px;
+  font-family: 'Baloo 2', cursive;
+  color: white;
+  font-size: 1.8rem;
+  font-weight: 700;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.3), inset 0 0 40px rgba(0,0,0,0.2);
+  animation: boardFloat 4s ease-in-out infinite;
+}
+
+@keyframes boardFloat {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(-8px); }
+}
+
+.board-line { 
+  display: flex; 
+  gap: 14px; 
+  align-items: center;
+  justify-content: center;
+  animation: fadeInText 0.6s ease both;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.4);
+}
+.board-line:nth-child(1) { animation-delay: 0.8s; }
+.board-line:nth-child(2) { animation-delay: 1.2s; }
+.board-line:nth-child(3) { animation-delay: 1.6s; }
+
+@keyframes fadeInText {
+  from { opacity: 0; transform: translateX(-20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.board-line .num { color: #FFD93D; }
+.board-line .op { color: #FFFFFF; }
+.board-line .res { color: #4CD97B; }
+
+/* Floating numbers */
+.float-num {
+  position: absolute;
+  font-family: 'Baloo 2', cursive;
+  font-weight: 800;
+  animation: floatShape 5s ease-in-out infinite;
+  text-shadow: 3px 3px 0 rgba(0,0,0,0.08);
+}
+
+.fn-2 { top: 20px; left: 30px; font-size: 4rem; color: var(--purple); animation-delay: 0s; }
+.fn-3 { top: 30px; right: 40px; font-size: 3.5rem; color: var(--blue); animation-delay: 0.8s; }
+.fn-x { top: 60px; right: 100px; font-size: 2.2rem; color: var(--red); animation-delay: 1.2s; }
+
+@keyframes floatShape {
+  0%, 100% { transform: translateY(0) rotate(0); }
+  50% { transform: translateY(-18px) rotate(10deg); }
+}
+
+/* Paper plane */
+.plane {
+  position: absolute;
+  top: 100px;
+  right: 60px;
+  font-size: 2rem;
+  animation: planeFly 6s ease-in-out infinite;
+  color: var(--purple);
+}
+
+@keyframes planeFly {
+  0%, 100% { transform: translate(0, 0) rotate(-10deg); }
+  50% { transform: translate(-20px, -15px) rotate(-20deg); }
+}
+
+/* Kids illustration (emoji-based) */
+.kid-figure {
+  position: absolute;
+  bottom: 55px;
+  font-size: 5.5rem;
+  animation: kidBob 3s ease-in-out infinite;
+  filter: drop-shadow(0 8px 15px rgba(0,0,0,0.15));
+}
+
+.kid-boy { left: 60px; animation-delay: 0.3s; }
+.kid-girl { right: 50px; animation-delay: 0.9s; }
+
+@keyframes kidBob {
+  0%, 100% { transform: translateY(0) rotate(-2deg); }
+  50% { transform: translateY(-10px) rotate(2deg); }
+}
+
+/* ============ FEATURES ROW ============ */
+.features-section {
+  padding: 50px 0;
+  background: white;
+  position: relative;
+  z-index: 3;
+  margin-top: -20px;
+  border-radius: 30px 30px 0 0;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+}
+
+.feature-card {
+  text-align: center;
+  padding: 24px 14px;
+  border-radius: var(--radius);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  position: relative;
+}
+
+.feature-card:hover {
+  transform: translateY(-10px);
+  background: var(--bg);
+  box-shadow: var(--shadow-md);
+}
+
+.feature-icon {
+  width: 70px; height: 70px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 2rem;
+  margin: 0 auto 16px;
+  color: white;
+  transition: all 0.4s ease;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+}
+
+.feature-card:hover .feature-icon {
+  transform: rotate(-10deg) scale(1.1);
+}
+
+.f-icon-1 { background: linear-gradient(135deg, #9B7BFF, #7C5CFC); }
+.f-icon-2 { background: linear-gradient(135deg, #6DDB92, #4CD97B); }
+.f-icon-3 { background: linear-gradient(135deg, #FFB84D, #FF9F43); }
+.f-icon-4 { background: linear-gradient(135deg, #6BB6FF, #4A9EFF); }
+.f-icon-5 { background: linear-gradient(135deg, #FF85B3, #FF6B9D); }
+
+.feature-card h4 {
+  font-size: 1rem;
+  color: var(--purple);
+  margin-bottom: 8px;
+  font-family: 'Baloo 2';
+}
+
+.feature-card:nth-child(1) h4 { color: #7C5CFC; }
+.feature-card:nth-child(2) h4 { color: #4CD97B; }
+.feature-card:nth-child(3) h4 { color: #FF9F43; }
+.feature-card:nth-child(4) h4 { color: #4A9EFF; }
+.feature-card:nth-child(5) h4 { color: #FF6B9D; }
+
+.feature-card p {
+  font-size: 0.78rem;
+  color: var(--gray);
+  line-height: 1.5;
+}
+
+/* ============ SECTION TITLE ============ */
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.section-title {
+  font-size: clamp(1.4rem, 2.5vw, 1.9rem);
+  color: var(--dark);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'Baloo 2';
+  font-weight: 700;
+}
+
+.section-title .star { 
+  color: var(--pink); 
+  animation: rotateStar 3s infinite; 
+  display: inline-block;
+  font-size: 0.9rem;
+}
+
+.view-all {
+  color: var(--purple);
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: gap 0.3s;
+  font-size: 0.9rem;
+}
+
+.view-all:hover { gap: 12px; }
+
+/* ============ TOPICS ============ */
+.topics-section {
+  padding: 40px 0 60px;
+  background: var(--bg);
+}
+
+.topics-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px;
+}
+
+.topic-card {
+  border-radius: var(--radius);
+  padding: 20px 16px;
+  min-height: 210px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.topic-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: var(--shadow-lg);
+}
+
+.topic-1 { background: linear-gradient(135deg, #E8E1FF 0%, #D5C9FF 100%); }
+.topic-2 { background: linear-gradient(135deg, #DFF5E1 0%, #C8F0CE 100%); }
+.topic-3 { background: linear-gradient(135deg, #FFF1D6 0%, #FFE0B3 100%); }
+.topic-4 { background: linear-gradient(135deg, #D6E8FF 0%, #B8D8FF 100%); }
+.topic-5 { background: linear-gradient(135deg, #FFE0EC 0%, #FFC7DD 100%); }
+
+.topic-card h4 {
+  font-size: 0.95rem;
+  color: var(--dark);
+  margin-bottom: 12px;
+  position: relative;
+  z-index: 2;
+  font-family: 'Baloo 2';
+  line-height: 1.25;
+}
+
+.topic-visual {
+  font-size: 3rem;
+  text-align: center;
+  position: relative;
+  z-index: 2;
+  transition: transform 0.4s ease;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.topic-card:hover .topic-visual { transform: scale(1.15) rotate(-5deg); }
+
+.topic-arrow {
+  width: 36px; height: 36px;
+  background: white;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: var(--purple);
+  font-weight: 700;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transition: all 0.3s;
+  align-self: flex-start;
+  position: relative;
+  z-index: 2;
+  font-size: 0.9rem;
+}
+
+.topic-card:hover .topic-arrow {
+  background: var(--purple);
+  color: white;
+  transform: translateX(5px);
+}
+
+.dots-nav {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 25px;
+}
+
+.dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: #D5D0EB;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.dot.active {
+  background: var(--purple);
+  width: 28px;
+  border-radius: 5px;
+}
+
+/* ============ LEARNING PATH ============ */
+.path-section {
+  padding: 60px 0;
+  background: linear-gradient(180deg, #F0F4FF 0%, #F8F7FF 100%);
+  position: relative;
+}
+
+.path-section .main-title {
+  text-align: center;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  margin-bottom: 8px;
+  font-family: 'Baloo 2';
+  font-weight: 800;
+  color: var(--dark);
+}
+
+.path-section .subtitle {
+  text-align: center;
+  color: var(--gray);
+  margin-bottom: 40px;
+  font-size: 0.95rem;
+}
+
+.path-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+  position: relative;
+  align-items: start;
+}
+
+.path-step {
+  text-align: center;
+  padding: 20px 10px;
+  position: relative;
+  transition: all 0.4s ease;
+}
+
+.path-step:hover { transform: translateY(-8px); }
+
+.path-icon {
+  width: 76px; height: 76px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 1.8rem;
+  margin: 0 auto 14px;
+  color: white;
+  position: relative;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+  transition: all 0.4s ease;
+}
+
+.path-step:hover .path-icon {
+  transform: scale(1.1) rotate(8deg);
+}
+
+.p-icon-1 { background: linear-gradient(135deg, #9B7BFF, #7C5CFC); }
+.p-icon-2 { background: linear-gradient(135deg, #FF85B3, #FF6B9D); }
+.p-icon-3 { background: linear-gradient(135deg, #FFB84D, #FF9F43); }
+.p-icon-4 { background: linear-gradient(135deg, #6BB6FF, #4A9EFF); }
+.p-icon-5 { background: linear-gradient(135deg, #6DDB92, #4CD97B); }
+
+.path-step h4 { font-size: 0.95rem; margin-bottom: 6px; color: var(--dark); font-family: 'Baloo 2'; }
+.path-step p { font-size: 0.78rem; color: var(--gray); line-height: 1.4; }
+
+/* Arrow between steps */
+.path-step:not(:last-child)::after {
+  content: '→';
+  position: absolute;
+  top: 48px;
+  right: -8px;
+  font-size: 1.6rem;
+  color: var(--purple);
+  font-weight: 700;
+  animation: arrowPulse 2s ease-in-out infinite;
+  z-index: 5;
+}
+
+@keyframes arrowPulse {
+  0%, 100% { transform: translateX(0); opacity: 0.5; }
+  50% { transform: translateX(5px); opacity: 1; }
+}
+
+/* Brain + kid illustration in path section */
+.path-deco {
+  position: absolute;
+  font-size: 5rem;
+  opacity: 0.9;
+}
+
+.path-deco-left {
+  left: 40px;
+  top: 50%;
+  transform: translateY(-50%);
+  animation: kidBob 3s ease-in-out infinite;
+}
+
+.path-deco-right {
+  right: 40px;
+  top: 50%;
+  transform: translateY(-50%);
+  animation: kidBob 3s ease-in-out infinite 1s;
+}
+
+/* ============ WHY KIDS LOVE ============ */
+.why-section {
+  padding: 60px 0;
+  background: white;
+}
+
+.why-section .main-title {
+  text-align: center;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  margin-bottom: 8px;
+  font-family: 'Baloo 2';
+  font-weight: 800;
+  color: var(--dark);
+}
+
+.why-section .main-title .purple { color: var(--purple); }
+.why-section .main-title .pink { color: var(--pink); }
+
+.why-section .subtitle {
+  text-align: center;
+  color: var(--gray);
+  margin-bottom: 40px;
+  font-size: 0.95rem;
+}
+
+.why-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr 1fr;
+  gap: 30px;
+  align-items: center;
+}
+
+.why-col { display: flex; flex-direction: column; gap: 26px; }
+
+.why-item {
+  display: flex;
+  gap: 14px;
+  padding: 14px;
+  border-radius: 16px;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+
+.why-item:hover {
+  background: var(--bg);
+  transform: translateX(5px);
+  box-shadow: var(--shadow-sm);
+}
+
+.why-col.right .why-item:hover { transform: translateX(-5px); }
+
+.why-icon {
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  font-size: 1.3rem;
+  color: white;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.12);
+}
+
+.w-icon-1 { background: linear-gradient(135deg, #6DDB92, #4CD97B); }
+.w-icon-2 { background: linear-gradient(135deg, #9B7BFF, #7C5CFC); }
+.w-icon-3 { background: linear-gradient(135deg, #FF85B3, #FF6B9D); }
+.w-icon-4 { background: linear-gradient(135deg, #6BB6FF, #4A9EFF); }
+
+.why-item h5 { 
+  font-size: 0.92rem; 
+  color: var(--dark); 
+  margin-bottom: 3px; 
+  font-family: 'Baloo 2';
+  font-weight: 700;
+}
+.why-item p { font-size: 0.78rem; color: var(--gray); line-height: 1.4; }
+
+.why-center {
+  background: linear-gradient(135deg, #FFF4D6 0%, #FFE0EC 100%);
+  border-radius: 30px;
+  padding: 40px 20px;
+  text-align: center;
+  position: relative;
+  min-height: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+}
+
+.why-center::before {
+  content: '';
+  position: absolute;
+  top: -50px; left: -50px;
+  width: 150px; height: 150px;
+  background: radial-gradient(circle, rgba(124,92,252,0.2), transparent);
+  border-radius: 50%;
+}
+
+.family-emoji {
+  font-size: 6rem;
+  animation: familyBounce 3s ease-in-out infinite;
+  filter: drop-shadow(0 10px 20px rgba(0,0,0,0.15));
+}
+
+@keyframes familyBounce {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-10px) scale(1.05); }
+}
+
+/* Small monster */
+.monster {
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+  font-size: 3.5rem;
+  animation: monsterBounce 2.5s ease-in-out infinite;
+}
+
+@keyframes monsterBounce {
+  0%, 100% { transform: translateY(0) rotate(-5deg); }
+  50% { transform: translateY(-15px) rotate(5deg); }
+}
+
+/* ============ STATS ============ */
+.stats-section {
+  padding: 0 24px;
+  margin: 0 auto 60px;
+  max-width: 1200px;
+}
+
+.stats-box {
+  background: linear-gradient(135deg, #7C5CFC 0%, #9B7BFF 100%);
+  border-radius: 30px;
+  padding: 45px 40px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 30px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 25px 60px rgba(124,92,252,0.4);
+}
+
+.stats-box::before {
+  content: '';
+  position: absolute;
+  top: -100px; right: -100px;
+  width: 300px; height: 300px;
+  background: radial-gradient(circle, rgba(255,255,255,0.15), transparent 70%);
+  border-radius: 50%;
+}
+
+.stats-box::after {
+  content: '';
+  position: absolute;
+  bottom: -100px; left: -80px;
+  width: 250px; height: 250px;
+  background: radial-gradient(circle, rgba(255,217,61,0.2), transparent 70%);
+  border-radius: 50%;
+}
+
+.stat-item {
+  text-align: center;
+  color: white;
+  position: relative;
+  z-index: 2;
+}
+
+.stat-item .icon {
+  font-size: 2.2rem;
+  margin-bottom: 8px;
+  animation: floatShape 4s ease-in-out infinite;
+  display: inline-block;
+}
+
+.stat-number {
+  font-family: 'Baloo 2', cursive;
+  font-size: clamp(2rem, 4vw, 2.8rem);
+  font-weight: 800;
+  line-height: 1;
+  margin-bottom: 6px;
+}
+
+.stat-label {
+  font-size: 0.9rem;
+  opacity: 0.95;
+  font-weight: 600;
+}
+
+/* ============ TESTIMONIALS ============ */
+.testimonials-section {
+  padding: 40px 0 60px;
+  background: var(--bg);
+}
+
+.testimonials-section .main-title {
+  text-align: center;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  margin-bottom: 40px;
+  font-family: 'Baloo 2';
+  font-weight: 800;
+  color: var(--dark);
+}
+
+.testimonials-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+}
+
+.testimonial {
+  background: white;
+  border-radius: var(--radius);
+  padding: 28px 24px;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  border: 2px solid transparent;
+}
+
+.testimonial:hover {
+  transform: translateY(-10px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--purple-light);
+}
+
+.testimonial p {
+  font-size: 0.88rem;
+  color: var(--gray);
+  margin-bottom: 18px;
+  position: relative;
+  z-index: 2;
+  line-height: 1.6;
+}
+
+.stars { 
+  color: var(--yellow); 
+  margin-bottom: 14px; 
+  font-size: 1rem; 
+  letter-spacing: 3px;
+  filter: drop-shadow(0 2px 3px rgba(255,217,61,0.4));
+}
+
+.author {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.author-avatar {
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 1.5rem;
+  background: linear-gradient(135deg, #FFD93D, #FF9F43);
+  box-shadow: 0 5px 12px rgba(255,159,67,0.35);
+  overflow: hidden;
+}
+
+.author-avatar.img {
+  background: #DDD;
+}
+
+.author-name {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--dark);
+}
+
+/* ============ CTA ============ */
+.cta-section {
+  padding: 0 24px 60px;
+}
+
+.cta-box {
+  max-width: 1200px;
+  margin: 0 auto;
+  background: linear-gradient(135deg, #7C5CFC 0%, #5B3FD6 100%);
+  border-radius: 30px;
+  padding: 50px 40px;
+  text-align: center;
+  color: white;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 25px 60px rgba(124,92,252,0.4);
+}
+
+.cta-box::before,
+.cta-box::after {
+  content: '';
+  position: absolute;
+  width: 200px; height: 200px;
+  background: radial-gradient(circle, rgba(255,255,255,0.12), transparent 70%);
+  border-radius: 50%;
+}
+
+.cta-box::before { top: -80px; left: -80px; }
+.cta-box::after { bottom: -80px; right: -80px; }
+
+.cta-box h2 {
+  font-size: clamp(1.5rem, 3.5vw, 2.3rem);
+  margin-bottom: 10px;
+  position: relative;
+  z-index: 2;
+  font-family: 'Baloo 2';
+}
+
+.cta-box p {
+  opacity: 0.95;
+  margin-bottom: 26px;
+  position: relative;
+  z-index: 2;
+  font-size: 1rem;
+}
+
+.btn-white {
+  background: white;
+  color: var(--purple);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+  position: relative;
+  z-index: 2;
+  padding: 14px 30px;
+  border-radius: 40px;
+  border: none;
+  font-family: 'Baloo 2';
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+}
+
+.btn-white:hover {
+  transform: translateY(-4px) scale(1.03);
+  box-shadow: 0 15px 35px rgba(0,0,0,0.25);
+}
+
+/* Kids at corners */
+.cta-kid {
+  position: absolute;
+  font-size: 5rem;
+  bottom: -10px;
+  animation: kidBob 3s ease-in-out infinite;
+}
+
+.cta-kid-left { left: 30px; }
+.cta-kid-right { right: 30px; animation-delay: 0.8s; }
+
+/* ============ FOOTER ============ */
+.footer {
+  background: white;
+  padding: 50px 0 20px;
+  border-top: 1px solid #EEE;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr 1fr 1.4fr;
+  gap: 30px;
+  margin-bottom: 30px;
+}
+
+.footer-brand .logo { margin-bottom: 10px; }
+.footer-brand > span {
+  font-size: 0.8rem;
+  color: var(--gray);
+  display: block;
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+.footer-brand p {
+  font-size: 0.82rem;
+  color: var(--gray);
+  margin: 12px 0;
+  line-height: 1.5;
+}
+
+.socials {
+  display: flex;
+  gap: 10px;
+}
+
+.socials a {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: var(--purple-light);
+  display: grid;
+  place-items: center;
+  color: var(--purple);
+  transition: all 0.3s;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.socials a:hover {
+  background: var(--purple);
+  color: white;
+  transform: translateY(-3px) rotate(10deg);
+}
+
+.footer-col h5 {
+  font-family: 'Baloo 2';
+  font-size: 0.95rem;
+  margin-bottom: 14px;
+  color: var(--dark);
+  font-weight: 700;
+}
+
+.footer-col ul li {
+  margin-bottom: 8px;
+}
+
+.footer-col ul a {
+  font-size: 0.82rem;
+  color: var(--gray);
+  transition: all 0.3s;
+  display: inline-block;
+}
+
+.footer-col ul a:hover {
+  color: var(--purple);
+  transform: translateX(4px);
+}
+
+.newsletter {
+  display: flex;
+  background: var(--bg);
+  border-radius: 30px;
+  padding: 4px;
+  margin-top: 10px;
+  border: 2px solid var(--purple-light);
+  transition: border-color 0.3s;
+}
+
+.newsletter:focus-within { border-color: var(--purple); }
+
+.newsletter input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  padding: 10px 16px;
+  font-family: inherit;
+  font-size: 0.85rem;
+  outline: none;
+  min-width: 0;
+}
+
+.newsletter button {
+  background: var(--purple);
+  color: white;
+  border: none;
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: grid;
+  place-items: center;
+  font-size: 1rem;
+}
+
+.newsletter button:hover {
+  background: var(--purple-dark);
+  transform: rotate(-20deg) scale(1.1);
+}
+
+.footer-bottom {
+  text-align: center;
+  padding-top: 20px;
+  border-top: 1px solid #EEE;
+  font-size: 0.82rem;
+  color: var(--gray);
+}
+
+/* ============ SCROLL REVEAL ============ */
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.reveal.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 1024px) {
+  .hero-grid { grid-template-columns: 1fr; text-align: center; }
+  .hero-content p { margin: 0 auto 28px; }
+  .hero-buttons, .hero-features { justify-content: center; }
+  .hero-scene { max-width: 600px; margin: 0 auto; }
+  .features-grid { grid-template-columns: repeat(3, 1fr); }
+  .topics-grid { grid-template-columns: repeat(3, 1fr); }
+  .path-grid { grid-template-columns: repeat(3, 1fr); }
+  .path-step:not(:last-child)::after { display: none; }
+  .why-grid { grid-template-columns: 1fr; }
+  .why-center { max-width: 500px; margin: 0 auto; }
+  .testimonials-grid { grid-template-columns: 1fr; }
+  .footer-grid { grid-template-columns: repeat(2, 1fr); }
+  .stats-box { grid-template-columns: repeat(2, 1fr); }
+  .path-deco { display: none; }
+}
+
+@media (max-width: 640px) {
+  .nav-links { display: none; }
+  .mobile-toggle { display: block; }
+  .features-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .topics-grid { grid-template-columns: repeat(2, 1fr); }
+  .path-grid { grid-template-columns: 1fr 1fr; }
+  .footer-grid { grid-template-columns: 1fr; }
+  .stats-box { grid-template-columns: 1fr; padding: 30px 20px; }
+  .hero-scene { height: 340px; }
+  .board { width: 220px; height: 160px; font-size: 1.3rem; padding: 16px; }
+  .kid-figure { font-size: 4rem; }
+  .fn-2, .fn-3 { font-size: 2.5rem; }
+  .cta-kid { font-size: 3rem; bottom: -5px; }
+  .cta-kid-left { left: 10px; }
+  .cta-kid-right { right: 10px; }
+  .container { padding: 0 16px; }
+}
+</style>
 </head>
-<body class="text-slate-800 antialiased min-h-screen flex flex-col justify-between selection:bg-brand-pink selection:text-white">
+<body>
 
-    <!-- Header -->
-    <header class="sticky top-0 z-50 backdrop-filter backdrop-blur-lg shadow-sm">
-        <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-4">
-            <div class="flex items-center gap-3">
-                <div class="w-12 h-12 bg-gradient-to-tr from-brand-purple to-brand-pink rounded-2xl flex items-center justify-center text-white text-2xl shadow-lg animate-float">
-                    <i class="fa-solid font-bold fa-calculator"></i>
-                </div>
-                <div>
-                    <h1 class="text-xl md:text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-brand-purple via-brand-pink to-brand-yellow">
-                        <span class="emoji-bounce">🚀</span> مغامر الرياضيات الذكي <span class="emoji-bounce" style="animation-delay:0.5s">🌟</span>
-                    </h1>
-                    <p class="text-xs text-slate-500 font-bold">الصف الرابع الابتدائي - مراجعة شاملة وممتعة</p>
-                </div>
-            </div>
-            <div class="flex items-center gap-4 bg-slate-100 p-2 rounded-2xl border border-slate-200">
-                <div class="flex items-center gap-1.5 px-3 py-1 bg-amber-100 text-amber-700 rounded-xl font-black text-sm">
-                    <i class="fa-solid fa-star text-amber-500 text-lg star-glow animate-bounce"></i>
-                    <span id="score">0</span> نقاط
-                </div>
-                <div class="flex items-center gap-1.5 px-3 py-1 bg-emerald-100 text-emerald-700 rounded-xl font-black text-sm">
-                    <i class="fa-solid fa-circle-check text-emerald-500 text-lg"></i>
-                    <span id="completed-count">0</span> / <span id="total-questions">0</span>
-                </div>
-                <button id="sound-toggle" onclick="toggleSound()" class="w-9 h-9 bg-white text-slate-600 rounded-xl flex items-center justify-center hover:bg-slate-200 transition shadow-sm">
-                    <i class="fa-solid fa-volume-high" id="sound-icon"></i>
-                </button>
-            </div>
+<!-- ============ NAVBAR ============ -->
+<nav class="navbar">
+  <div class="container nav-inner">
+    <div class="logo">
+      <div class="logo-icon">⭐</div>
+      <span><span class="math">Math</span><span class="kids">Kids</span></span>
+    </div>
+
+    <ul class="nav-links">
+      <li><a href="#" class="active">🏠 Home</a></li>
+      <li class="dropdown">
+        <a href="#">📚 Lessons ▾</a>
+        <div class="dropdown-menu">
+          <a href="#">🎓 Grade 1</a>
+          <a href="#">🎓 Grade 2</a>
+          <a href="#">🎓 Grade 3</a>
+          <a href="#" class="active">🎓 Grade 4</a>
+          <a href="#">🎓 Grade 5</a>
+          <a href="#">🎓 Grade 6</a>
         </div>
-        <div class="w-full bg-slate-200 h-2.5">
-            <div id="overall-progress" class="h-2.5 transition-all duration-500 w-0"></div>
+      </li>
+      <li><a href="#">📝 Exams</a></li>
+      <li><a href="#">🎮 Games</a></li>
+      <li><a href="#">💡 Ideas</a></li>
+    </ul>
+
+    <a href="#" class="login-btn">👤 Login</a>
+    <button class="mobile-toggle" aria-label="menu">☰</button>
+  </div>
+</nav>
+
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <div class="container hero-grid">
+    <div class="hero-content">
+      <h1>Learn <span class="highlight-purple">Math</span>,<br>Have <span class="highlight-pink">Fun!</span></h1>
+      <p>Engaging lessons, exciting games, and creative activities make math easy and enjoyable for kids.</p>
+
+      <div class="hero-buttons">
+        <button class="btn btn-primary">🚀 Start Learning</button>
+        <button class="btn btn-outline">▶ Watch Video</button>
+      </div>
+
+      <div class="hero-features">
+        <div class="feat">
+          <div class="feat-icon">📘</div>
+          <span>Curriculum Aligned<br>Grade 4 Math</span>
         </div>
-    </header>
-
-    <!-- Main -->
-    <main class="max-w-7xl mx-auto px-4 py-6 w-full flex-1 grid grid-cols-1 lg:grid-cols-4 gap-6">
-        <aside class="lg:col-span-1 space-y-3">
-            <div class="bg-white p-4 rounded-3xl shadow-sm border border-slate-200 sticky top-24">
-                <h2 class="text-sm font-black text-slate-400 uppercase tracking-wider mb-3 px-2 flex items-center gap-2">
-                    <i class="fa-solid fa-map"></i> أقسام المراجعة
-                </h2>
-                <nav id="sections-nav" class="space-y-2"></nav>
-            </div>
-        </aside>
-        <section class="lg:col-span-3 space-y-6">
-            <div id="section-header" class="bg-gradient-to-r from-brand-purple to-indigo-600 rounded-3xl p-6 text-white shadow-xl relative overflow-hidden flex items-center justify-between">
-                <div class="relative z-10">
-                    <span id="section-badge" class="bg-white/20 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold mb-2 inline-block">القسم 1</span>
-                    <h2 id="section-title" class="text-2xl md:text-3xl font-black mb-1">...</h2>
-                    <p id="section-desc" class="text-white/80 text-sm">...</p>
-                </div>
-                <div class="text-6xl text-white/20 z-0">
-                    <i id="section-icon" class="fa-solid fa-shapes"></i>
-                </div>
-            </div>
-            <div id="questions-container" class="space-y-6"></div>
-        </section>
-    </main>
-
-    <footer class="bg-white border-t border-slate-200 py-4 mt-8">
-        <div class="max-w-7xl mx-auto px-4 text-center text-xs text-slate-500 font-bold">
-            مغامر الرياضيات الذكي للصف الرابع الابتدائي - تم التصميم للتلميذ الذكي 🌟
+        <div class="feat">
+          <div class="feat-icon">🛡️</div>
+          <span>Safe & Ad-Free<br>Environment</span>
         </div>
-    </footer>
+        <div class="feat">
+          <div class="feat-icon">📊</div>
+          <span>Track Progress<br>& Achievements</span>
+        </div>
+      </div>
+    </div>
 
-    <!-- ===== Audio System ===== -->
-    <script>
-        const AudioContext = window.AudioContext || window.webkitAudioContext;
-        let audioCtx = null;
-        let soundEnabled = true;
+    <div class="hero-image">
+      <div class="hero-scene">
+        <div class="sky-bg"></div>
 
-        function initAudio() {
-            if (!audioCtx) audioCtx = new AudioContext();
-        }
+        <!-- Clouds -->
+        <div class="cloud cloud-1"></div>
+        <div class="cloud cloud-2"></div>
 
-        function playSound(type) {
-            if (!soundEnabled) return;
-            initAudio();
-            if (audioCtx.state === 'suspended') audioCtx.resume();
-            const now = audioCtx.currentTime;
+        <!-- Trees -->
+        <div class="tree tree-left"></div>
+        <div class="tree tree-right"></div>
 
-            if (type === 'correct') {
-                const notes = [523.25, 659.25, 783.99, 1046.50];
-                notes.forEach((freq, i) => {
-                    const osc = audioCtx.createOscillator();
-                    const gain = audioCtx.createGain();
-                    osc.type = 'triangle';
-                    osc.frequency.value = freq;
-                    osc.connect(gain); gain.connect(audioCtx.destination);
-                    gain.gain.setValueAtTime(0, now + i * 0.09);
-                    gain.gain.linearRampToValueAtTime(0.25, now + i * 0.09 + 0.02);
-                    gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.09 + 0.35);
-                    osc.start(now + i * 0.09);
-                    osc.stop(now + i * 0.09 + 0.4);
-                });
-                const extra = audioCtx.createOscillator();
-                const eg = audioCtx.createGain();
-                extra.type = 'sine';
-                extra.frequency.value = 1318.51;
-                extra.connect(eg); eg.connect(audioCtx.destination);
-                eg.gain.setValueAtTime(0.15, now + 0.45);
-                eg.gain.exponentialRampToValueAtTime(0.001, now + 0.9);
-                extra.start(now + 0.45); extra.stop(now + 0.95);
-            } else if (type === 'wrong') {
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(392, now);
-                osc.frequency.exponentialRampToValueAtTime(196, now + 0.35);
-                gain.gain.setValueAtTime(0.18, now);
-                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.45);
-                osc.connect(gain); gain.connect(audioCtx.destination);
-                osc.start(now); osc.stop(now + 0.5);
-                const osc2 = audioCtx.createOscillator();
-                const g2 = audioCtx.createGain();
-                osc2.type = 'triangle';
-                osc2.frequency.setValueAtTime(280, now + 0.05);
-                osc2.frequency.exponentialRampToValueAtTime(140, now + 0.35);
-                g2.gain.setValueAtTime(0.12, now + 0.05);
-                g2.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
-                osc2.connect(g2); g2.connect(audioCtx.destination);
-                osc2.start(now + 0.05); osc2.stop(now + 0.45);
-            } else if (type === 'click') {
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(880, now);
-                osc.frequency.exponentialRampToValueAtTime(440, now + 0.05);
-                gain.gain.setValueAtTime(0.08, now);
-                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
-                osc.connect(gain); gain.connect(audioCtx.destination);
-                osc.start(now); osc.stop(now + 0.1);
-            } else if (type === 'levelup') {
-                [523.25, 659.25, 783.99, 1046.50, 1318.51].forEach((freq, i) => {
-                    const osc = audioCtx.createOscillator();
-                    const gain = audioCtx.createGain();
-                    osc.type = 'square';
-                    osc.frequency.value = freq;
-                    osc.connect(gain); gain.connect(audioCtx.destination);
-                    gain.gain.setValueAtTime(0.001, now + i * 0.1);
-                    gain.gain.linearRampToValueAtTime(0.15, now + i * 0.1 + 0.02);
-                    gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.1 + 0.25);
-                    osc.start(now + i * 0.1);
-                    osc.stop(now + i * 0.1 + 0.3);
-                });
-            }
-        }
+        <!-- Floating numbers -->
+        <div class="float-num fn-2">2</div>
+        <div class="float-num fn-3">3</div>
+        <div class="float-num fn-x">×</div>
 
-        function toggleSound() {
-            soundEnabled = !soundEnabled;
-            const icon = document.getElementById('sound-icon');
-            icon.className = soundEnabled ? 'fa-solid fa-volume-high text-slate-600' : 'fa-solid fa-volume-xmark text-red-500';
-        }
-    </script>
+        <!-- Paper plane -->
+        <div class="plane">✈️</div>
 
-    <!-- ===== App Data & Logic ===== -->
-    <script>
-        const appData = [
-            {
-                id: "sec1",
-                title: "الضرب والقسمة ومضاعفات 10، 100، 1000",
-                icon: "fa-bolt",
-                color: "from-purple-600 to-indigo-600",
-                desc: "استمتع بتسهيل عمليات الضرب وخاصية الإبدال والدمج بمضاعفات 10 و100 و1000!",
-                questions: [
-                    { id:"q1_1", type:"number", question:"كم عدد العشرات التي تكون العدد 180 ؟", hint:"اقسم 180 على 10", answer:[18], explanation:"العدد 180 يتكون من 18 عشرة، لأن: 18 × 10 = 180" },
-                    { id:"q1_2", type:"number", question:"اكتب العدد الناقص: 3 × 800 = (3 × 8) × ...............", hint:"3 × 800 = 3 × 8 × 100", answer:[100], explanation:"3 × 800 تعادل (3 × 8) × 100 = 24 × 100 = 2,400" },
-                    { id:"q1_3", type:"multi_input", question:"استخدم تحليل مضاعفات 10، 100، 1,000 لتسهيل عملية الضرب:", subQuestions:[
-                        {label:"أوجد ناتج: 4 × 30", key:"sq1", answer:120},
-                        {label:"أوجد ناتج: 8 × 600", key:"sq2", answer:4800},
-                        {label:"أوجد ناتج: 2 × 7,000", key:"sq3", answer:14000}
-                    ], explanation:"4 × 30 = 120 | 8 × 600 = 4,800 | 2 × 7,000 = 14,000" },
-                    { id:"q1_4", type:"number", question:"الأداء المنزلي (1): 4 × (....... × 4) = 2 × (5 × 2)", hint:"احسب 2 × 10 = 20", answer:[1.25,5], acceptAnswers:[1.25,5], explanation:"2 × 10 = 20. بالتالي 4 × 5 = 20 (أو 4 × 1.25 × 4 = 20)." },
-                    { id:"q1_5", type:"number", question:"الأداء المنزلي (2): (5 × 2) × ....... = (6 × 5) × 2", hint:"الطرف = 60، (5×2)=10", answer:[6], explanation:"(6 × 5) × 2 = 60. إذن 10 × 6 = 60." },
-                    { id:"q1_6", type:"mcq", question:"ضع الأقواس في المكان المناسب: 30 = 5 × 3 × 2", options:["30 = (5 × 3) × 2","30 = 5 × (3 × 2)","كلاهما صحيح"], answer:"كلاهما صحيح", explanation:"خاصية الدمج تسمح بالحالتين." },
-                    { id:"q1_7", type:"mcq", question:"ضع الأقواس: 24 = 6 × 1 × 4", options:["24 = (6 × 1) × 4","24 = 6 × (1 × 4)","كلاهما صحيح"], answer:"كلاهما صحيح", explanation:"كلا الحالتين تعطي 24." },
-                    { id:"q1_8", type:"multi_input", question:"أكمل الفراغات لتحصل على معادلات صحيحة:", subQuestions:[
-                        {label:"4 × (....... × 2) = 2 × (3 × 4)", key:"blank1", answer:3},
-                        {label:"5 × (....... × 1) = (8 × 5) × 1", key:"blank2", answer:8}
-                    ], explanation:"الفراغ الأول = 3، الفراغ الثاني = 8." },
-                    { id:"q1_9", type:"multi_input", question:"أوجد الناتج باستخدام خاصية الإبدال والدمج:", subQuestions:[
-                        {label:"5 × 9 × 2 =", key:"comb1", answer:90},
-                        {label:"4 × 7 × 25 =", key:"comb2", answer:700}
-                    ], explanation:"(5×2)×9=90 | (4×25)×7=700." },
-                    { id:"q1_10", type:"multi_input", question:"اكتب العدد الناقص باستخدام خاصية الإبدال:", subQuestions:[
-                        {label:"4 × 6 = ....... × 6", key:"sw1", answer:4},
-                        {label:"7 × 3 = 3 × .......", key:"sw2", answer:7}
-                    ], explanation:"الترتيب لا يغير الناتج." },
-                    { id:"q1_11", type:"number", question:"اشترى خالد 3 صناديق حلوى، في كل صندوق 8 قطع. كم عدد القطع؟", hint:"3 × 8", answer:[24], explanation:"3 × 8 = 24 قطعة." },
-                    { id:"q1_12", type:"mcq", question:"أحمد يقول: 1,000 × 5 = 500. ماذا تقول له؟", options:["كلامه صحيح!","خطأ، 1,000 × 5 = 5,000","خطأ، الناتج 50"], answer:"خطأ، 1,000 × 5 = 5,000", explanation:"نضع 3 أصفار: 1,000 × 5 = 5,000." },
-                    { id:"q1_13", type:"number", question:"اشترى أبانوب 6 شنط سعر الواحدة 100 جنيه. احسب الإجمالي.", hint:"6 × 100", answer:[600], explanation:"6 × 100 = 600 جنيه." }
-                ]
-            },
-            {
-                id: "sec2",
-                title: "المقارنة بالأضعاف والمعادلات ومخطط الشرائط",
-                icon: "fa-chart-bar",
-                color: "from-blue-600 to-cyan-600",
-                desc: "حل المسائل الكلامية والمعادلات واستخدم مخططات الشرائط بسهولة!",
-                questions: [
-                    { id:"q2_1", type:"number", question:"لدى أحمد 18 قلمًا، ولديه 3 أضعاف عدد أقلام يوسف. كم قلمًا لدى يوسف؟", hint:"18 ÷ 3", answer:[6], explanation:"18 ÷ 3 = 6 أقلام." },
-                    { id:"q2_2", type:"number", question:"حديقة بها 24 وردة، وعدد الياسمين ضعف الورود. كم عدد الياسمين؟", hint:"24 × 2", answer:[48], explanation:"24 × 2 = 48 زهرة." },
-                    { id:"q2_3", type:"number", question:"عداء يقطع 5 كم يوميًا. آخر يقطع 3 أضعاف. كم يقطع الآخر؟", hint:"5 × 3", answer:[15], explanation:"5 × 3 = 15 كم." },
-                    { id:"q2_4", type:"number", question:"عدد يساوي 4 أضعاف العدد 9. ما هو؟", hint:"4 × 9", answer:[36], explanation:"4 × 9 = 36." },
-                    { id:"q2_5", type:"multi_input", question:"حل المعادلات:", subQuestions:[
-                        {label:"35 = ....... × 5", key:"eq1", answer:7},
-                        {label:"....... = 7 × 42", key:"eq2", answer:294},
-                        {label:"50 = ....... × 5", key:"eq3", answer:10}
-                    ], explanation:"7 | 294 | 10" },
-                    { id:"q2_6", type:"mcq", question:"معادلة: '28 يساوي 4 أضعاف عدد ما'", options:["28 = 4 × n","28 = 4 + n","n = 28 × 4"], answer:"28 = 4 × n", explanation:"الصيغة الصحيحة: 28 = 4 × n." },
-                    { id:"q2_7", type:"mcq", question:"ليلى جمعت 10 طوابع، وندى 3 أضعافها. معادلة ندى (n)؟", options:["n = 3 × 10","n = 10 ÷ 3","n = 10 + 3"], answer:"n = 3 × 10", explanation:"n = 3 × 10 = 30." },
-                    { id:"q2_8", type:"mcq", question:"24 بقرة = 4 أضعاف الأغنام (g). المعادلة الصحيحة؟", options:["24 = 4 × g","g = 24 × 4","24 = 4 + g"], answer:"24 = 4 × g", explanation:"24 = 4 × g." },
-                    { id:"q2_9", type:"mcq", question:"عدد القصص 6 أضعاف الدواوين (7). معادلة القصص (p)؟", options:["p = 6 × 7","p = 7 ÷ 6","p = 6 + 7"], answer:"p = 6 × 7", explanation:"p = 42 قصة." },
-                    { id:"q2_10", type:"number", question:"سكان (أ) = 10 أضعاف سكان (ب)=50,000. كم سكان (أ)؟", hint:"50,000 × 10", answer:[500000], explanation:"500,000 نسمة." },
-                    { id:"q2_11", type:"number", question:"ما العدد الذي 5 أضعافه 35؟", hint:"35 ÷ 5", answer:[7], explanation:"35 ÷ 5 = 7." },
-                    { id:"q2_12", type:"number", question:"ما العدد الذي يساوي 7 أضعاف 9؟", hint:"7 × 9", answer:[63], explanation:"7 × 9 = 63." },
-                    { id:"q2_13", type:"interactive_tape", question:"تمثيل مخطط الشرائط: 14 = 7 أضعاف 2.", tapeCount:7, tapeVal:2, totalVal:14, explanation:"7 مربعات كل منها 2 = 14." },
-                    { id:"q2_14", type:"number", question:"ما العدد الذي 5 أضعافه 45؟", hint:"45 ÷ 5", answer:[9], explanation:"45 ÷ 5 = 9." },
-                    { id:"q2_15", type:"number", question:"كم عدد المربعات (9) لتكوين 27؟", hint:"27 ÷ 9", answer:[3], explanation:"3 × 9 = 27." }
-                ]
-            },
-            {
-                id: "sec3",
-                title: "المحيط والمساحة والأشكال الهندسية",
-                icon: "fa-draw-polygon",
-                color: "from-amber-500 to-orange-600",
-                desc: "قوانين وحساب محيط ومساحة المربعات والمستطيلات بخطوات واضحة!",
-                questions: [
-                    { id:"q3_1", type:"number", question:"مربع محيطه 36 سم. ما طول ضلعه؟", hint:"36 ÷ 4", answer:[9], explanation:"36 ÷ 4 = 9 سم." },
-                    { id:"q3_2", type:"number", question:"مربع مساحته 49 سم². طول ضلعه؟", hint:"ابحث عن عدد × نفسه = 49", answer:[7], explanation:"7 × 7 = 49." },
-                    { id:"q3_3", type:"number", question:"مستطيل محيطه 16 سم وطوله 5 سم. العرض a؟", hint:"نصف المحيط = 8", answer:[3], explanation:"8 - 5 = 3 سم." },
-                    { id:"q3_4", type:"number", question:"مربع ضلعه 7 م. مساحته؟", hint:"7 × 7", answer:[49], explanation:"49 م²." },
-                    { id:"q3_5", type:"number", question:"مساحة مستطيل 9×5 سم²؟", hint:"9 × 5", answer:[45], explanation:"45 سم²." },
-                    { id:"q3_6", type:"number", question:"حوض مستطيل 6×3 م. مساحته؟", hint:"6 × 3", answer:[18], explanation:"18 م²." },
-                    { id:"q3_7", type:"multi_input", question:"احسب المحيط والمساحة:", subQuestions:[
-                        {label:"مربع ضلعه 7م -> محيطه", key:"geom1", answer:28},
-                        {label:"مربع ضلعه 7م -> مساحته", key:"geom2", answer:49},
-                        {label:"مستطيل 12×4سم -> محيطه", key:"geom3", answer:32},
-                        {label:"مستطيل 12×4سم -> مساحته", key:"geom4", answer:48}
-                    ], explanation:"28 | 49 | 32 | 48" },
-                    { id:"q3_8", type:"mcq", question:"أيهما أصغر: مستطيل 5×2 أم مربع ضلعه 4؟", options:["مساحة المستطيل (10)","مساحة المربع (16)","متساويتان"], answer:"مساحة المستطيل (10)", explanation:"10 أصغر من 16." },
-                    { id:"q3_9", type:"mcq", question:"قانون محيط المستطيل P؟", options:["P = (L + W) × 2","P = L × W","P = L + W"], answer:"P = (L + W) × 2", explanation:"P = (L+W)×2." },
-                    { id:"q3_10", type:"number", question:"محيط مستطيل 3 و 7 سم؟", hint:"(3+7)×2", answer:[20], explanation:"20 سم." },
-                    { id:"q3_11", type:"number", question:"حمام سباحة 12×8 م. محيطه؟", hint:"(12+8)×2", answer:[40], explanation:"40 م." },
-                    { id:"q3_12", type:"number", question:"محيط مستطيل 6×3 سم؟", hint:"(6+3)×2", answer:[18], explanation:"18 سم." },
-                    { id:"q3_13", type:"number", question:"حديقة مربعة ضلعها 10م. محيطها؟", hint:"10×4", answer:[40], explanation:"40 م." }
-                ]
-            },
-            {
-                id: "sec4",
-                title: "الوقت والكتلة والسعة والقياس والتحويلات",
-                icon: "fa-stopwatch-20",
-                color: "from-emerald-600 to-teal-600",
-                desc: "تحويل وحدات الزمن والكتلة والسعة وحل المسائل الشريطية!",
-                questions: [
-                    { id:"q4_1", type:"number", question:"ثلاث ساعات ونصف بالدقائق؟", hint:"3×60 + 30", answer:[210], explanation:"180 + 30 = 210 دقيقة." },
-                    { id:"q4_2", type:"number", question:"من 5:15 إلى 6:10 مساءً. المدة بالدقائق؟", hint:"45 + 10", answer:[55], explanation:"55 دقيقة." },
-                    { id:"q4_3", type:"multi_input", question:"عصفور طار 25,000م في 5 أيام:", subQuestions:[
-                        {label:"المسافة بالأمتار يوميًا", key:"bird1", answer:5000},
-                        {label:"المسافة بالكيلومتر", key:"bird2", answer:5}
-                    ], explanation:"5000 م = 5 كم." },
-                    { id:"q4_4", type:"number", question:"15,000 ملل في 3 زجاجات. كم لتر بكل زجاجة؟", hint:"15,000 ÷ 3 ثم إلى لتر", answer:[5], explanation:"5000 ملل = 5 لتر." },
-                    { id:"q4_5", type:"multi_input", question:"قطة 2 كجم، تزداد 200جم/أسبوع. بعد 5 أسابيع:", subQuestions:[
-                        {label:"الزيادة (جرام)", key:"cat1", answer:1000},
-                        {label:"الكتلة (جرام)", key:"cat2", answer:3000},
-                        {label:"الكتلة (كجم)", key:"cat3", answer:3}
-                    ], explanation:"1000 جم زيادة، الإجمالي 3 كجم." },
-                    { id:"q4_6", type:"number", question:"شريطان 45 سم و 350 مم. الفرق بالسنتيمتر؟", hint:"350 مم = 35 سم", answer:[10], explanation:"45 - 35 = 10 سم." },
-                    { id:"q4_7", type:"number", question:"مجموع: 950جم + 2كجم + 150جم بالجرام؟", hint:"2 كجم = 2000 جم", answer:[3100], explanation:"3,100 جرام." },
-                    { id:"q4_8", type:"number", question:"طريق 753 كم، قُطع 466 كم. المتبقي؟", hint:"753 - 466", answer:[287], explanation:"287 كم." },
-                    { id:"q4_9", type:"number", question:"6,500 جم فاكهة، أُكل 3 كجم. المتبقي بالجرام؟", hint:"6500 - 3000", answer:[3500], explanation:"3,500 جرام." },
-                    { id:"q4_10", type:"number", question:"إناء 10 لتر به 7,560 ملل. المطلوب إضافته؟", hint:"10,000 - 7,560", answer:[2440], explanation:"2,440 ملليلتر." },
-                    { id:"q4_11", type:"multi_input", question:"احسب الفروق بالأوقات:", subQuestions:[
-                        {label:"7:30 - 2:15 (دقائق كلية)", key:"t1", answer:315},
-                        {label:"3:10 - 40 دقيقة (دقائق كلية)", key:"t2", answer:150},
-                        {label:"من 2:35 إلى 4:45 (دقائق)", key:"t3", answer:130}
-                    ], explanation:"315 | 150 | 130" },
-                    { id:"q4_12", type:"number", question:"من 8:40 إلى 10:40 مساءً. بالساعات؟", hint:"الفرق", answer:[2], explanation:"ساعتان." },
-                    { id:"q4_13", type:"number", question:"ريم قرأت 25 دقيقة صباحًا + 48 مساءً. الإجمالي؟", hint:"25 + 48", answer:[73], explanation:"73 دقيقة." },
-                    { id:"q4_14", type:"multi_input", question:"تحويلات:", subQuestions:[
-                        {label:"كم ثانية في 10 دقائق؟", key:"u1", answer:600},
-                        {label:"كم يومًا في 5 أسابيع و3 أيام؟", key:"u2", answer:38},
-                        {label:"كم دقيقة في 6 ساعات؟", key:"u3", answer:360}
-                    ], explanation:"600 | 38 | 360" },
-                    { id:"q4_15", type:"multi_input", question:"280 دقيقة = ....... ساعات و ....... دقيقة", subQuestions:[
-                        {label:"ساعات", key:"b_hrs", answer:4},
-                        {label:"دقائق متبقية", key:"b_mins", answer:40}
-                    ], explanation:"4 ساعات و40 دقيقة." },
-                    { id:"q4_16", type:"number", question:"6 دقائق و40 ثانية = كم ثانية؟", hint:"(6×60) + 40", answer:[400], explanation:"400 ثانية." },
-                    { id:"q4_17", type:"multi_input", question:"الكتلة والسعة:", subQuestions:[
-                        {label:"كم كجم في 25 طنًا؟", key:"m1", answer:25000},
-                        {label:"كم ملل في 9 لتر و495 ملل؟", key:"m2", answer:9495},
-                        {label:"9,000 جم = 6 كجم + a. a=؟", key:"m3", answer:3000}
-                    ], explanation:"25000 | 9495 | 3000" },
-                    { id:"q4_18", type:"number", question:"3 لتر حليب، شُرب 1,850 ملل. المتبقي؟", hint:"3000 - 1850", answer:[1150], explanation:"1,150 ملليلتر." },
-                    { id:"q4_19", type:"multi_input", question:"أكمل النماذج:", subQuestions:[
-                        {label:"13,025 جم = ....... كجم", key:"tb1", answer:13},
-                        {label:"13,025 جم = ....... جم", key:"tb2", answer:25},
-                        {label:"12 لتر و530 ملل = ....... ملل", key:"tb3", answer:12530}
-                    ], explanation:"13 | 25 | 12530" },
-                    { id:"q4_20", type:"multi_input", question:"الأطوال والمسافات:", subQuestions:[
-                        {label:"كم مترًا في 55 كم؟", key:"l1", answer:55000},
-                        {label:"(10 سم + 60 مم) بالمليمتر", key:"l2", answer:160}
-                    ], explanation:"55000 | 160" },
-                    { id:"q4_21", type:"mcq", question:"رتب من الأقصر للأطول: 6 دسم، 70 سم، 1 م، 500 مم", options:["500 مم < 6 دسم < 70 سم < 1 م","6 دسم < 500 مم < 70 سم < 1 م","1 م < 70 سم < 6 دسم < 500 مم"], answer:"500 مم < 6 دسم < 70 سم < 1 م", explanation:"50 < 60 < 70 < 100 سم." },
-                    { id:"q4_22", type:"multi_input", question:"أكمل النماذج:", subQuestions:[
-                        {label:"275 سم = ....... م", key:"lb1", answer:2},
-                        {label:"275 سم = ....... سم", key:"lb2", answer:75},
-                        {label:"7 م و25 سم = ....... سم", key:"lb3", answer:725}
-                    ], explanation:"2 | 75 | 725" },
-                    { id:"q4_23", type:"multi_input", question:"عصفور طار 412 سم. عبّر:", subQuestions:[
-                        {label:"الأمتار", key:"fly1", answer:4},
-                        {label:"السنتيمترات المتبقية", key:"fly2", answer:12}
-                    ], explanation:"4 م و 12 سم." }
-                ]
-            },
-            {
-                id: "sec5",
-                title: "الجمع والطرح والمسائل الكلامية المركبة",
-                icon: "fa-calculator",
-                color: "from-pink-600 to-rose-600",
-                desc: "حل العمليات الحسابية المتعددة والمسائل الحياتية الذكية!",
-                questions: [
-                    { id:"q5_1", type:"number", question:"56,219 + 80 + 1 =", hint:"+ 81", answer:[56300], explanation:"56,300." },
-                    { id:"q5_2", type:"number", question:"محمد 3 علب × 12 قلم، أعطى 6. المتبقي؟", hint:"(3×12) - 6", answer:[30], explanation:"36 - 6 = 30." },
-                    { id:"q5_3", type:"number", question:"مكتبة 345 كتابًا، تبرع 128، أُعير 97. الباقي؟", hint:"(345+128) - 97", answer:[376], explanation:"376 كتابًا." },
-                    { id:"q5_4", type:"number", question:"مزرعة 415 دجاجة، اشترى 238، باع فأصبح 512. كم باع؟", hint:"(415+238) - 512", answer:[141], explanation:"141 دجاجة." },
-                    { id:"q5_5", type:"number", question:"حافلة 1 بها 45 تلميذ، نزل 9. كم بقي؟", hint:"45 - 9", answer:[36], explanation:"36 تلميذًا." }
-                ]
-            }
-        ];
+        <!-- Chalkboard -->
+        <div class="board">
+          <div class="board-line"><span class="num">2</span> <span class="op">+</span> <span class="num">3</span> <span class="op">=</span> <span class="res">5</span></div>
+          <div class="board-line"><span class="num">8</span> <span class="op">−</span> <span class="num">2</span> <span class="op">=</span> <span class="res">6</span></div>
+          <div class="board-line"><span class="num">4</span> <span class="op">×</span> <span class="num">2</span> <span class="op">=</span> <span class="res">8</span></div>
+        </div>
 
-        let currentSectionIndex = 0;
-        let solvedQuestions = new Set();
-        let currentScore = 0;
-        const totalQuestionsCount = appData.reduce((sum, sec) => sum + sec.questions.length, 0);
+        <!-- Desk -->
+        <div class="desk"></div>
 
-        document.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('total-questions').textContent = totalQuestionsCount;
-            renderNavigation();
-            loadSection(0);
-        });
+        <!-- Books -->
+        <div class="book book-1"></div>
+        <div class="book book-2"></div>
 
-        function renderNavigation() {
-            const navContainer = document.getElementById('sections-nav');
-            navContainer.innerHTML = '';
-            appData.forEach((sec, idx) => {
-                const solvedInSec = sec.questions.filter(q => solvedQuestions.has(q.id)).length;
-                const isComplete = solvedInSec === sec.questions.length;
-                const btn = document.createElement('button');
-                btn.className = `w-full text-right p-3 rounded-2xl font-bold text-sm transition flex items-center justify-between border ${
-                    idx === currentSectionIndex 
-                        ? 'bg-slate-900 text-white border-slate-900 shadow-md' 
-                        : 'bg-slate-50 hover:bg-slate-100 text-slate-700 border-slate-200'
-                }`;
-                btn.onclick = () => { playSound('click'); loadSection(idx); };
-                btn.innerHTML = `
-                    <div class="flex items-center gap-2.5 overflow-hidden">
-                        <span class="w-7 h-7 rounded-xl flex items-center justify-center text-xs text-white bg-gradient-to-tr ${sec.color} shrink-0">
-                            <i class="fa-solid ${sec.icon}"></i>
-                        </span>
-                        <span class="truncate">${sec.title}</span>
-                    </div>
-                    <span class="text-xs px-2 py-0.5 rounded-full ${isComplete ? 'bg-emerald-500 text-white' : 'bg-slate-200 text-slate-600'}">
-                        ${solvedInSec}/${sec.questions.length}
-                    </span>`;
-                navContainer.appendChild(btn);
-            });
-        }
+        <!-- Pencil -->
+        <div class="pencil"></div>
 
-        function loadSection(index) {
-            currentSectionIndex = index;
-            const sec = appData[index];
-            document.getElementById('section-badge').textContent = `القسم ${index + 1} من ${appData.length}`;
-            document.getElementById('section-title').textContent = sec.title;
-            document.getElementById('section-desc').textContent = sec.desc;
-            document.getElementById('section-icon').className = `fa-solid ${sec.icon}`;
-            document.getElementById('section-header').className = `bg-gradient-to-r ${sec.color} rounded-3xl p-6 text-white shadow-xl relative overflow-hidden flex items-center justify-between`;
+        <!-- Kids -->
+        <div class="kid-figure kid-boy">👦</div>
+        <div class="kid-figure kid-girl">👧</div>
+      </div>
+    </div>
+  </div>
+</section>
 
-            const qContainer = document.getElementById('questions-container');
-            qContainer.innerHTML = '';
+<!-- ============ FEATURES ROW ============ -->
+<section class="features-section">
+  <div class="container">
+    <div class="features-grid">
+      <div class="feature-card reveal">
+        <div class="feature-icon f-icon-1">📖</div>
+        <h4>Interactive Lessons</h4>
+        <p>Step-by-step video lessons with examples & practice questions.</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon f-icon-2">🎮</div>
+        <h4>Fun Math Games</h4>
+        <p>Practice math skills with exciting games and challenges.</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon f-icon-3">🏆</div>
+        <h4>Exams & Quizzes</h4>
+        <p>Test your knowledge and track your progress easily.</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon f-icon-4">📈</div>
+        <h4>Progress Tracking</h4>
+        <p>See reports and achievements to improve every day.</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon f-icon-5">💡</div>
+        <h4>Creative Ideas</h4>
+        <p>Fun activities and puzzles to explore math creatively.</p>
+      </div>
+    </div>
+  </div>
+</section>
 
-            sec.questions.forEach((q, qIndex) => {
-                const isSolved = solvedQuestions.has(q.id);
-                const card = document.createElement('div');
-                card.id = `card-${q.id}`;
-                card.className = `glass-card rounded-3xl p-6 shadow-sm border border-slate-200 transition duration-300 hover:shadow-md ${isSolved ? 'border-emerald-300 bg-emerald-50/30' : ''}`;
+<!-- ============ TOPICS ============ -->
+<section class="topics-section">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">Explore by Topic <span class="star">★</span></h2>
+      <a href="#" class="view-all">View all topics →</a>
+    </div>
 
-                let inputHtml = '';
-                if (q.type === 'number') {
-                    inputHtml = `
-                        <div class="flex flex-wrap gap-3 items-center mt-4">
-                            <input type="number" step="any" id="input-${q.id}" placeholder="اكتب إجابتك هنا..." 
-                                class="flex-1 min-w-[200px] px-4 py-3 rounded-2xl border-2 border-slate-200 focus:border-brand-purple focus:outline-none font-black text-lg text-center ${isSolved ? 'bg-emerald-100/50 border-emerald-400' : ''}"
-                                ${isSolved ? 'disabled' : ''}>
-                            <button onclick="checkAnswer('${q.id}')" ${isSolved ? 'disabled' : ''} 
-                                class="btn-fun px-6 py-3 text-white font-black rounded-2xl active:scale-95 transition disabled:opacity-50">
-                                ${isSolved ? '<i class="fa-solid fa-check"></i> تم الحل' : 'تحقق من الإجابة 🚀'}
-                            </button>
-                        </div>`;
-                } else if (q.type === 'mcq') {
-                    inputHtml = `
-                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 mt-4">
-                            ${q.options.map(opt => `
-                                <button onclick="checkMcqAnswer('${q.id}', '${opt}')" ${isSolved ? 'disabled' : ''}
-                                    class="p-3 text-sm font-bold border-2 border-slate-200 rounded-2xl bg-white hover:border-brand-purple hover:bg-purple-50 hover:scale-105 active:scale-95 transition text-slate-700 text-center ${isSolved ? 'disabled:opacity-60' : ''}">
-                                    ${opt}
-                                </button>`).join('')}
-                        </div>`;
-                } else if (q.type === 'multi_input') {
-                    inputHtml = `
-                        <div class="space-y-3 mt-4">
-                            ${q.subQuestions.map(sq => `
-                                <div class="flex flex-wrap items-center justify-between bg-slate-50 p-3 rounded-2xl border border-slate-200 gap-2">
-                                    <label class="font-bold text-sm text-slate-700">${sq.label}</label>
-                                    <input type="number" step="any" id="sub-${q.id}-${sq.key}" placeholder="؟" 
-                                        class="w-28 px-3 py-1.5 border-2 border-slate-300 rounded-xl text-center font-bold focus:border-brand-purple focus:outline-none"
-                                        ${isSolved ? 'disabled' : ''}>
-                                </div>`).join('')}
-                            <button onclick="checkMultiInputAnswer('${q.id}')" ${isSolved ? 'disabled' : ''}
-                                class="mt-2 w-full py-3 btn-fun text-white font-black rounded-2xl active:scale-95 transition disabled:opacity-50">
-                                ${isSolved ? '<i class="fa-solid fa-check"></i> تم الحل' : 'تحقق من جميع الإجابات ✨'}
-                            </button>
-                        </div>`;
-                } else if (q.type === 'interactive_tape') {
-                    inputHtml = `
-                        <div class="mt-4 p-4 bg-purple-50 rounded-2xl border border-purple-200 space-y-3 text-center">
-                            <p class="font-bold text-sm text-purple-900">مخطط الشرائط التفاعلي:</p>
-                            <div class="flex flex-wrap justify-center gap-2">
-                                ${Array(q.tapeCount).fill(0).map(() => `
-                                    <div class="w-12 h-12 bg-gradient-to-tr from-brand-purple to-brand-pink text-white font-black text-lg rounded-xl flex items-center justify-center shadow-md animate-pulse-glow">
-                                        ${q.tapeVal}
-                                    </div>`).join('')}
-                            </div>
-                            <div class="text-xs text-purple-700 font-bold">المجموع = ${q.totalVal}</div>
-                            <button onclick="checkInteractiveTape('${q.id}')" ${isSolved ? 'disabled' : ''}
-                                class="px-6 py-2 btn-fun text-white font-black rounded-xl">
-                                ${isSolved ? 'تم التأكيد ✓' : 'تأكيد 🎯'}
-                            </button>
-                        </div>`;
-                }
+    <div class="topics-grid">
+      <div class="topic-card topic-1 reveal">
+        <h4>Numbers & Place Value</h4>
+        <div class="topic-visual">🔢</div>
+        <div class="topic-arrow">→</div>
+      </div>
+      <div class="topic-card topic-2 reveal">
+        <h4>Addition & Subtraction</h4>
+        <div class="topic-visual">➕</div>
+        <div class="topic-arrow">→</div>
+      </div>
+      <div class="topic-card topic-3 reveal">
+        <h4>Multiplication & Division</h4>
+        <div class="topic-visual">✖️</div>
+        <div class="topic-arrow">→</div>
+      </div>
+      <div class="topic-card topic-4 reveal">
+        <h4>Fractions & Decimals</h4>
+        <div class="topic-visual">🥧</div>
+        <div class="topic-arrow">→</div>
+      </div>
+      <div class="topic-card topic-5 reveal">
+        <h4>Measurement & Data</h4>
+        <div class="topic-visual">📏</div>
+        <div class="topic-arrow">→</div>
+      </div>
+    </div>
 
-                card.innerHTML = `
-                    <div class="flex items-start justify-between gap-3">
-                        <div class="flex items-center gap-3">
-                            <span class="w-8 h-8 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center font-black text-sm border border-slate-300">
-                                ${qIndex + 1}
-                            </span>
-                            <h3 class="text-lg font-bold text-slate-800 leading-snug">${q.question}</h3>
-                        </div>
-                        ${isSolved ? '<span class="text-emerald-500 font-bold text-xs bg-emerald-100 px-3 py-1 rounded-full"><i class="fa-solid fa-circle-check"></i> ممتازة</span>' : ''}
-                    </div>
-                    ${inputHtml}
-                    <div class="mt-4 pt-3 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2">
-                        <button onclick="toggleExplanation('${q.id}')" class="text-xs font-bold text-brand-purple hover:underline flex items-center gap-1">
-                            <i class="fa-regular fa-lightbulb text-amber-500 text-sm"></i> عرض طريقة الحل
-                        </button>
-                    </div>
-                    <div id="explain-${q.id}" class="hidden mt-3 p-3 bg-amber-50 rounded-2xl border border-amber-200 text-xs text-amber-900 font-bold leading-relaxed">
-                        <i class="fa-solid fa-circle-info text-amber-600"></i> ${q.explanation}
-                    </div>`;
-                qContainer.appendChild(card);
-            });
-            renderNavigation();
-        }
+    <div class="dots-nav">
+      <div class="dot active"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+    </div>
+  </div>
+</section>
 
-        function toggleExplanation(qId) {
-            playSound('click');
-            const el = document.getElementById(`explain-${qId}`);
-            if (el) el.classList.toggle('hidden');
-        }
+<!-- ============ LEARNING PATH ============ -->
+<section class="path-section">
+  <div class="path-deco path-deco-left">👧</div>
+  <div class="path-deco path-deco-right">🧠</div>
+  <div class="container">
+    <h2 class="main-title">A Fun Learning Path for Every Kid</h2>
+    <p class="subtitle">Structured lessons designed to build strong math skills step by step.</p>
 
-        function checkAnswer(qId) {
-            const input = document.getElementById(`input-${qId}`);
-            const val = parseFloat(input.value);
-            const question = findQuestion(qId);
-            if (isNaN(val)) { triggerShake(qId); return; }
-            let isCorrect = false;
-            if (question.acceptAnswers) isCorrect = question.acceptAnswers.includes(val);
-            else isCorrect = question.answer.includes(val);
-            isCorrect ? handleSuccess(qId) : handleFailure(qId);
-        }
+    <div class="path-grid">
+      <div class="path-step reveal">
+        <div class="path-icon p-icon-1">📋</div>
+        <h4>1. Learn</h4>
+        <p>Watch lessons and understand new concepts.</p>
+      </div>
+      <div class="path-step reveal">
+        <div class="path-icon p-icon-2">✏️</div>
+        <h4>2. Practice</h4>
+        <p>Solve exercises and try practice questions.</p>
+      </div>
+      <div class="path-step reveal">
+        <div class="path-icon p-icon-3">🎮</div>
+        <h4>3. Play</h4>
+        <p>Play fun games to reinforce what you learned.</p>
+      </div>
+      <div class="path-step reveal">
+        <div class="path-icon p-icon-4">🏅</div>
+        <h4>4. Test</h4>
+        <p>Take quizzes and exams to check your knowledge.</p>
+      </div>
+      <div class="path-step reveal">
+        <div class="path-icon p-icon-5">🏆</div>
+        <h4>5. Achieve</h4>
+        <p>Earn stars, badges, and certificates!</p>
+      </div>
+    </div>
+  </div>
+</section>
 
-        function checkMcqAnswer(qId, selectedOption) {
-            const question = findQuestion(qId);
-            selectedOption === question.answer ? handleSuccess(qId) : handleFailure(qId);
-        }
+<!-- ============ WHY KIDS LOVE ============ -->
+<section class="why-section">
+  <div class="container">
+    <h2 class="main-title">Why Kids & Parents Love <span class="purple">Math</span><span class="pink">Kids</span></h2>
+    <p class="subtitle">MathKids makes learning math simple, fun, and effective!</p>
 
-        function checkMultiInputAnswer(qId) {
-            const question = findQuestion(qId);
-            let allCorrect = true;
-            question.subQuestions.forEach(sq => {
-                const input = document.getElementById(`sub-${qId}-${sq.key}`);
-                const val = parseFloat(input.value);
-                if (val !== sq.answer) allCorrect = false;
-            });
-            allCorrect ? handleSuccess(qId) : handleFailure(qId);
-        }
+    <div class="why-grid">
+      <div class="why-col left">
+        <div class="why-item reveal">
+          <div class="why-icon w-icon-1">✓</div>
+          <div>
+            <h5>Safe & Kid-Friendly</h5>
+            <p>100% safe learning environment with no ads.</p>
+          </div>
+        </div>
+        <div class="why-item reveal">
+          <div class="why-icon w-icon-2">🎓</div>
+          <div>
+            <h5>Curriculum Aligned</h5>
+            <p>Lessons designed to match Grade 4 curriculum.</p>
+          </div>
+        </div>
+      </div>
 
-        function checkInteractiveTape(qId) { handleSuccess(qId); }
+      <div class="why-center reveal" style="position:relative;">
+        <div class="family-emoji">👨‍👩‍👦</div>
+        <div class="monster">👾</div>
+      </div>
 
-        function findQuestion(qId) {
-            for (let sec of appData) {
-                const q = sec.questions.find(item => item.id === qId);
-                if (q) return q;
-            }
-            return null;
-        }
+      <div class="why-col right">
+        <div class="why-item reveal">
+          <div class="why-icon w-icon-3">❤️</div>
+          <div>
+            <h5>Engaging & Interactive</h5>
+            <p>Colorful videos, animations, and interactive activities.</p>
+          </div>
+        </div>
+        <div class="why-item reveal">
+          <div class="why-icon w-icon-4">📊</div>
+          <div>
+            <h5>Progress You Can See</h5>
+            <p>Detailed reports to help kids improve and grow.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
-        function spawnStars(x, y) {
-            const emojis = ['⭐', '🌟', '✨', '💫', '🎉', '🏆'];
-            for (let i = 0; i < 6; i++) {
-                const star = document.createElement('div');
-                star.className = 'floating-star';
-                star.textContent = emojis[Math.floor(Math.random() * emojis.length)];
-                star.style.left = (x + (Math.random() - 0.5) * 120) + 'px';
-                star.style.top = y + 'px';
-                star.style.fontSize = (1.5 + Math.random() * 1.5) + 'rem';
-                document.body.appendChild(star);
-                setTimeout(() => star.remove(), 1300);
-            }
-        }
+<!-- ============ STATS ============ -->
+<section class="stats-section">
+  <div class="stats-box reveal">
+    <div class="stat-item">
+      <div class="icon">🚀</div>
+      <div class="stat-number" data-target="10000">0</div>
+      <div class="stat-label">Happy Students</div>
+    </div>
+    <div class="stat-item">
+      <div class="icon">📚</div>
+      <div class="stat-number" data-target="500">0</div>
+      <div class="stat-label">Interactive Lessons</div>
+    </div>
+    <div class="stat-item">
+      <div class="icon">🎮</div>
+      <div class="stat-number" data-target="100">0</div>
+      <div class="stat-label">Fun Math Games</div>
+    </div>
+    <div class="stat-item">
+      <div class="icon">💜</div>
+      <div class="stat-number" data-target="98" data-suffix="%">0</div>
+      <div class="stat-label">Parents Satisfied</div>
+    </div>
+  </div>
+</section>
 
-        function handleSuccess(qId) {
-            if (solvedQuestions.has(qId)) return;
-            solvedQuestions.add(qId);
-            currentScore += 10;
-            playSound('correct');
+<!-- ============ TESTIMONIALS ============ -->
+<section class="testimonials-section">
+  <div class="container">
+    <h2 class="main-title">What Parents Say</h2>
 
-            confetti({
-                particleCount: 80, spread: 90, origin: { y: 0.6 },
-                colors: ['#7C3AED', '#EC4899', '#F59E0B', '#10B981', '#0EA5E9']
-            });
+    <div class="testimonials-grid">
+      <div class="testimonial reveal">
+        <p>"MathKids has made math so easy and fun for my daughter. She looks forward to learning every day!"</p>
+        <div class="stars">★★★★★</div>
+        <div class="author">
+          <div class="author-avatar">👩</div>
+          <div class="author-name">— Emma's Mom</div>
+        </div>
+      </div>
+      <div class="testimonial reveal">
+        <p>"The lessons are clear, the games are amazing, and I can see real improvement in my son's skills."</p>
+        <div class="stars">★★★★★</div>
+        <div class="author">
+          <div class="author-avatar">👨</div>
+          <div class="author-name">— James's Dad</div>
+        </div>
+      </div>
+      <div class="testimonial reveal">
+        <p>"A fantastic platform! My child loves the quizzes and badges. Highly recommended!"</p>
+        <div class="stars">★★★★★</div>
+        <div class="author">
+          <div class="author-avatar">👩‍🦰</div>
+          <div class="author-name">— Sophia's Mom</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
-            const card = document.getElementById(`card-${qId}`);
-            if (card) {
-                const rect = card.getBoundingClientRect();
-                spawnStars(rect.left + rect.width / 2, rect.top + rect.height / 2);
-                card.classList.add('pop-success');
-                setTimeout(() => card.classList.remove('pop-success'), 600);
-            }
+<!-- ============ CTA ============ -->
+<section class="cta-section">
+  <div class="cta-box reveal">
+    <div class="cta-kid cta-kid-left">👦</div>
+    <div class="cta-kid cta-kid-right">👧</div>
+    <h2>Start Your Math Adventure Today!</h2>
+    <p>Join thousands of kids learning math the fun way.</p>
+    <button class="btn-white">🚀 Start Learning Now</button>
+  </div>
+</section>
 
-            const currentSec = appData[currentSectionIndex];
-            const solvedInSec = currentSec.questions.filter(q => solvedQuestions.has(q.id)).length;
-            if (solvedInSec === currentSec.questions.length) {
-                setTimeout(() => {
-                    playSound('levelup');
-                    confetti({ particleCount: 200, spread: 160, origin: { y: 0.5 }, colors: ['#F59E0B','#EC4899','#7C3AED'] });
-                }, 400);
-            }
+<!-- ============ FOOTER ============ -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="logo">
+          <div class="logo-icon">⭐</div>
+          <span><span class="math">Math</span><span class="kids">Kids</span></span>
+        </div>
+        <span>Learn • Play • Grow</span>
+        <p>Making math learning fun, interactive, and effective for Grade 4 students.</p>
+        <div class="socials">
+          <a href="#" aria-label="Facebook">f</a>
+          <a href="#" aria-label="Twitter">𝕏</a>
+          <a href="#" aria-label="Instagram">◎</a>
+        </div>
+      </div>
 
-            document.getElementById('score').textContent = currentScore;
-            document.getElementById('completed-count').textContent = solvedQuestions.size;
-            const progressPct = (solvedQuestions.size / totalQuestionsCount) * 100;
-            document.getElementById('overall-progress').style.width = `${progressPct}%`;
-            loadSection(currentSectionIndex);
-        }
+      <div class="footer-col">
+        <h5>Explore</h5>
+        <ul>
+          <li><a href="#">Lessons</a></li>
+          <li><a href="#">Exams</a></li>
+          <li><a href="#">Games</a></li>
+          <li><a href="#">Ideas</a></li>
+          <li><a href="#">Grade 4</a></li>
+        </ul>
+      </div>
 
-        function handleFailure(qId) {
-            playSound('wrong');
-            triggerShake(qId);
-        }
+      <div class="footer-col">
+        <h5>Resources</h5>
+        <ul>
+          <li><a href="#">Blog</a></li>
+          <li><a href="#">Help Center</a></li>
+          <li><a href="#">Parents Guide</a></li>
+          <li><a href="#">Study Tips</a></li>
+          <li><a href="#">Download App</a></li>
+        </ul>
+      </div>
 
-        function triggerShake(qId) {
-            const card = document.getElementById(`card-${qId}`);
-            if (card) {
-                card.classList.add('shake');
-                setTimeout(() => card.classList.remove('shake'), 500);
-            }
-        }
-    </script>
+      <div class="footer-col">
+        <h5>Company</h5>
+        <ul>
+          <li><a href="#">About Us</a></li>
+          <li><a href="#">Contact Us</a></li>
+          <li><a href="#">Terms of Use</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h5>Stay Updated!</h5>
+        <p style="font-size:0.8rem; color:var(--gray); margin-bottom:8px; line-height:1.5;">Subscribe to get the latest updates and learning tips.</p>
+        <form class="newsletter" onsubmit="event.preventDefault(); this.reset(); showToast('Subscribed! 🎉');">
+          <input type="email" placeholder="Enter your email" required>
+          <button type="submit" aria-label="Subscribe">➤</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      © 2024 MathKids. All rights reserved.
+    </div>
+  </div>
+</footer>
+
+<!-- Toast Notification -->
+<div id="toast" style="position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--purple);color:white;padding:14px 28px;border-radius:30px;font-weight:700;box-shadow:0 10px 30px rgba(124,92,252,0.4);transition:transform 0.4s;z-index:9999;font-family:'Baloo 2';"></div>
+
+<script>
+/* ============ SCROLL REVEAL ============ */
+const revealElements = document.querySelectorAll('.reveal');
+
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach((entry, i) => {
+    if (entry.isIntersecting) {
+      setTimeout(() => {
+        entry.target.classList.add('active');
+      }, i * 80);
+      revealObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.15 });
+
+revealElements.forEach(el => revealObserver.observe(el));
+
+/* ============ COUNTER ANIMATION ============ */
+const counters = document.querySelectorAll('.stat-number');
+let countersStarted = false;
+
+const counterObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting && !countersStarted) {
+      countersStarted = true;
+      counters.forEach(counter => {
+        const target = +counter.dataset.target;
+        const suffix = counter.dataset.suffix || '+';
+        const duration = 2200;
+        const step = target / (duration / 16);
+        let current = 0;
+
+        const updateCounter = () => {
+          current += step;
+          if (current < target) {
+            counter.textContent = Math.floor(current).toLocaleString() + (current > target * 0.9 ? suffix : '');
+            requestAnimationFrame(updateCounter);
+          } else {
+            counter.textContent = target.toLocaleString() + suffix;
+          }
+        };
+        updateCounter();
+      });
+    }
+  });
+}, { threshold: 0.4 });
+
+const statsBox = document.querySelector('.stats-box');
+if (statsBox) counterObserver.observe(statsBox);
+
+/* ============ DOTS NAV ============ */
+document.querySelectorAll('.dot').forEach(dot => {
+  dot.addEventListener('click', () => {
+    document.querySelectorAll('.dot').forEach(d => d.classList.remove('active'));
+    dot.classList.add('active');
+  });
+});
+
+/* ============ MOBILE MENU ============ */
+const mobileToggle = document.querySelector('.mobile-toggle');
+const navLinks = document.querySelector('.nav-links');
+
+mobileToggle?.addEventListener('click', (e) => {
+  e.stopPropagation();
+  const isOpen = navLinks.style.display === 'flex';
+  if (isOpen) {
+    navLinks.style.display = 'none';
+    mobileToggle.textContent = '☰';
+  } else {
+    navLinks.style.display = 'flex';
+    navLinks.style.flexDirection = 'column';
+    navLinks.style.position = 'absolute';
+    navLinks.style.top = '70px';
+    navLinks.style.left = '16px';
+    navLinks.style.right = '16px';
+    navLinks.style.background = 'white';
+    navLinks.style.padding = '20px';
+    navLinks.style.boxShadow = '0 10px 30px rgba(0,0,0,0.1)';
+    navLinks.style.borderRadius = '20px';
+    mobileToggle.textContent = '✕';
+  }
+});
+
+/* ============ PARALLAX HERO SHAPES ============ */
+document.addEventListener('mousemove', (e) => {
+  const shapes = document.querySelectorAll('.float-num');
+  const x = (e.clientX / window.innerWidth - 0.5) * 20;
+  const y = (e.clientY / window.innerHeight - 0.5) * 20;
+  shapes.forEach((shape, i) => {
+    const factor = (i + 1) * 0.6;
+    shape.style.transform = `translate(${x * factor}px, ${y * factor}px)`;
+  });
+});
+
+/* ============ BUTTON RIPPLE ============ */
+document.querySelectorAll('.btn, .btn-white, .login-btn').forEach(btn => {
+  btn.style.position = btn.style.position || 'relative';
+  btn.style.overflow = 'hidden';
+  btn.addEventListener('click', function(e) {
+    const rect = this.getBoundingClientRect();
+    const circle = document.createElement('span');
+    circle.style.position = 'absolute';
+    circle.style.width = circle.style.height = '20px';
+    circle.style.background = 'rgba(255,255,255,0.5)';
+    circle.style.borderRadius = '50%';
+    circle.style.left = (e.clientX - rect.left) + 'px';
+    circle.style.top = (e.clientY - rect.top) + 'px';
+    circle.style.transform = 'translate(-50%, -50%) scale(0)';
+    circle.style.transition = 'transform 0.6s ease, opacity 0.6s ease';
+    circle.style.pointerEvents = 'none';
+    circle.style.zIndex = '1';
+    this.appendChild(circle);
+    requestAnimationFrame(() => {
+      circle.style.transform = 'translate(-50%, -50%) scale(15)';
+      circle.style.opacity = '0';
+    });
+    setTimeout(() => circle.remove(), 700);
+  });
+});
+
+/* ============ TOAST ============ */
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.style.transform = 'translateX(-50%) translateY(0)';
+  setTimeout(() => {
+    toast.style.transform = 'translateX(-50%) translateY(100px)';
+  }, 2500);
+}
+
+/* ============ NAV LINK ACTIVE ============ */
+document.querySelectorAll('.nav-links > li > a').forEach(link => {
+  link.addEventListener('click', function(e) {
+    if (this.classList.contains('active') === false && !this.parentElement.classList.contains('dropdown')) {
+      document.querySelectorAll('.nav-links > li > a').forEach(l => l.classList.remove('active'));
+      this.classList.add('active');
+    }
+  });
+});
+</script>
 </body>
 </html>

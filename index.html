@@ -1,2301 +1,749 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Large Numbers · Grade 4 · Exam</title>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.0.1/dist/chartjs-plugin-annotation.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-  <style>
-    :root {
-      --purple: #7547E8;
-      --purple-light: #F0E9FF;
-
-      --pink: #F34F7D;
-      --pink-light: #FFE8EF;
-
-      --blue: #3D8EEA;
-      --blue-light: #E5F3FF;
-
-      --green: #45B96B;
-      --green-light: #E9F9E8;
-
-      --yellow: #FFBD32;
-      --yellow-light: #FFF5D9;
-
-      --orange: #FF8B28;
-
-      --dark: #25335F;
-      --text: #1D2B52;
-      --text-light: #78829B;
-
-      --white: #FFFFFF;
-
-      --background: #F5FAFF;
-    }
-
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Fredoka', 'Comic Sans MS', 'Segoe UI', Roboto, system-ui, sans-serif; }
-
-    /* ============ FUN BACKGROUND ============ */
-    body {
-      background: linear-gradient(135deg, var(--purple-light) 0%, var(--pink-light) 30%, var(--blue-light) 60%, var(--yellow-light) 100%);
-      background-size: 400% 400%;
-      animation: gradientShift 20s ease infinite;
-      min-height: 100vh;
-      display: flex; justify-content: center; align-items: center;
-      padding: 2rem 1rem;
-      position: relative;
-      overflow-x: hidden;
-      color: var(--text);
-    }
-
-    @keyframes gradientShift {
-      0%, 100% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-    }
-
-    /* Floating background emojis */
-    .floating-bg {
-      position: fixed; inset: 0;
-      pointer-events: none; z-index: 0;
-      overflow: hidden;
-    }
-    .floating-bg span {
-      position: absolute;
-      font-size: 2.5rem;
-      opacity: 0.35;
-      animation: floatUp linear infinite;
-      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
-    }
-    @keyframes floatUp {
-      0% { transform: translateY(110vh) rotate(0deg); opacity: 0; }
-      10% { opacity: 0.4; }
-      90% { opacity: 0.4; }
-      100% { transform: translateY(-20vh) rotate(360deg); opacity: 0; }
-    }
-
-    /* ============ LOGIN ============ */
-    .login-wrapper {
-      position: fixed; inset: 0;
-      background: linear-gradient(135deg, var(--purple) 0%, var(--pink) 35%, var(--blue) 70%, var(--purple) 100%);
-      background-size: 400% 400%;
-      animation: gradientShift 15s ease infinite;
-      display: flex; justify-content: center; align-items: center;
-      z-index: 1000; padding: 1rem;
-    }
-    .login-card {
-      background: var(--white);
-      border-radius: 3rem;
-      padding: 3rem 2.5rem; max-width: 480px; width: 100%;
-      box-shadow: 0 30px 60px rgba(37,51,95,0.25), 0 0 0 6px var(--white), 0 0 0 12px var(--yellow);
-      border: 4px solid var(--purple);
-      text-align: center;
-      animation: cardBounceIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
-      position: relative;
-    }
-
-    @keyframes cardBounceIn {
-      0% { transform: scale(0.3) rotate(-15deg); opacity: 0; }
-      60% { transform: scale(1.05) rotate(3deg); opacity: 1; }
-      100% { transform: scale(1) rotate(0deg); }
-    }
-
-    .login-card::before {
-      content: '🎓';
-      position: absolute;
-      top: -30px; left: 50%;
-      transform: translateX(-50%);
-      font-size: 3.5rem;
-      animation: hatBounce 2s ease-in-out infinite;
-      filter: drop-shadow(0 6px 8px rgba(0,0,0,0.2));
-    }
-
-    @keyframes hatBounce {
-      0%, 100% { transform: translateX(-50%) translateY(0) rotate(-5deg); }
-      50% { transform: translateX(-50%) translateY(-8px) rotate(5deg); }
-    }
-
-    .login-card h2 {
-      font-size: 2.4rem; color: var(--dark);
-      margin-bottom: 0.5rem; margin-top: 1rem;
-      text-shadow: 3px 3px 0 var(--yellow-light);
-      animation: titleWiggle 3s ease-in-out infinite;
-    }
-
-    @keyframes titleWiggle {
-      0%, 100% { transform: rotate(-1deg); }
-      50% { transform: rotate(1deg); }
-    }
-
-    .login-card p.subtitle { color: var(--text-light); margin-bottom: 2rem; font-weight: 700; font-size: 1.05rem; }
-    .login-field { margin-bottom: 1.2rem; text-align: left; }
-    .login-field label {
-      display: block; font-weight: 700; color: var(--dark);
-      margin-bottom: 0.4rem; font-size: 1.05rem;
-      display: flex; align-items: center; gap: 0.4rem;
-    }
-    .login-field input {
-      width: 100%; padding: 0.9rem 1.2rem; border-radius: 2rem;
-      border: 3px solid var(--blue-light); font-size: 1.1rem; font-weight: 600;
-      background: var(--white); outline: none; transition: all 0.25s;
-      color: var(--text);
-    }
-    .login-field input:focus {
-      border-color: var(--purple);
-      box-shadow: 0 0 0 5px rgba(117,71,232,0.15);
-      transform: scale(1.02);
-    }
-
-    .login-btn {
-      width: 100%; margin-top: 1rem;
-      background: linear-gradient(135deg, var(--purple), var(--blue));
-      color: var(--white);
-      border: none; padding: 1.1rem; border-radius: 3rem;
-      font-size: 1.3rem; font-weight: 800; cursor: pointer;
-      box-shadow: 0 8px 0 #4a2a9c, 0 8px 20px rgba(117,71,232,0.35);
-      transition: all 0.12s;
-      letter-spacing: 0.5px;
-      position: relative;
-      overflow: hidden;
-    }
-    .login-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 0 #4a2a9c, 0 12px 25px rgba(117,71,232,0.4); }
-    .login-btn:active { transform: translateY(6px); box-shadow: 0 2px 0 #4a2a9c; }
-
-    .login-error {
-      color: var(--pink); font-weight: 700;
-      margin-top: 1rem; min-height: 1.5rem;
-      animation: shake 0.5s;
-    }
-
-    @keyframes shake {
-      0%, 100% { transform: translateX(0); }
-      25% { transform: translateX(-8px); }
-      75% { transform: translateX(8px); }
-    }
-
-    .login-hint {
-      margin-top: 1.5rem; font-size: 0.85rem; color: var(--text-light);
-      background: var(--purple-light); padding: 0.8rem 1rem;
-      border-radius: 1.5rem; line-height: 1.7;
-      border: 2px dashed var(--purple);
-    }
-
-    /* ============ APP ============ */
-    .app-container {
-      max-width: 1400px; width: 100%;
-      background: var(--white);
-      border-radius: 4rem 4rem 3rem 3rem;
-      padding: 2.5rem 2rem;
-      box-shadow: 0 30px 60px rgba(37,51,95,0.15), 0 0 0 6px var(--white), 0 0 0 12px var(--purple);
-      border: 4px solid var(--purple);
-      display: none;
-      position: relative;
-      z-index: 1;
-      animation: appSlideIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-    .app-container.visible { display: block; }
-
-    @keyframes appSlideIn {
-      0% { transform: translateY(50px) scale(0.95); opacity: 0; }
-      100% { transform: translateY(0) scale(1); opacity: 1; }
-    }
-
-    .user-bar {
-      display: flex; justify-content: space-between; align-items: center;
-      background: linear-gradient(90deg, var(--purple), var(--blue));
-      padding: 0.7rem 1.5rem; border-radius: 3rem;
-      margin-bottom: 1.5rem;
-      box-shadow: 0 6px 0 #4a2a9c, 0 8px 15px rgba(117,71,232,0.2);
-      flex-wrap: wrap; gap: 0.5rem;
-      border: 3px solid var(--white);
-    }
-    .user-bar .welcome {
-      font-weight: 800; color: var(--white); font-size: 1.05rem;
-      display: flex; align-items: center; gap: 0.4rem;
-    }
-    .logout-btn {
-      background: var(--pink); border: none; padding: 0.6rem 1.3rem;
-      border-radius: 2rem; font-weight: 800; cursor: pointer;
-      box-shadow: 0 5px 0 #b8335a; color: var(--white); font-size: 0.95rem;
-      transition: all 0.1s;
-    }
-    .logout-btn:hover { transform: translateY(-2px); box-shadow: 0 7px 0 #b8335a; }
-    .logout-btn:active { transform: translateY(3px); box-shadow: 0 2px 0 #b8335a; }
-
-    h1 {
-      font-size: 3rem; text-align: center; color: var(--dark);
-      text-shadow: 4px 4px 0 var(--yellow-light), 6px 6px 0 rgba(37,51,95,0.1);
-      letter-spacing: 2px;
-      margin-top: -0.5rem; margin-bottom: 1.5rem;
-      animation: titleFloat 3s ease-in-out infinite;
-    }
-
-    @keyframes titleFloat {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-6px); }
-    }
-
-    h1 span {
-      background: linear-gradient(135deg, var(--purple), var(--pink));
-      color: var(--white);
-      padding: 0.2rem 1.2rem; border-radius: 4rem;
-      display: inline-block;
-      transform: rotate(-2deg);
-      box-shadow: 0 8px 0 #4a2a9c, 0 10px 20px rgba(117,71,232,0.3);
-      animation: badgePulse 2s ease-in-out infinite;
-    }
-
-    @keyframes badgePulse {
-      0%, 100% { transform: rotate(-2deg) scale(1); }
-      50% { transform: rotate(2deg) scale(1.05); }
-    }
-
-    /* Progress */
-    .progress-container {
-      background: var(--purple-light); border-radius: 2rem;
-      padding: 0.6rem 1.2rem; margin-bottom: 1.5rem;
-      display: flex; align-items: center; gap: 0.8rem;
-      font-weight: 800; color: var(--dark); font-size: 1rem;
-      border: 3px solid var(--purple);
-      box-shadow: 0 4px 0 rgba(117,71,232,0.3);
-    }
-    .progress-bar-bg {
-      flex: 1; height: 22px; background: rgba(255,255,255,0.6);
-      border-radius: 1rem; overflow: hidden;
-      box-shadow: inset 0 3px 6px rgba(0,0,0,0.1);
-    }
-    .progress-bar-fill {
-      height: 100%;
-      background: linear-gradient(90deg, var(--green), var(--yellow), var(--pink));
-      background-size: 200% 100%;
-      border-radius: 1rem;
-      transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-      width: 0%;
-      animation: progressShimmer 3s linear infinite;
-      box-shadow: 0 0 10px rgba(69,185,107,0.6);
-    }
-
-    @keyframes progressShimmer {
-      0% { background-position: 0% 50%; }
-      100% { background-position: 200% 50%; }
-    }
-
-    /* Place value chart */
-    .chart-section {
-      background: linear-gradient(135deg, var(--purple-light), var(--blue-light));
-      border-radius: 3rem;
-      padding: 1.8rem 1.5rem 2rem; margin-bottom: 2rem;
-      border: 4px dashed var(--purple);
-      box-shadow: inset 0 0 30px rgba(117,71,232,0.1), 0 10px 20px rgba(0,0,0,0.05);
-    }
-    .section-title {
-      font-size: 2rem; font-weight: 800; color: var(--white);
-      display: flex; align-items: center; gap: 0.75rem;
-      margin-bottom: 1.8rem;
-      background: linear-gradient(90deg, var(--purple), var(--pink));
-      padding: 0.5rem 1.8rem; border-radius: 4rem;
-      width: fit-content;
-      box-shadow: 0 6px 0 #4a2a9c, 0 8px 15px rgba(117,71,232,0.3);
-      border: 3px solid var(--white);
-      animation: sectionTitleBounce 3s ease-in-out infinite;
-    }
-
-    @keyframes sectionTitleBounce {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-4px); }
-    }
-
-    .section-title i { font-size: 2rem; filter: drop-shadow(2px 2px 0 rgba(0,0,0,0.2)); }
-
-    .place-chart {
-      display: flex; flex-wrap: wrap; justify-content: center;
-      gap: 0.75rem 0.5rem; direction: ltr;
-    }
-    .place-group {
-      display: flex; flex-direction: column;
-      background: linear-gradient(135deg, var(--white), var(--purple-light));
-      border-radius: 1.5rem; padding: 0.5rem;
-      box-shadow: 0 6px 0 rgba(117,71,232,0.4), 0 8px 15px rgba(0,0,0,0.08);
-      border: 3px solid var(--white);
-      transition: transform 0.2s;
-    }
-    .place-group:hover { transform: translateY(-4px); }
-
-    .group-label {
-      font-size: 1rem; font-weight: 800; text-align: center;
-      color: var(--white); background: linear-gradient(135deg, var(--purple), var(--blue));
-      border-radius: 2rem; padding: 0.25rem 0.8rem;
-      margin-bottom: 0.3rem;
-      text-transform: uppercase; letter-spacing: 1px;
-      box-shadow: 0 3px 0 #4a2a9c;
-    }
-
-    .digits-row { display: flex; gap: 0.25rem; }
-    .digit-box {
-      width: 4.2rem; height: 4.8rem;
-      background: linear-gradient(180deg, var(--white), var(--blue-light));
-      border-radius: 1.2rem; display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      border: 3px solid var(--blue);
-      box-shadow: 0 5px 0 rgba(61,142,234,0.5), 0 6px 12px rgba(0,0,0,0.1);
-      transition: all 0.2s;
-    }
-    .digit-box:hover {
-      transform: translateY(-3px) scale(1.05);
-      box-shadow: 0 8px 0 rgba(61,142,234,0.5), 0 10px 18px rgba(0,0,0,0.15);
-    }
-    .digit-value {
-      font-size: 2.5rem; font-weight: 800; color: var(--purple);
-      line-height: 1; margin-bottom: -0.1rem;
-      text-shadow: 2px 2px 0 var(--yellow-light);
-    }
-    .place-name {
-      font-size: 0.75rem; font-weight: 800; background: var(--yellow);
-      padding: 0.15rem 0.45rem; border-radius: 1rem;
-      color: var(--dark); white-space: nowrap; text-transform: uppercase;
-      box-shadow: 0 2px 0 #c9961e;
-    }
-
-    .current-number-box { text-align: center; margin: 1.8rem 0 1rem; }
-    .big-number {
-      font-size: 3.5rem; font-weight: 900;
-      background: linear-gradient(135deg, var(--dark), var(--purple));
-      color: var(--yellow);
-      display: inline-block; padding: 0.3rem 2.5rem;
-      border-radius: 5rem; letter-spacing: 4px;
-      box-shadow: 0 12px 0 #4a2a9c, 0 15px 30px rgba(117,71,232,0.35);
-      border: 4px solid var(--purple);
-      word-break: break-word;
-      animation: numberGlow 2.5s ease-in-out infinite;
-      text-shadow: 0 0 15px rgba(255,189,50,0.6);
-    }
-
-    @keyframes numberGlow {
-      0%, 100% { box-shadow: 0 12px 0 #4a2a9c, 0 15px 30px rgba(117,71,232,0.35), 0 0 20px rgba(255,189,50,0.4); }
-      50% { box-shadow: 0 12px 0 #4a2a9c, 0 15px 30px rgba(117,71,232,0.35), 0 0 40px rgba(255,189,50,0.8); }
-    }
-
-    .buttons-panel {
-      display: flex; flex-wrap: wrap; justify-content: center;
-      align-items: center; gap: 1rem 0.9rem; margin: 2rem 0 1rem;
-    }
-    .btn {
-      background: linear-gradient(135deg, var(--purple), var(--blue));
-      color: var(--white);
-      border: none; padding: 0.85rem 1.7rem;
-      border-radius: 3rem; font-size: 1.2rem; font-weight: 800;
-      display: inline-flex; align-items: center;
-      gap: 0.6rem; cursor: pointer;
-      box-shadow: 0 7px 0 #4a2a9c, 0 8px 20px rgba(117,71,232,0.25);
-      transition: all 0.1s ease;
-      border: 3px solid var(--white);
-      position: relative;
-      overflow: hidden;
-      letter-spacing: 0.3px;
-    }
-    .btn:hover { transform: translateY(-3px); box-shadow: 0 10px 0 #4a2a9c, 0 12px 25px rgba(117,71,232,0.3); }
-    .btn:active { transform: translateY(5px); box-shadow: 0 2px 0 #4a2a9c; }
-    .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-
-    .btn-green { background: linear-gradient(135deg, var(--green), #35a058); box-shadow: 0 7px 0 #2d7d44, 0 8px 20px rgba(69,185,107,0.25); }
-    .btn-green:hover { box-shadow: 0 10px 0 #2d7d44, 0 12px 25px rgba(69,185,107,0.3); }
-    .btn-green:active { box-shadow: 0 2px 0 #2d7d44; }
-
-    .btn-blue { background: linear-gradient(135deg, var(--blue), #2e78cf); box-shadow: 0 7px 0 #235a9e, 0 8px 20px rgba(61,142,234,0.25); }
-    .btn-blue:hover { box-shadow: 0 10px 0 #235a9e, 0 12px 25px rgba(61,142,234,0.3); }
-    .btn-blue:active { box-shadow: 0 2px 0 #235a9e; }
-
-    .btn-purple { background: linear-gradient(135deg, var(--purple), #5e36c4); box-shadow: 0 7px 0 #4a2a9c, 0 8px 20px rgba(117,71,232,0.25); }
-    .btn-purple:hover { box-shadow: 0 10px 0 #4a2a9c, 0 12px 25px rgba(117,71,232,0.3); }
-    .btn-purple:active { box-shadow: 0 2px 0 #4a2a9c; }
-
-    .btn-red { background: linear-gradient(135deg, var(--pink), #d93361); color: var(--white); box-shadow: 0 7px 0 #a82a4c, 0 8px 20px rgba(243,79,125,0.25); }
-    .btn-red:hover { box-shadow: 0 10px 0 #a82a4c, 0 12px 25px rgba(243,79,125,0.3); }
-    .btn-red:active { box-shadow: 0 2px 0 #a82a4c; }
-
-    .btn-yellow { background: linear-gradient(135deg, var(--yellow), var(--orange)); color: var(--dark); box-shadow: 0 7px 0 #c9961e, 0 8px 20px rgba(255,189,50,0.3); }
-    .btn-yellow:hover { box-shadow: 0 10px 0 #c9961e, 0 12px 25px rgba(255,189,50,0.4); }
-    .btn-yellow:active { box-shadow: 0 2px 0 #c9961e; }
-
-    .btn-small { font-size: 1.05rem; padding: 0.65rem 1.3rem; }
-
-    /* Four sections */
-    .four-grid {
-      display: grid; grid-template-columns: repeat(2, 1fr);
-      gap: 1.5rem; margin-top: 1.5rem;
-    }
-    .card {
-      background: linear-gradient(135deg, var(--white), var(--purple-light));
-      border-radius: 2.5rem; padding: 1.8rem 1.5rem;
-      box-shadow: 0 10px 0 rgba(117,71,232,0.35), 0 15px 30px rgba(0,0,0,0.08);
-      border: 4px solid var(--purple);
-      transition: all 0.25s;
-      position: relative;
-      overflow: hidden;
-    }
-    .card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: -100%;
-      width: 100%; height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(117,71,232,0.08), transparent);
-      transition: left 0.6s;
-    }
-    .card:hover::before { left: 100%; }
-    .card:hover { transform: translateY(-4px); box-shadow: 0 14px 0 rgba(117,71,232,0.35), 0 20px 35px rgba(0,0,0,0.12); }
-
-    .card h2 {
-      font-size: 1.9rem; color: var(--dark); display: flex;
-      align-items: center; gap: 0.6rem; margin-bottom: 1.4rem;
-      border-bottom: 5px dotted var(--purple); padding-bottom: 0.5rem;
-      font-weight: 800;
-    }
-    .card-content { font-size: 1.25rem; font-weight: 500; color: var(--text); line-height: 1.6; }
-
-    /* ================= ENGLISH SENTENCE BUILDER ================= */
-    .builder-instructions {
-      background: linear-gradient(135deg, var(--purple-light), var(--blue-light));
-      padding: 1rem 1.2rem; border-radius: 2rem;
-      font-weight: 700; border-left: 8px solid var(--purple);
-      margin-bottom: 1rem; font-size: 1.05rem; line-height: 1.55;
-      color: var(--text);
-      box-shadow: 0 4px 0 rgba(117,71,232,0.2);
-    }
-
-    .build-area {
-      background: linear-gradient(135deg, var(--blue-light), #d4eaf5);
-      border: 4px dashed var(--blue);
-      border-radius: 2rem; padding: 1rem;
-      min-height: 90px; margin-bottom: 1rem;
-      display: flex; flex-wrap: wrap; gap: 0.5rem;
-      align-items: center;
-      transition: all 0.25s;
-      box-shadow: inset 0 4px 10px rgba(61,142,234,0.1);
-    }
-    .build-area:empty::before {
-      content: '📝 Drop words here to build the number...';
-      color: var(--text-light); font-weight: 700; font-size: 1rem;
-      display: block; padding: 0.5rem;
-    }
-    .build-area.correct {
-      background: linear-gradient(135deg, var(--green-light), #c8e6a0);
-      border-color: var(--green);
-      animation: successPulse 0.8s ease;
-    }
-    .build-area.wrong {
-      background: linear-gradient(135deg, var(--pink-light), #ffd0d0);
-      border-color: var(--pink);
-      animation: shake 0.5s;
-    }
-
-    @keyframes successPulse {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.03); box-shadow: 0 0 30px rgba(69,185,107,0.6); }
-      100% { transform: scale(1); }
-    }
-
-    .word-bank {
-      background: linear-gradient(135deg, var(--yellow-light), var(--purple-light));
-      border: 4px dashed var(--yellow);
-      border-radius: 2rem; padding: 1rem;
-      display: flex; flex-wrap: wrap; gap: 0.5rem;
-      margin-bottom: 1rem;
-      min-height: 80px;
-      box-shadow: inset 0 4px 12px rgba(255,189,50,0.15);
-    }
-
-    .word-chip {
-      background: linear-gradient(135deg, var(--yellow), var(--orange));
-      color: var(--dark);
-      padding: 0.65rem 1.1rem; border-radius: 2rem;
-      font-weight: 800; font-size: 1rem;
-      cursor: grab; user-select: none;
-      box-shadow: 0 5px 0 #c9961e, 0 6px 12px rgba(0,0,0,0.12);
-      transition: all 0.15s;
-      border: 3px solid var(--white);
-      display: inline-flex; align-items: center;
-      animation: chipPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-      position: relative;
-    }
-
-    @keyframes chipPop {
-      0% { transform: scale(0) rotate(-20deg); }
-      100% { transform: scale(1) rotate(0deg); }
-    }
-
-    .word-chip:hover {
-      transform: translateY(-3px) rotate(-2deg) scale(1.05);
-      box-shadow: 0 8px 0 #c9961e, 0 10px 18px rgba(0,0,0,0.18);
-      animation: chipWiggle 0.6s ease-in-out infinite;
-    }
-    .word-chip:active { cursor: grabbing; transform: translateY(3px) scale(0.98); box-shadow: 0 2px 0 #c9961e; }
-
-    @keyframes chipWiggle {
-      0%, 100% { transform: translateY(-3px) rotate(-2deg) scale(1.05); }
-      50% { transform: translateY(-3px) rotate(2deg) scale(1.05); }
-    }
-
-    .word-chip.placed {
-      background: linear-gradient(135deg, var(--green), #35a058);
-      color: var(--white);
-      box-shadow: 0 5px 0 #2d7d44, 0 6px 12px rgba(0,0,0,0.12);
-      border-color: var(--white);
-    }
-    .word-chip.placed:hover {
-      box-shadow: 0 8px 0 #2d7d44, 0 10px 18px rgba(0,0,0,0.18);
-    }
-
-    .word-chip.comma {
-      background: linear-gradient(135deg, var(--blue), #2e78cf);
-      color: var(--white);
-      box-shadow: 0 5px 0 #235a9e, 0 6px 12px rgba(0,0,0,0.12);
-    }
-    .word-chip.comma:hover { box-shadow: 0 8px 0 #235a9e, 0 10px 18px rgba(0,0,0,0.18); }
-
-    .builder-actions {
-      display: flex; flex-wrap: wrap; gap: 0.6rem;
-      margin-bottom: 1rem;
-    }
-
-    .builder-feedback {
-      background: linear-gradient(135deg, var(--purple-light), var(--blue-light));
-      padding: 1rem 1.2rem; border-radius: 2rem;
-      font-weight: 800; font-size: 1.05rem;
-      min-height: 2.5rem;
-      border-left: 8px solid var(--purple);
-      color: var(--text);
-      transition: all 0.25s;
-    }
-    .builder-feedback.success {
-      background: linear-gradient(135deg, var(--green-light), #c8e6a0);
-      border-left-color: var(--green); color: #2d6b1e;
-      animation: successPulse 0.6s ease;
-    }
-    .builder-feedback.fail {
-      background: linear-gradient(135deg, var(--pink-light), #ffd0d0);
-      border-left-color: var(--pink); color: var(--pink);
-      animation: shake 0.5s;
-    }
-
-    /* Hidden answer reveal box */
-    .reveal-box {
-      margin-top: 1rem;
-      background: linear-gradient(135deg, var(--yellow-light), #FFF0C0);
-      border-radius: 2rem; padding: 1.2rem 1.3rem;
-      border-left: 8px solid var(--yellow);
-      display: none;
-      box-shadow: 0 6px 0 rgba(255,189,50,0.4);
-    }
-    .reveal-box.visible {
-      display: block;
-      animation: revealPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-
-    @keyframes revealPop {
-      0% { transform: scale(0.7) translateY(-20px); opacity: 0; }
-      100% { transform: scale(1) translateY(0); opacity: 1; }
-    }
-
-    .reveal-box .label {
-      font-size: 0.95rem; font-weight: 800;
-      color: #6d531c; margin-bottom: 0.5rem;
-      display: flex; align-items: center; gap: 0.4rem;
-    }
-    .reveal-box .answer-text {
-      font-size: 1.15rem; font-weight: 800;
-      color: #2d4012; line-height: 1.6;
-      background: var(--white); padding: 0.9rem 1.1rem;
-      border-radius: 1.5rem;
-      border: 3px solid var(--green);
-      word-break: break-word;
-      box-shadow: 0 4px 0 rgba(69,185,107,0.4);
-      animation: glowAnswer 2s ease-in-out infinite;
-    }
-
-    @keyframes glowAnswer {
-      0%, 100% { box-shadow: 0 4px 0 rgba(69,185,107,0.4), 0 0 0 rgba(69,185,107,0); }
-      50% { box-shadow: 0 4px 0 rgba(69,185,107,0.4), 0 0 20px rgba(69,185,107,0.6); }
-    }
-
-    .expanded-form {
-      background: linear-gradient(135deg, var(--blue-light), var(--purple-light));
-      padding: 1rem 1.2rem; border-radius: 2rem;
-      font-family: 'Courier New', monospace; font-size: 1.2rem;
-      word-break: break-word;
-      border-left: 8px solid var(--blue);
-      font-weight: 700;
-      box-shadow: 0 4px 0 rgba(61,142,234,0.3);
-      color: var(--text);
-    }
-    .calc-display {
-      background: linear-gradient(135deg, var(--dark), var(--purple));
-      color: var(--yellow);
-      border-radius: 1.8rem; padding: 0.9rem 1.4rem;
-      font-size: 2rem; font-weight: 800;
-      text-align: center; margin-bottom: 0.8rem;
-      letter-spacing: 2px;
-      box-shadow: 0 6px 0 #1a1d3a, inset 0 0 20px rgba(255,189,50,0.15);
-      border: 3px solid var(--purple);
-      text-shadow: 0 0 10px rgba(255,189,50,0.5);
-    }
-    .calc-buttons { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; }
-    .quiz-question {
-      font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem;
-      background: linear-gradient(135deg, var(--purple-light), var(--blue-light));
-      padding: 1rem 1.2rem; border-radius: 2rem;
-      border-left: 6px solid var(--purple);
-      box-shadow: 0 4px 0 rgba(117,71,232,0.2);
-      color: var(--text);
-    }
-    .quiz-options { display: flex; flex-direction: column; gap: 0.6rem; margin: 1rem 0; }
-    .quiz-option {
-      background: linear-gradient(135deg, var(--white), var(--purple-light));
-      padding: 0.8rem 1.1rem; border-radius: 2rem;
-      border: 3px solid var(--purple); font-weight: 700;
-      cursor: pointer; transition: all 0.15s;
-      display: flex; align-items: center; gap: 0.6rem;
-      box-shadow: 0 4px 0 rgba(117,71,232,0.4);
-      color: var(--text);
-    }
-    .quiz-option:hover {
-      background: linear-gradient(135deg, var(--purple-light), var(--blue-light));
-      transform: translateX(6px) scale(1.01);
-      box-shadow: 0 6px 0 rgba(117,71,232,0.5);
-    }
-    .quiz-option.selected {
-      background: linear-gradient(135deg, var(--yellow), var(--orange));
-      border: 3px solid var(--orange);
-      transform: translateX(8px);
-      box-shadow: 0 6px 0 #c9961e;
-      color: var(--dark);
-    }
-    .quiz-option.correct {
-      background: linear-gradient(135deg, var(--green), #35a058);
-      color: var(--white);
-      border: 3px solid #2d7d44;
-      animation: successPulse 0.6s;
-    }
-    .quiz-option.wrong {
-      background: linear-gradient(135deg, var(--pink), #d93361);
-      color: var(--white);
-      border: 3px solid #a82a4c;
-      animation: shake 0.5s;
-    }
-    .quiz-feedback { font-size: 1.15rem; font-weight: 800; margin-top: 0.8rem; min-height: 2rem; }
-    .green-text { color: var(--green); }
-    .red-text { color: var(--pink); }
-
-    /* ZOO SECTION */
-    .zoo-section {
-      background: linear-gradient(135deg, var(--green-light), var(--blue-light));
-      border-radius: 3rem; padding: 2rem 1.5rem;
-      margin-top: 2rem; border: 4px dashed var(--green);
-      box-shadow: inset 0 0 40px rgba(69,185,107,0.1), 0 10px 20px rgba(0,0,0,0.05);
-    }
-    .zoo-section .section-title {
-      background: linear-gradient(90deg, var(--green), var(--blue));
-      box-shadow: 0 6px 0 #2d7d44, 0 8px 15px rgba(69,185,107,0.3);
-      color: var(--white);
-    }
-
-    .zoo-description {
-      background: var(--white); padding: 1.1rem 1.5rem; border-radius: 2rem;
-      margin-bottom: 1.5rem; font-size: 1.1rem; font-weight: 700;
-      color: var(--text);
-      border-left: 8px solid var(--green);
-      box-shadow: 0 5px 0 rgba(69,185,107,0.4);
-    }
-
-    .animal-cards {
-      display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
-      gap: 1rem; margin-bottom: 1.5rem;
-    }
-    .animal-card {
-      background: var(--white); border-radius: 2rem; padding: 1rem;
-      text-align: center; border: 4px solid var(--green);
-      box-shadow: 0 7px 0 #2d7d44, 0 10px 20px rgba(0,0,0,0.08);
-      transition: all 0.2s; cursor: pointer;
-      animation: cardPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
-    }
-    .animal-card:nth-child(1) { animation-delay: 0.1s; }
-    .animal-card:nth-child(2) { animation-delay: 0.2s; }
-    .animal-card:nth-child(3) { animation-delay: 0.3s; }
-    .animal-card:nth-child(4) { animation-delay: 0.4s; }
-
-    @keyframes cardPop {
-      0% { transform: scale(0) rotate(-10deg); }
-      100% { transform: scale(1) rotate(0); }
-    }
-
-    .animal-card:hover { transform: translateY(-6px) scale(1.03); box-shadow: 0 10px 0 #2d7d44, 0 15px 25px rgba(0,0,0,0.12); }
-    .animal-card.active {
-      border-color: var(--purple);
-      box-shadow: 0 7px 0 #4a2a9c, 0 0 0 5px rgba(117,71,232,0.3), 0 12px 25px rgba(0,0,0,0.15);
-      transform: translateY(-6px) scale(1.05);
-      animation: activeCardPulse 1.5s ease-in-out infinite;
-    }
-
-    @keyframes activeCardPulse {
-      0%, 100% { box-shadow: 0 7px 0 #4a2a9c, 0 0 0 5px rgba(117,71,232,0.3), 0 12px 25px rgba(0,0,0,0.15); }
-      50% { box-shadow: 0 7px 0 #4a2a9c, 0 0 0 12px rgba(117,71,232,0.15), 0 12px 25px rgba(0,0,0,0.15); }
-    }
-
-    .animal-emoji {
-      font-size: 3rem; line-height: 1;
-      animation: animalBounce 2s ease-in-out infinite;
-      display: inline-block;
-    }
-
-    @keyframes animalBounce {
-      0%, 100% { transform: translateY(0) rotate(-3deg); }
-      50% { transform: translateY(-6px) rotate(3deg); }
-    }
-
-    .animal-name { font-weight: 800; color: var(--text); margin: 0.4rem 0; font-size: 1.15rem; }
-    .animal-count-display {
-      background: linear-gradient(135deg, var(--purple-light), var(--blue-light));
-      border-radius: 1.5rem;
-      padding: 0.7rem; font-size: 1.4rem; font-weight: 900;
-      color: var(--purple); min-height: 2.6rem;
-      display: flex; align-items: center; justify-content: center;
-      border: 3px solid transparent;
-      box-shadow: inset 0 3px 6px rgba(0,0,0,0.05);
-      transition: all 0.25s;
-    }
-    .animal-count-display.correct {
-      background: linear-gradient(135deg, var(--green-light), #c8e6a0);
-      border-color: var(--green);
-      animation: successPulse 0.6s;
-      color: #2d6b1e;
-    }
-    .animal-count-display.wrong {
-      background: linear-gradient(135deg, var(--pink-light), #ffd0d0);
-      border-color: var(--pink);
-      color: var(--pink);
-      animation: shake 0.5s;
-    }
-
-    .zoo-chart-container {
-      background: var(--white); border-radius: 2rem; padding: 1rem;
-      margin-bottom: 1.5rem; height: 420px;
-      border: 4px solid var(--green);
-      box-shadow: 0 8px 0 #2d7d44, 0 12px 25px rgba(0,0,0,0.08);
-      position: relative;
-    }
-    .zoo-hint {
-      background: linear-gradient(135deg, var(--yellow-light), var(--purple-light));
-      padding: 0.9rem 1.3rem; border-radius: 1.5rem;
-      margin-bottom: 1rem; font-weight: 700; color: var(--text);
-      border-left: 6px solid var(--yellow); font-size: 1rem;
-      box-shadow: 0 4px 0 rgba(255,189,50,0.3);
-    }
-    .zoo-actions { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; margin-top: 1rem; }
-    .zoo-feedback { text-align: center; font-size: 1.25rem; font-weight: 800; margin-top: 1rem; min-height: 2rem; }
-
-    .chart-edit-input {
-      position: absolute;
-      background: var(--white);
-      border: 4px solid var(--purple);
-      border-radius: 1rem;
-      padding: 0.5rem 0.9rem;
-      font-size: 1.3rem;
-      font-weight: 900;
-      color: var(--dark);
-      width: 130px; text-align: center;
-      outline: none;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.25), 0 0 0 5px rgba(117,71,232,0.2);
-      z-index: 10;
-      transform: translate(-50%, -50%);
-      animation: inputPop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-
-    @keyframes inputPop {
-      0% { transform: translate(-50%, -50%) scale(0); }
-      100% { transform: translate(-50%, -50%) scale(1); }
-    }
-
-    .chart-edit-input:focus {
-      border-color: var(--green);
-      box-shadow: 0 0 0 6px rgba(69,185,107,0.3), 0 8px 20px rgba(0,0,0,0.25);
-    }
-
-    /* Exam */
-    .exam-section {
-      background: linear-gradient(135deg, var(--pink-light), var(--yellow-light));
-      border-radius: 3rem; padding: 2rem 1.5rem;
-      margin-top: 2rem; border: 4px dashed var(--pink);
-      box-shadow: inset 0 0 40px rgba(243,79,125,0.08), 0 10px 20px rgba(0,0,0,0.05);
-      text-align: center;
-    }
-    .exam-section .section-title {
-      background: linear-gradient(90deg, var(--pink), var(--purple));
-      box-shadow: 0 6px 0 #a82a4c, 0 8px 15px rgba(243,79,125,0.3);
-      color: var(--white);
-      margin-left: auto; margin-right: auto;
-    }
-    .exam-status { font-size: 1.2rem; font-weight: 700; color: var(--text); margin: 1rem 0; }
-    .finish-btn {
-      background: linear-gradient(135deg, var(--pink), var(--purple));
-      color: var(--white);
-      border: none; padding: 1.2rem 2.8rem; border-radius: 3rem;
-      font-size: 1.5rem; font-weight: 900; cursor: pointer;
-      box-shadow: 0 8px 0 #a82a4c, 0 10px 25px rgba(243,79,125,0.3);
-      transition: all 0.1s;
-      margin-top: 0.5rem;
-      letter-spacing: 0.5px;
-      border: 3px solid var(--white);
-      animation: finishBtnPulse 2s ease-in-out infinite;
-    }
-
-    @keyframes finishBtnPulse {
-      0%, 100% { transform: scale(1); box-shadow: 0 8px 0 #a82a4c, 0 10px 25px rgba(243,79,125,0.3); }
-      50% { transform: scale(1.03); box-shadow: 0 8px 0 #a82a4c, 0 10px 30px rgba(243,79,125,0.5); }
-    }
-
-    .finish-btn:hover { transform: translateY(-4px) scale(1.05); }
-    .finish-btn:active { transform: translateY(6px); box-shadow: 0 2px 0 #a82a4c; }
-
-    /* Result modal */
-    .result-overlay {
-      position: fixed; inset: 0; background: rgba(37,51,95,0.6);
-      display: none; justify-content: center; align-items: center;
-      z-index: 2000; padding: 1rem; backdrop-filter: blur(6px);
-    }
-    .result-overlay.visible { display: flex; }
-
-    .result-card {
-      background: linear-gradient(135deg, var(--white), var(--purple-light));
-      border-radius: 3rem;
-      padding: 2.5rem 2rem; max-width: 620px; width: 100%;
-      box-shadow: 0 30px 60px rgba(37,51,95,0.4), 0 0 0 6px var(--white), 0 0 0 12px var(--purple);
-      border: 4px solid var(--purple);
-      text-align: center;
-      animation: resultPopIn 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
-      position: relative;
-    }
-
-    @keyframes resultPopIn {
-      0% { transform: scale(0.4) rotate(-15deg); opacity: 0; }
-      60% { transform: scale(1.05) rotate(3deg); opacity: 1; }
-      100% { transform: scale(1) rotate(0deg); }
-    }
-
-    .result-card h2 {
-      font-size: 2.3rem; color: var(--dark);
-      margin-bottom: 0.5rem;
-      text-shadow: 3px 3px 0 var(--yellow-light);
-    }
-    .result-emoji {
-      font-size: 5rem; margin: 0.5rem 0;
-      animation: emojiCelebrate 1s ease-in-out infinite;
-      display: inline-block;
-    }
-
-    @keyframes emojiCelebrate {
-      0%, 100% { transform: rotate(-8deg) scale(1); }
-      50% { transform: rotate(8deg) scale(1.15); }
-    }
-
-    .result-score {
-      font-size: 3.5rem; font-weight: 900;
-      background: linear-gradient(135deg, var(--purple), var(--pink));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      text-shadow: 0 4px 8px rgba(243,79,125,0.3);
-      margin: 0.5rem 0;
-      animation: scorePop 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-
-    @keyframes scorePop {
-      0% { transform: scale(0); }
-      100% { transform: scale(1); }
-    }
-
-    .result-details {
-      background: var(--purple-light); padding: 1.2rem; border-radius: 2rem;
-      margin: 1rem 0; text-align: left; font-size: 1.05rem;
-      color: var(--text); font-weight: 700; line-height: 1.9;
-      border: 3px dashed var(--purple);
-    }
-    .result-details span { color: var(--green); font-weight: 900; }
-    .result-message {
-      font-size: 1.4rem; font-weight: 800; margin: 1rem 0; color: var(--text);
-      animation: messageBounce 1.5s ease-in-out infinite;
-    }
-
-    @keyframes messageBounce {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-5px); }
-    }
-
-    .result-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-top: 1.2rem; }
-
-    /* Confetti */
-    .confetti {
-      position: fixed;
-      width: 12px; height: 12px;
-      top: -20px;
-      z-index: 3000;
-      pointer-events: none;
-      border-radius: 2px;
-    }
-    @keyframes confettiFall {
-      0% { transform: translateY(0) rotate(0deg); opacity: 1; }
-      100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
-    }
-
-    /* Star burst */
-    .star-burst {
-      position: fixed;
-      font-size: 3rem;
-      pointer-events: none;
-      z-index: 3000;
-      animation: starBurst 1s ease-out forwards;
-    }
-
-    @keyframes starBurst {
-      0% { transform: scale(0) rotate(0deg); opacity: 1; }
-      100% { transform: scale(2) rotate(180deg); opacity: 0; }
-    }
-
-    /* responsive */
-    @media (max-width: 900px) {
-      .four-grid { grid-template-columns: 1fr; }
-      .app-container { padding: 1.5rem 1rem; border-radius: 2.5rem; }
-      h1 { font-size: 2rem; }
-      .digit-box { width: 3.2rem; height: 4rem; }
-      .digit-value { font-size: 2rem; }
-      .place-name { font-size: 0.6rem; }
-      .big-number { font-size: 2.2rem; padding: 0.3rem 1.5rem; }
-      .animal-cards { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
-      .section-title { font-size: 1.5rem; }
-      .card h2 { font-size: 1.5rem; }
-    }
-    @media (max-width: 550px) {
-      .digit-box { width: 2.5rem; height: 3.2rem; }
-      .digit-value { font-size: 1.6rem; }
-      .place-name { font-size: 0.5rem; padding: 0.1rem 0.2rem; }
-      .group-label { font-size: 0.75rem; }
-      .zoo-chart-container { height: 320px; }
-      .word-chip { font-size: 0.85rem; padding: 0.5rem 0.8rem; }
-      .btn { font-size: 1rem; padding: 0.7rem 1.2rem; }
-      h1 { font-size: 1.6rem; }
-    }
-  </style>
-</head>
-<body>
-
-<!-- Floating background emojis -->
-<div class="floating-bg" id="floatingBg"></div>
-
-<!-- ============ LOGIN ============ -->
-<div class="login-wrapper" id="loginWrapper">
-  <div class="login-card">
-    <h2>Welcome!🎁 Grade 4</h2>
-    <p class="subtitle">🔓 Sign in to start the fun exam</p>
-
-    <div class="login-field">
-      <label for="loginUser">👤 Username</label>
-      <input type="text" id="loginUser" placeholder="Enter your username" autocomplete="off">
-    </div>
-    <div class="login-field">
-      <label for="loginPass">🔑 Password</label>
-      <input type="password" id="loginPass" placeholder="Enter your password">
-    </div>
-    <button class="login-btn" id="loginBtn">🚀 Let's Go!</button>
-    <div class="login-error" id="loginError"></div>
-    <div class="login-hint">
-      <strong>🎁 Grade 4:</strong><br>
-      JICA: From the people of Japan<br>
-      👩‍🏫 Made By Eng. Marina Ayman (Teacher)
-    </div>
-  </div>
-</div>
-
-<!-- ============ APP ============ -->
-<div class="app-container" id="appContainer">
-
-  <div class="user-bar">
-    <div class="welcome" id="welcomeMsg">👋 Welcome!</div>
-    <button class="logout-btn" id="logoutBtn">↩ Logout</button>
-  </div>
-
-  <h1>🔢 <span>Large Numbers</span> 🎯</h1>
-
-  <div class="progress-container">
-    <span>🚀 Progress:</span>
-    <div class="progress-bar-bg"><div class="progress-bar-fill" id="progressFill"></div></div>
-    <span id="progressText">0%</span>
-  </div>
-
-  <!-- Place Value Chart -->
-  <div class="chart-section">
-    <div class="section-title"><i>📊</i> Place Value Chart</div>
-    <div class="place-chart" id="placeValueChart"></div>
-    <div class="current-number-box">
-      <div class="big-number" id="currentNumberDisplay">1,234,567,890</div>
-    </div>
-    <div class="buttons-panel">
-      <button class="btn" id="btnHundredMillion">🔹 100 Million</button>
-      <button class="btn btn-green" id="btnBillion">🌟 1 Billion</button>
-      <button class="btn btn-blue" id="btnRandom">🎲 Random</button>
-      <button class="btn btn-purple" id="btnIncrement">➕ +1 Million</button>
-      <button class="btn btn-yellow btn-small" id="btnDecrement">➖ -1 Million</button>
-    </div>
-  </div>
-
-  <!-- Four sections -->
-  <div class="four-grid">
-    <!-- ENGLISH SENTENCE BUILDER -->
-    <div class="card">
-      <h2><i>🗣️</i> English Reading</h2>
-      <div class="card-content">
-        <div class="builder-instructions">
-          🔊 <strong>Listen</strong> first, then <strong>build the number</strong> by clicking or dragging the word chips into the blue box!
-        </div>
-
-        <div class="english-actions" style="margin-bottom:1rem;display:flex;flex-wrap:wrap;gap:0.6rem;">
-          <button class="btn btn-blue btn-small" id="listenBtn">🔊 Listen</button>
-        </div>
-
-        <div class="build-area" id="buildArea"></div>
-
-        <div class="word-bank" id="wordBank"></div>
-
-        <div class="builder-actions">
-          <button class="btn btn-green btn-small" id="checkBuildBtn">✅ Check My Answer</button>
-          <button class="btn btn-yellow btn-small" id="resetBuildBtn">🔄 Reset</button>
-          <button class="btn btn-purple btn-small" id="undoBuildBtn">↩ Undo</button>
-        </div>
-
-        <div class="builder-feedback" id="builderFeedback">
-          💡 Click the word chips below to add them to the box. You can also drag them!
-        </div>
-
-        <!-- Hidden correct answer shown only after submit -->
-        <div class="reveal-box" id="revealBox">
-          <div class="label">✅ Correct Answer:</div>
-          <div class="answer-text" id="revealAnswer">—</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="card">
-      <h2><i>🧩</i> Expanded Form</h2>
-      <div class="card-content">
-        <div id="expandedForm" class="expanded-form">—</div>
-      </div>
-    </div>
-
-    <div class="card">
-      <h2><i>🧮</i> Calculating Large Numbers</h2>
-      <div class="card-content">
-        <div class="calc-display" id="calcDisplay">1,234,567,890</div>
-        <div class="calc-buttons">
-          <button class="btn btn-small" id="calcAddMillion">+ 1,000,000</button>
-          <button class="btn btn-small" id="calcSubMillion">- 1,000,000</button>
-          <button class="btn btn-small" id="calcAddBillion">+ 1,000,000,000</button>
-          <button class="btn btn-yellow btn-small" id="calcReset">↺ Reset</button>
-        </div>
-        <div style="margin-top:1rem;font-size:1rem;color:var(--text-light);font-weight:700;" id="calcMessage">✅ Current number is ready</div>
-      </div>
-    </div>
-
-    <div class="card">
-      <h2><i>❓</i> Mini Quiz</h2>
-      <div class="card-content">
-        <div class="quiz-question" id="quizQuestion">—</div>
-        <div class="quiz-options" id="quizOptions"></div>
-        <button class="btn btn-green btn-small" id="checkQuizBtn">✅ Check Answer</button>
-        <div class="quiz-feedback" id="quizFeedback"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ZOO TRAINING -->
-  <div class="zoo-section">
-    <div class="section-title"><i>🦁</i> Zoo Chart Training</div>
-
-    <div class="zoo-description">
-      🏞️ <strong>Welcome to the zoo!</strong> Click on an animal, then <strong>click on the chart</strong> to answer,
-      and <strong>edit your answer by clicking the orange box</strong> that pops up!
-    </div>
-
-    <div class="animal-cards" id="animalCards"></div>
-
-    <div class="zoo-hint" id="zooHint">
-      🖱️ Click on the chart at the height that matches the number. Then click the orange box to edit it.
-    </div>
-
-    <div class="zoo-chart-container" id="zooChartContainer">
-      <canvas id="zooChart"></canvas>
-    </div>
-
-    <div class="zoo-actions">
-      <button class="btn btn-green" id="checkZooBtn">✅ Check Answers</button>
-      <button class="btn btn-blue" id="resetZooBtn">🔄 New Numbers</button>
-    </div>
-
-    <div class="zoo-feedback" id="zooFeedback"></div>
-  </div>
-
-  <!-- EXAM -->
-  <div class="exam-section">
-    <div class="section-title"><i>🏁</i> Finish Exam</div>
-    <div class="exam-status" id="examStatus">
-      🎯 Answer quiz questions, build the English reading, and complete the zoo training. Then click below to see your result!
-    </div>
-    <button class="finish-btn" id="finishBtn">🎓 Show My Result</button>
-  </div>
-</div>
-
-<!-- RESULT MODAL -->
-<div class="result-overlay" id="resultOverlay">
-  <div class="result-card">
-    <div class="result-emoji" id="resultEmoji">🎉</div>
-    <h2 id="resultTitle">Exam Completed!</h2>
-    <div class="result-score" id="resultScore">0 / 100</div>
-    <div class="result-message" id="resultMessage"></div>
-    <div class="result-details" id="resultDetails"></div>
-    <div class="result-buttons">
-      <button class="btn btn-green" id="tryAgainBtn">🔄 Try Again</button>
-      <button class="btn btn-red" id="closeResultBtn">❌ Close</button>
-    </div>
-  </div>
-</div>
-
-<script>
-/* ============================================================
-   FUN BACKGROUND EMOJIS
-============================================================ */
-function initFloatingBg() {
-  const container = document.getElementById('floatingBg');
-  const emojis = ['⭐', '🌟', '✨', '💫', '🎈', '🎉', '🎨', '🧮', '🔢', '🎯', '🏆', '💎', '🌈', '🦄', '🚀', '🎪'];
-  for (let i = 0; i < 20; i++) {
-    const span = document.createElement('span');
-    span.textContent = emojis[Math.floor(Math.random() * emojis.length)];
-    span.style.left = Math.random() * 100 + '%';
-    span.style.animationDuration = (15 + Math.random() * 20) + 's';
-    span.style.animationDelay = (Math.random() * 15) + 's';
-    span.style.fontSize = (1.5 + Math.random() * 2.5) + 'rem';
-    container.appendChild(span);
-  }
-}
-
-/* ============================================================
-   CONFETTI
-============================================================ */
-function launchConfetti(count = 100) {
-  const colors = ['#7547E8', '#F34F7D', '#3D8EEA', '#45B96B', '#FFBD32', '#FF8B28'];
-  for (let i = 0; i < count; i++) {
-    const conf = document.createElement('div');
-    conf.className = 'confetti';
-    conf.style.left = Math.random() * 100 + 'vw';
-    conf.style.background = colors[Math.floor(Math.random() * colors.length)];
-    conf.style.animation = `confettiFall ${2 + Math.random() * 3}s linear forwards`;
-    conf.style.animationDelay = Math.random() * 0.5 + 's';
-    conf.style.width = (8 + Math.random() * 8) + 'px';
-    conf.style.height = (8 + Math.random() * 8) + 'px';
-    if (Math.random() > 0.5) conf.style.borderRadius = '50%';
-    document.body.appendChild(conf);
-    setTimeout(() => conf.remove(), 6000);
-  }
-}
-
-function starBurst(x, y) {
-  const stars = ['⭐', '🌟', '✨', '💫'];
-  for (let i = 0; i < 6; i++) {
-    const star = document.createElement('div');
-    star.className = 'star-burst';
-    star.textContent = stars[Math.floor(Math.random() * stars.length)];
-    star.style.left = x + 'px';
-    star.style.top = y + 'px';
-    star.style.animationDelay = (i * 0.05) + 's';
-    document.body.appendChild(star);
-    setTimeout(() => star.remove(), 1200);
-  }
-}
-
-/* ============================================================
-   SESSION STORAGE HELPERS
-============================================================ */
-const SESSION_KEY = 'largeNumbersExamSession';
-
-function saveSession(user) {
-  const sessionData = {
-    username: user,
-    loginTime: Date.now(),
-    examState: JSON.parse(JSON.stringify(examState))
-  };
-  try {
-    sessionStorage.setItem(SESSION_KEY, JSON.stringify(sessionData));
-  } catch (e) { console.warn('Session save failed:', e); }
-}
-
-function loadSession() {
-  try {
-    const raw = sessionStorage.getItem(SESSION_KEY);
-    if (!raw) return null;
-    return JSON.parse(raw);
-  } catch (e) { return null; }
-}
-
-function updateSessionExamState() {
-  const raw = sessionStorage.getItem(SESSION_KEY);
-  if (!raw) return;
-  try {
-    const data = JSON.parse(raw);
-    data.examState = JSON.parse(JSON.stringify(examState));
-    sessionStorage.setItem(SESSION_KEY, JSON.stringify(data));
-  } catch (e) {}
-}
-
-function clearSession() {
-  sessionStorage.removeItem(SESSION_KEY);
-}
-
-/* ============================================================
-   GLOBAL STATE
-============================================================ */
-let currentUser = '';
-let currentNumber = 1234567890;
-
-const examState = {
-  quizAttempted: false,
-  quizCorrectCount: 0,
-  quizTotal: 0,
-  zooAttempted: false,
-  zooCorrectCount: 0,
-  zooTotal: 4,
-  englishListened: false,
-  englishBuiltCorrect: false,
-  englishAttempts: 0,
-  totalScore: 0
-};
-
-let zooAnimals = [];
-let zooChartMax = 600;
-let zooChartStep = 50;
-let zooUserCounts = [];
-let activeAnimalIndex = 0;
-let zooChartInstance = null;
-let floatingInput = null;
-
-let wordBankWords = [];
-let placedWords = [];
-let wordIdCounter = 0;
-
-/* ============================================================
-   ZOO
-============================================================ */
-function generateRandomZooAnimals() {
-  const pickFrom = (arr) => arr[Math.floor(Math.random() * arr.length)];
-  zooAnimals = [
-    { name: 'Rabbits', emoji: '🐰', correct: pickFrom([0, 20, 40, 60, 80, 100, 120, 140, 160, 180, 200, 220, 240, 260, 280, 300]) },
-    { name: 'Chickens', emoji: '🐔', correct: pickFrom([100, 120, 140, 160, 180, 200, 220,240, 260, 280, 300]) },
-    { name: 'Ducks', emoji: '🦆', correct: pickFrom([40, 60, 80, 100, 120, 140, 160, 180, 80, 100]) },
-    { name: 'Turtles', emoji: '🐢', correct: pickFrom([0, 20, 40, 60,160, 180, 200, 220, 80, 100, 120, 140]) }
-  ];
-}
-
-function computeChartScale() {
-  const maxCorrect = Math.max(...zooAnimals.map(a => a.correct));
-  if (maxCorrect <= 100) { zooChartMax = 120; zooChartStep = 10; }
-  else if (maxCorrect <= 200) { zooChartMax = 220; zooChartStep = 20; }
-  else if (maxCorrect <= 300) { zooChartMax = 320; zooChartStep = 20; }
-  else if (maxCorrect <= 500) { zooChartMax = 520; zooChartStep = 50; }
-  else { zooChartMax = 600; zooChartStep = 50; }
-}
-
-const VALID_USERS = [
-  { username: 'steven', password: 'Steven777' },
-  { username: 'Marina@teacher', password: 'Marina777#' }
-];
-
-/* ============================================================
-   DOM
-============================================================ */
-const loginWrapper = document.getElementById('loginWrapper');
-const appContainer = document.getElementById('appContainer');
-const loginUser = document.getElementById('loginUser');
-const loginPass = document.getElementById('loginPass');
-const loginBtn = document.getElementById('loginBtn');
-const loginError = document.getElementById('loginError');
-const welcomeMsg = document.getElementById('welcomeMsg');
-const logoutBtn = document.getElementById('logoutBtn');
-
-const chartContainer = document.getElementById('placeValueChart');
-const currentNumberDisplay = document.getElementById('currentNumberDisplay');
-const expandedFormEl = document.getElementById('expandedForm');
-const calcDisplay = document.getElementById('calcDisplay');
-const calcMessage = document.getElementById('calcMessage');
-
-const btnHundredMillion = document.getElementById('btnHundredMillion');
-const btnBillion = document.getElementById('btnBillion');
-const btnRandom = document.getElementById('btnRandom');
-const btnIncrement = document.getElementById('btnIncrement');
-const btnDecrement = document.getElementById('btnDecrement');
-
-const calcAddMillion = document.getElementById('calcAddMillion');
-const calcSubMillion = document.getElementById('calcSubMillion');
-const calcAddBillion = document.getElementById('calcAddBillion');
-const calcReset = document.getElementById('calcReset');
-
-const quizQuestion = document.getElementById('quizQuestion');
-const quizOptions = document.getElementById('quizOptions');
-const checkQuizBtn = document.getElementById('checkQuizBtn');
-const quizFeedback = document.getElementById('quizFeedback');
-
-const listenBtn = document.getElementById('listenBtn');
-const buildArea = document.getElementById('buildArea');
-const wordBank = document.getElementById('wordBank');
-const checkBuildBtn = document.getElementById('checkBuildBtn');
-const resetBuildBtn = document.getElementById('resetBuildBtn');
-const undoBuildBtn = document.getElementById('undoBuildBtn');
-const builderFeedback = document.getElementById('builderFeedback');
-const revealBox = document.getElementById('revealBox');
-const revealAnswer = document.getElementById('revealAnswer');
-
-const animalCards = document.getElementById('animalCards');
-const zooChartCanvas = document.getElementById('zooChart');
-const zooChartContainer = document.getElementById('zooChartContainer');
-const checkZooBtn = document.getElementById('checkZooBtn');
-const resetZooBtn = document.getElementById('resetZooBtn');
-const zooFeedback = document.getElementById('zooFeedback');
-const zooHint = document.getElementById('zooHint');
-
-const progressFill = document.getElementById('progressFill');
-const progressText = document.getElementById('progressText');
-
-const finishBtn = document.getElementById('finishBtn');
-const examStatus = document.getElementById('examStatus');
-
-const resultOverlay = document.getElementById('resultOverlay');
-const resultEmoji = document.getElementById('resultEmoji');
-const resultTitle = document.getElementById('resultTitle');
-const resultScore = document.getElementById('resultScore');
-const resultMessage = document.getElementById('resultMessage');
-const resultDetails = document.getElementById('resultDetails');
-const tryAgainBtn = document.getElementById('tryAgainBtn');
-const closeResultBtn = document.getElementById('closeResultBtn');
-
-/* ============================================================
-   LOGIN
-============================================================ */
-loginBtn.addEventListener('click', handleLogin);
-loginPass.addEventListener('keydown', e => { if (e.key === 'Enter') handleLogin(); });
-loginUser.addEventListener('keydown', e => { if (e.key === 'Enter') loginPass.focus(); });
-
-function handleLogin() {
-  const user = loginUser.value.trim();
-  const pass = loginPass.value.trim();
-  if (!user || !pass) { loginError.textContent = '⚠️ Please enter username and password.'; return; }
-
-  const valid = VALID_USERS.find(u => u.username === user && u.password === pass);
-  if (valid) {
-    currentUser = user;
-    loginError.textContent = '';
-    loginWrapper.style.display = 'none';
-    appContainer.classList.add('visible');
-    welcomeMsg.textContent = `👋 Welcome, ${user.split('@')[0]}! 🎉`;
-    launchConfetti(80);
-
-    // 💾 حفظ الجلسة في sessionStorage
-    saveSession(user);
-
-    initApp();
-  } else {
-    loginError.textContent = '❌ Wrong username or password. Please try again.';
-    loginPass.value = '';
-  }
-}
-
-logoutBtn.addEventListener('click', () => {
-  clearSession();  // 🗑️ مسح الجلسة
-  currentUser = '';
-  appContainer.classList.remove('visible');
-  loginWrapper.style.display = 'flex';
-  loginUser.value = '';
-  loginPass.value = '';
-  loginError.textContent = '';
-  resetExamState();
-});
-
-// 🔐 استرجاع الجلسة عند التحميل
-function restoreSession() {
-  const session = loadSession();
-  if (session && session.username) {
-    // تحقق إن المستخدم موجود
-    const valid = VALID_USERS.find(u => u.username === session.username);
-    if (valid) {
-      currentUser = session.username;
-      loginWrapper.style.display = 'none';
-      appContainer.classList.add('visible');
-      welcomeMsg.textContent = `👋 Welcome back, ${session.username.split('@')[0]}! 🎉`;
-      initApp();
-      return true;
-    } else {
-      // مستخدم غير موجود
-      clearSession();
-    }
-  }
-  return false;
-}
-
-/* ============================================================
-   PLACE VALUE CHART
-============================================================ */
-const placeGroups = [
-  { label: 'Billions', places: [{ name: 'Hundred', power: 11 }, { name: 'Ten', power: 10 }, { name: 'One', power: 9 }] },
-  { label: 'Millions', places: [{ name: 'Hundred', power: 8 }, { name: 'Ten', power: 7 }, { name: 'One', power: 6 }] },
-  { label: 'Thousands', places: [{ name: 'Hundred', power: 5 }, { name: 'Ten', power: 4 }, { name: 'One', power: 3 }] },
-  { label: 'Ones', places: [{ name: 'Hundred', power: 2 }, { name: 'Ten', power: 1 }, { name: 'One', power: 0 }] }
-];
-
-function buildPlaceChart() {
-  chartContainer.innerHTML = '';
-  placeGroups.forEach(group => {
-    const groupDiv = document.createElement('div');
-    groupDiv.className = 'place-group';
-    const labelDiv = document.createElement('div');
-    labelDiv.className = 'group-label';
-    labelDiv.textContent = group.label;
-    groupDiv.appendChild(labelDiv);
-    const digitsRow = document.createElement('div');
-    digitsRow.className = 'digits-row';
-    group.places.forEach(place => {
-      const box = document.createElement('div');
-      box.className = 'digit-box';
-      const valSpan = document.createElement('span');
-      valSpan.className = 'digit-value';
-      valSpan.id = `digit-${place.power}`;
-      valSpan.textContent = '0';
-      const nameSpan = document.createElement('span');
-      nameSpan.className = 'place-name';
-      nameSpan.textContent = place.name;
-      box.appendChild(valSpan);
-      box.appendChild(nameSpan);
-      digitsRow.appendChild(box);
-    });
-    groupDiv.appendChild(digitsRow);
-    chartContainer.appendChild(groupDiv);
-  });
-}
-
-/* ============================================================
-   NUMBER HELPERS
-============================================================ */
-function numberToEnglishWords(num) {
-  if (num === 0) return ['zero'];
-  const ones = ['', 'one','two','three','four','five','six','seven','eight','nine',
-    'ten','eleven','twelve','thirteen','fourteen','fifteen','sixteen','seventeen','eighteen','nineteen'];
-  const tens = ['', '', 'twenty','thirty','forty','fifty','sixty','seventy','eighty','ninety'];
-
-  function convert(n) {
-    if (n === 0) return [];
-    let words = [];
-    if (n >= 100) {
-      words.push(ones[Math.floor(n / 100)], 'hundred');
-      n %= 100;
-    }
-    if (n >= 20) {
-      const t = Math.floor(n / 10);
-      const o = n % 10;
-      if (o > 0) words.push(tens[t] + '-' + ones[o]);
-      else words.push(tens[t]);
-    } else if (n > 0) {
-      words.push(ones[n]);
-    }
-    return words;
-  }
-
-  const billion = Math.floor(num / 1_000_000_000);
-  const million = Math.floor((num % 1_000_000_000) / 1_000_000);
-  const thousand = Math.floor((num % 1_000_000) / 1000);
-  const remainder = num % 1000;
-
-  const parts = [];
-  if (billion > 0) parts.push(...convert(billion), 'billion');
-  if (million > 0) parts.push(...convert(million), 'million');
-  if (thousand > 0) parts.push(...convert(thousand), 'thousand');
-  if (remainder > 0) parts.push(...convert(remainder));
-  return parts;
-}
-
-function numberToEnglish(num) {
-  return numberToEnglishWords(num).join(' ');
-}
-
-function expandedForm(num) {
-  if (num === 0) return '0';
-  const numStr = num.toString();
-  const parts = [];
-  const len = numStr.length;
-  for (let i = 0; i < len; i++) {
-    const digit = parseInt(numStr[i]);
-    if (digit === 0) continue;
-    const placeValue = Math.pow(10, len - i - 1);
-    parts.push((digit * placeValue).toLocaleString('en-US'));
-  }
-  return parts.join(' + ');
-}
-
-/* ============================================================
-   ENGLISH BUILDER
-============================================================ */
-function buildWordBank() {
-  const correctWords = numberToEnglishWords(currentNumber);
-  const wordsWithCommas = [];
-  for (let i = 0; i < correctWords.length; i++) {
-    wordsWithCommas.push(correctWords[i]);
-    if (['billion', 'million', 'thousand'].includes(correctWords[i]) && i < correctWords.length - 1) {
-      wordsWithCommas.push(',');
-    }
-  }
-
-  const bankSet = new Map();
-  wordsWithCommas.forEach(w => {
-    bankSet.set(w, (bankSet.get(w) || 0) + 1);
-  });
-
-  const distractors = ['hundred', 'thousand', 'million', 'billion', 'ten', 'twenty', 'thirty',
-    'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety', 'one', 'two', 'three', 'four',
-    'five', 'six', 'seven', 'eight', 'nine', 'zero'];
-  const presentWords = new Set([...bankSet.keys()]);
-  let distractorsAdded = 0;
-  while (distractorsAdded < 4) {
-    const d = distractors[Math.floor(Math.random() * distractors.length)];
-    if (!presentWords.has(d) && d !== ',') {
-      bankSet.set(d, (bankSet.get(d) || 0) + 1);
-      distractorsAdded++;
-    }
-  }
-
-  wordBankWords = [];
-  wordIdCounter = 0;
-  bankSet.forEach((count, word) => {
-    for (let i = 0; i < count; i++) {
-      wordBankWords.push({
-        id: 'w' + (wordIdCounter++),
-        word: word,
-        placed: false
-      });
-    }
-  });
-
-  for (let i = wordBankWords.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [wordBankWords[i], wordBankWords[j]] = [wordBankWords[j], wordBankWords[i]];
-  }
-
-  placedWords = [];
-  renderBuilder();
-}
-
-function renderBuilder() {
-  wordBank.innerHTML = '';
-  wordBankWords.forEach(w => {
-    if (w.placed) return;
-    const chip = document.createElement('div');
-    chip.className = 'word-chip' + (w.word === ',' ? ' comma' : '');
-    chip.textContent = w.word === ',' ? '،' : w.word;
-    chip.dataset.id = w.id;
-    chip.draggable = true;
-    chip.addEventListener('click', () => placeWord(w.id));
-    chip.addEventListener('dragstart', (e) => {
-      e.dataTransfer.setData('text/plain', w.id);
-    });
-    wordBank.appendChild(chip);
-  });
-
-  if (wordBank.children.length === 0) {
-    wordBank.innerHTML = '<div style="color:var(--text-light);font-weight:700;padding:0.5rem;">🎉 All words placed!</div>';
-  }
-
-  buildArea.innerHTML = '';
-  placedWords.forEach(w => {
-    const chip = document.createElement('div');
-    chip.className = 'word-chip placed' + (w.word === ',' ? ' comma' : '');
-    chip.textContent = w.word === ',' ? '،' : w.word;
-    chip.dataset.id = w.id;
-    chip.draggable = true;
-    chip.addEventListener('click', () => removeWord(w.id));
-    chip.addEventListener('dragstart', (e) => {
-      e.dataTransfer.setData('text/plain', w.id);
-    });
-    buildArea.appendChild(chip);
-  });
-}
-
-function placeWord(id) {
-  const w = wordBankWords.find(x => x.id === id);
-  if (!w || w.placed) return;
-  w.placed = true;
-  placedWords.push(w);
-  renderBuilder();
-}
-
-function removeWord(id) {
-  const idx = placedWords.findIndex(x => x.id === id);
-  if (idx === -1) return;
-  const w = placedWords[idx];
-  w.placed = false;
-  placedWords.splice(idx, 1);
-  renderBuilder();
-}
-
-buildArea.addEventListener('dragover', (e) => {
-  e.preventDefault();
-  buildArea.style.background = 'linear-gradient(135deg, #d4eaf5, #c4e0f0)';
-});
-buildArea.addEventListener('dragleave', () => {
-  buildArea.style.background = '';
-});
-buildArea.addEventListener('drop', (e) => {
-  e.preventDefault();
-  buildArea.style.background = '';
-  const id = e.dataTransfer.getData('text/plain');
-  if (!id) return;
-  const w = wordBankWords.find(x => x.id === id);
-  if (w && !w.placed) placeWord(id);
-});
-
-wordBank.addEventListener('dragover', (e) => e.preventDefault());
-wordBank.addEventListener('drop', (e) => {
-  e.preventDefault();
-  const id = e.dataTransfer.getData('text/plain');
-  if (!id) return;
-  removeWord(id);
-});
-
-undoBuildBtn.addEventListener('click', () => {
-  if (placedWords.length === 0) return;
-  const last = placedWords[placedWords.length - 1];
-  removeWord(last.id);
-});
-
-resetBuildBtn.addEventListener('click', () => {
-  buildWordBank();
-  builderFeedback.textContent = '💡 Click the word chips below to add them to the box. You can also drag them!';
-  builderFeedback.className = 'builder-feedback';
-  revealBox.classList.remove('visible');
-  buildArea.classList.remove('correct', 'wrong');
-  examState.englishBuiltCorrect = false;
-  examState.englishAttempts = 0;
-  updateProgress();
-  updateSessionExamState();
-});
-
-checkBuildBtn.addEventListener('click', (e) => {
-  if (placedWords.length === 0) {
-    builderFeedback.textContent = '⚠️ Add some words first!';
-    builderFeedback.className = 'builder-feedback fail';
-    return;
-  }
-
-  examState.englishAttempts++;
-
-  const userWords = placedWords.map(w => w.word);
-  const correctWords = numberToEnglishWords(currentNumber);
-
-  const correctWithCommas = [];
-  for (let i = 0; i < correctWords.length; i++) {
-    correctWithCommas.push(correctWords[i]);
-    if (['billion', 'million', 'thousand'].includes(correctWords[i]) && i < correctWords.length - 1) {
-      correctWithCommas.push(',');
-    }
-  }
-
-  const userStr = userWords.join(' ').toLowerCase();
-  const correctStr = correctWithCommas.join(' ').toLowerCase();
-
-  const isCorrect = userStr === correctStr;
-
-  revealAnswer.textContent = numberToEnglish(currentNumber);
-  revealBox.classList.add('visible');
-
-  if (isCorrect) {
-    buildArea.classList.remove('wrong');
-    buildArea.classList.add('correct');
-    builderFeedback.textContent = '🎉 Perfect! You built the number correctly!';
-    builderFeedback.className = 'builder-feedback success';
-    examState.englishBuiltCorrect = true;
-    launchConfetti(50);
-    starBurst(e.clientX, e.clientY);
-    updateProgress();
-    updateSessionExamState();
-  } else {
-    buildArea.classList.remove('correct');
-    buildArea.classList.add('wrong');
-    builderFeedback.textContent = '❌ Not quite! Compare with the correct answer above, then click Reset to try again.';
-    builderFeedback.className = 'builder-feedback fail';
-    updateSessionExamState();
-  }
-});
-
-/* ============================================================
-   LISTEN
-============================================================ */
-listenBtn.addEventListener('click', () => {
-  if (!('speechSynthesis' in window)) {
-    builderFeedback.textContent = '❌ Speech synthesis not supported.';
-    return;
-  }
-  window.speechSynthesis.cancel();
-  const text = numberToEnglish(currentNumber);
-  const utterance = new SpeechSynthesisUtterance(text);
-  utterance.lang = 'en-US';
-  utterance.rate = 0.4;
-
-  utterance.onstart = () => {
-    builderFeedback.textContent = '🔊 Listening...';
-    builderFeedback.className = 'builder-feedback';
-  };
-  utterance.onend = () => {
-    builderFeedback.textContent = '✅ Now build the number by clicking the words below!';
-    builderFeedback.className = 'builder-feedback success';
-    examState.englishListened = true;
-    updateProgress();
-    updateSessionExamState();
-  };
-  window.speechSynthesis.speak(utterance);
-});
-
-/* ============================================================
-   UPDATE NUMBER
-============================================================ */
-function updateAllFromNumber() {
-  for (let power = 0; power <= 11; power++) {
-    const digitSpan = document.getElementById(`digit-${power}`);
-    if (!digitSpan) continue;
-    digitSpan.textContent = Math.floor(currentNumber / Math.pow(10, power)) % 10;
-  }
-
-  const formatted = currentNumber.toLocaleString('en-US');
-  currentNumberDisplay.textContent = formatted;
-  calcDisplay.textContent = formatted;
-  expandedFormEl.textContent = expandedForm(currentNumber);
-
-  buildWordBank();
-
-  revealBox.classList.remove('visible');
-  buildArea.classList.remove('correct', 'wrong');
-  builderFeedback.textContent = '💡 Click the word chips below to add them to the box. You can also drag them!';
-  builderFeedback.className = 'builder-feedback';
-  examState.englishBuiltCorrect = false;
-  examState.englishAttempts = 0;
-
-  generateQuizQuestion();
-}
-
-function setNumber(newNum) {
-  if (newNum < 0) newNum = 0;
-  if (newNum > 999_999_999_999) newNum = 999_999_999_999;
-  currentNumber = Math.floor(newNum);
-  updateAllFromNumber();
-  calcMessage.textContent = `✅ Number set to ${currentNumber.toLocaleString('en-US')}`;
-}
-
-/* ============================================================
-   QUIZ
-============================================================ */
-let currentQuizCorrectAnswer = '';
-let currentQuizSelected = null;
-
-function generateQuizQuestion() {
-  let power = Math.floor(Math.random() * 12);
-  let digit = Math.floor(currentNumber / Math.pow(10, power)) % 10;
-  let attempts = 0;
-  while (digit === 0 && attempts < 20) {
-    power = Math.floor(Math.random() * 12);
-    digit = Math.floor(currentNumber / Math.pow(10, power)) % 10;
-    attempts++;
-  }
-
-  const placeNames = ['ones','tens','hundreds','thousands','ten thousands','hundred thousands',
-    'millions','ten millions','hundred millions','billions','ten billions','hundred billions'];
-  const placeName = placeNames[power];
-
-  quizQuestion.textContent = `What is the place value of the digit ${digit} in ${currentNumber.toLocaleString('en-US')}?`;
-  currentQuizCorrectAnswer = placeName;
-
-  const optionsSet = new Set([placeName]);
-  while (optionsSet.size < 4) optionsSet.add(placeNames[Math.floor(Math.random() * placeNames.length)]);
-  const optionsArray = Array.from(optionsSet);
-  for (let i = optionsArray.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [optionsArray[i], optionsArray[j]] = [optionsArray[j], optionsArray[i]];
-  }
-
-  quizOptions.innerHTML = '';
-  currentQuizSelected = null;
-  quizFeedback.textContent = '';
-
-  optionsArray.forEach(opt => {
-    const optDiv = document.createElement('div');
-    optDiv.className = 'quiz-option';
-    optDiv.dataset.value = opt;
-    optDiv.innerHTML = `<span>💡</span> ${opt}`;
-    optDiv.addEventListener('click', () => {
-      if (examState.quizAttempted) return;
-      document.querySelectorAll('.quiz-option').forEach(el => el.classList.remove('selected'));
-      optDiv.classList.add('selected');
-      currentQuizSelected = opt;
-    });
-    quizOptions.appendChild(optDiv);
-  });
-}
-
-checkQuizBtn.addEventListener('click', (e) => {
-  if (!currentQuizSelected) {
-    quizFeedback.textContent = '⚠️ Please select an answer first!';
-    quizFeedback.className = 'quiz-feedback red-text';
-    return;
-  }
-  if (examState.quizAttempted) return;
-
-  examState.quizAttempted = true;
-  examState.quizTotal++;
-
-  document.querySelectorAll('.quiz-option').forEach(el => {
-    if (el.dataset.value === currentQuizCorrectAnswer) el.classList.add('correct');
-    else if (el.classList.contains('selected')) el.classList.add('wrong');
-    el.style.cursor = 'default';
-  });
-
-  if (currentQuizSelected === currentQuizCorrectAnswer) {
-    quizFeedback.textContent = '🎉 Correct! Amazing job!';
-    quizFeedback.className = 'quiz-feedback green-text';
-    examState.quizCorrectCount++;
-    starBurst(e.clientX, e.clientY);
-  } else {
-    quizFeedback.textContent = `❌ Oops! The correct answer is "${currentQuizCorrectAnswer}"`;
-    quizFeedback.className = 'quiz-feedback red-text';
-  }
-  updateProgress();
-  updateSessionExamState();
-
-  setTimeout(() => {
-    if (currentUser) {
-      examState.quizAttempted = false;
-      generateQuizQuestion();
-    }
-  }, 2500);
-});
-
-/* ============================================================
-   ZOO TRAINING
-============================================================ */
-function buildZooCards() {
-  animalCards.innerHTML = '';
-  zooAnimals.forEach((animal, idx) => {
-    const card = document.createElement('div');
-    card.className = 'animal-card';
-    card.id = `animal-card-${idx}`;
-    card.innerHTML = `
-      <div class="animal-emoji">${animal.emoji}</div>
-      <div class="animal-name">${animal.name}</div>
-      <div class="animal-count-display" id="zoo-display-${idx}">${animal.correct}</div>
-    `;
-    card.addEventListener('click', () => {
-      activeAnimalIndex = idx;
-      highlightActiveCard();
-      zooHint.textContent = `🖱️ Now click on the chart at the height for ${animal.emoji} ${animal.name}!`;
-      if (zooUserCounts[idx] != null) {
-        setTimeout(() => openFloatingInput(idx), 100);
-      }
-    });
-    animalCards.appendChild(card);
-  });
-  highlightActiveCard();
-}
-
-function highlightActiveCard() {
-  zooAnimals.forEach((_, idx) => {
-    const card = document.getElementById(`animal-card-${idx}`);
-    if (!card) return;
-    if (idx === activeAnimalIndex) card.classList.add('active');
-    else card.classList.remove('active');
-  });
-}
-
-function renderZooChart() {
-  computeChartScale();
-
-  const labels = zooAnimals.map(a => a.emoji + ' ' + a.name);
-  const values = zooAnimals.map((_, idx) => zooUserCounts[idx] || 0);
-  const colors = ['#7547E8', '#F34F7D', '#3D8EEA', '#45B96B'];
-
-  if (zooChartInstance) zooChartInstance.destroy();
-
-  const annotations = {};
-  zooAnimals.forEach((animal, idx) => {
-    const val = zooUserCounts[idx];
-    if (val == null) return;
-    annotations[`line-${idx}`] = {
-      type: 'line',
-      yMin: val, yMax: val,
-      xMin: idx - 0.45, xMax: idx + 0.45,
-      borderColor: '#FFBD32',
-      borderWidth: 5,
-      borderDash: [8, 5],
-      label: {
-        display: true,
-        content: `${val} ✏️`,
-        position: 'end',
-        backgroundColor: '#FF8B28',
-        color: '#fff',
-        font: { weight: 'bold', size: 13 },
-        padding: 6,
-        borderRadius: 10
-      }
-    };
-  });
-
-  zooChartInstance = new Chart(zooChartCanvas.getContext('2d'), {
-    type: 'bar',
-    data: {
-      labels: labels,
-      datasets: [{
-        label: 'Your Answer',
-        data: values,
-        backgroundColor: colors,
-        borderRadius: 16,
-        borderSkipped: false,
-        borderWidth: 4,
-        borderColor: '#fff'
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      animation: { duration: 600, easing: 'easeOutBounce' },
-      onClick: (event, elements, chart) => {
-        const yScale = chart.scales.y;
-        const canvasY = event.native.offsetY;
-        const value = yScale.getValueForPixel(canvasY);
-        if (value == null) return;
-
-        const rounded = Math.max(0, Math.round(value / zooChartStep) * zooChartStep);
-        zooUserCounts[activeAnimalIndex] = rounded;
-        updateZooDisplay(activeAnimalIndex);
-        renderZooChart();
-        setTimeout(() => openFloatingInput(activeAnimalIndex), 150);
-      },
-      plugins: {
-        legend: { display: false },
-        tooltip: {
-          backgroundColor: '#25335F',
-          titleFont: { weight: 'bold', size: 14 },
-          bodyFont: { weight: 'bold', size: 13 },
-          padding: 12,
-          cornerRadius: 12,
-          callbacks: { label: (ctx) => `Your answer: ${ctx.raw} — click to edit ✏️` }
-        },
-        annotation: { annotations: annotations }
-      },
-      scales: {
-        y: {
-          beginAtZero: true, max: zooChartMax,
-          ticks: {
-            font: { size: 13, weight: 'bold', family: 'Fredoka' },
-            stepSize: zooChartStep,
-            color: '#25335F'
-          },
-          title: {
-            display: true, text: '🐾 Number of Animals',
-            font: { size: 14, weight: 'bold' },
-            color: '#25335F'
-          },
-          grid: { color: '#E0E5F0' }
-        },
-        x: {
-          ticks: {
-            font: { size: 14, weight: 'bold', family: 'Fredoka' },
-            color: '#1D2B52'
-          },
-          grid: { display: false }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مغامر الرياضيات - الصف الرابع الابتدائي</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            purple: '#7C3AED', pink: '#EC4899', blue: '#0EA5E9',
+                            yellow: '#F59E0B', green: '#10B981', bg: '#F3F4F6'
+                        }
+                    },
+                    fontFamily: { cairo: ['Cairo', 'sans-serif'] },
+                    animation: {
+                        'float': 'float 3s ease-in-out infinite',
+                        'bounce-slow': 'bounce 2s infinite',
+                        'pulse-glow': 'pulseGlow 2s infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        },
+                        pulseGlow: {
+                            '0%, 100%': { boxShadow: '0 0 15px rgba(124, 58, 237, 0.5)' },
+                            '50%': { boxShadow: '0 0 25px rgba(236, 72, 153, 0.8)' }
+                        }
+                    }
+                }
+            }
         }
-      }
-    }
-  });
-}
+    </script>
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: #fef6ff;
+            background-image: 
+                radial-gradient(circle at 20% 20%, rgba(236, 72, 153, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 80% 80%, rgba(124, 58, 237, 0.08) 0%, transparent 40%),
+                radial-gradient(#e2e8f0 1.5px, transparent 1.5px);
+            background-size: 100% 100%, 100% 100%, 24px 24px;
+        }
+        header {
+            background: linear-gradient(135deg, rgba(255,255,255,0.98), rgba(254,246,255,0.98)) !important;
+            border-bottom: 4px solid transparent !important;
+            border-image: linear-gradient(90deg, #7C3AED, #EC4899, #F59E0B, #10B981) 1 !important;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            border-radius: 2rem;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0; right: 0;
+            width: 80px; height: 80px;
+            background: radial-gradient(circle, rgba(124,58,237,0.08), transparent 70%);
+            border-radius: 0 0 0 100%;
+        }
+        .glass-card:hover {
+            transform: translateY(-3px) scale(1.005);
+            box-shadow: 0 12px 28px rgba(124, 58, 237, 0.15) !important;
+            border-color: rgba(124, 58, 237, 0.3);
+        }
+        .btn-fun {
+            background: linear-gradient(135deg, #7C3AED 0%, #EC4899 50%, #F59E0B 100%);
+            background-size: 200% 200%;
+            animation: gradientShift 3s ease infinite;
+            box-shadow: 0 6px 0 rgba(124, 58, 237, 0.35), 0 8px 20px rgba(236, 72, 153, 0.3);
+            transition: all 0.15s ease;
+        }
+        .btn-fun:hover { transform: translateY(-2px); box-shadow: 0 8px 0 rgba(124,58,237,0.35), 0 12px 24px rgba(236,72,153,0.4); }
+        .btn-fun:active { transform: translateY(3px); box-shadow: 0 2px 0 rgba(124,58,237,0.35), 0 4px 10px rgba(236,72,153,0.3); }
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        input[type="number"] {
+            background: linear-gradient(135deg, #faf5ff, #fef6ff);
+            transition: all 0.25s ease;
+        }
+        input[type="number"]:focus {
+            transform: scale(1.02);
+            box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.15);
+        }
+        .shake {
+            animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+            border-color: #ef4444 !important;
+            background: #fef2f2 !important;
+        }
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-2px, 0, 0); }
+            20%, 80% { transform: translate3d(3px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-6px, 0, 0); }
+            40%, 60% { transform: translate3d(6px, 0, 0); }
+        }
+        .pop-success {
+            animation: popSuccess 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            border-color: #10b981 !important;
+            background: linear-gradient(135deg, #ecfdf5, #f0fdf4) !important;
+        }
+        @keyframes popSuccess {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+            100% { transform: scale(1); }
+        }
+        .floating-star {
+            position: fixed;
+            font-size: 2rem;
+            pointer-events: none;
+            z-index: 9999;
+            animation: floatUp 1.2s ease-out forwards;
+        }
+        @keyframes floatUp {
+            0% { transform: translateY(0) scale(0.5) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-150px) scale(1.5) rotate(360deg); opacity: 0; }
+        }
+        #overall-progress {
+            background: linear-gradient(90deg, #0EA5E9, #7C3AED, #EC4899, #F59E0B, #10B981);
+            background-size: 300% 100%;
+            animation: progressGlow 3s linear infinite;
+            box-shadow: 0 0 12px rgba(236, 72, 153, 0.6);
+        }
+        @keyframes progressGlow {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 300% 50%; }
+        }
+        .star-glow { filter: drop-shadow(0 0 8px #f59e0b); }
+        #sections-nav button { transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        #sections-nav button:hover { transform: translateX(-4px); box-shadow: 0 4px 12px rgba(124, 58, 237, 0.15); }
+        #section-header::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.15), transparent 60%);
+            pointer-events: none;
+        }
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: #faf5ff; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #7C3AED, #EC4899);
+            border-radius: 10px;
+            border: 2px solid #faf5ff;
+        }
+        ::-webkit-scrollbar-thumb:hover { background: linear-gradient(180deg, #EC4899, #F59E0B); }
+        @keyframes floaty {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+        .floaty { animation: floaty 3s ease-in-out infinite; }
+        .emoji-bounce {
+            display: inline-block;
+            animation: emojiBounce 1.5s ease-in-out infinite;
+        }
+        @keyframes emojiBounce {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-4px) rotate(-5deg); }
+            75% { transform: translateY(-4px) rotate(5deg); }
+        }
+    </style>
+</head>
+<body class="text-slate-800 antialiased min-h-screen flex flex-col justify-between selection:bg-brand-pink selection:text-white">
 
-function openFloatingInput(idx) {
-  closeFloatingInput();
-  if (!zooChartInstance) return;
-  const val = zooUserCounts[idx];
-  if (val == null) return;
+    <!-- Header -->
+    <header class="sticky top-0 z-50 backdrop-filter backdrop-blur-lg shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <div class="w-12 h-12 bg-gradient-to-tr from-brand-purple to-brand-pink rounded-2xl flex items-center justify-center text-white text-2xl shadow-lg animate-float">
+                    <i class="fa-solid font-bold fa-calculator"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl md:text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-brand-purple via-brand-pink to-brand-yellow">
+                        <span class="emoji-bounce">🚀</span> مغامر الرياضيات الذكي <span class="emoji-bounce" style="animation-delay:0.5s">🌟</span>
+                    </h1>
+                    <p class="text-xs text-slate-500 font-bold">الصف الرابع الابتدائي - مراجعة شاملة وممتعة</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-4 bg-slate-100 p-2 rounded-2xl border border-slate-200">
+                <div class="flex items-center gap-1.5 px-3 py-1 bg-amber-100 text-amber-700 rounded-xl font-black text-sm">
+                    <i class="fa-solid fa-star text-amber-500 text-lg star-glow animate-bounce"></i>
+                    <span id="score">0</span> نقاط
+                </div>
+                <div class="flex items-center gap-1.5 px-3 py-1 bg-emerald-100 text-emerald-700 rounded-xl font-black text-sm">
+                    <i class="fa-solid fa-circle-check text-emerald-500 text-lg"></i>
+                    <span id="completed-count">0</span> / <span id="total-questions">0</span>
+                </div>
+                <button id="sound-toggle" onclick="toggleSound()" class="w-9 h-9 bg-white text-slate-600 rounded-xl flex items-center justify-center hover:bg-slate-200 transition shadow-sm">
+                    <i class="fa-solid fa-volume-high" id="sound-icon"></i>
+                </button>
+            </div>
+        </div>
+        <div class="w-full bg-slate-200 h-2.5">
+            <div id="overall-progress" class="h-2.5 transition-all duration-500 w-0"></div>
+        </div>
+    </header>
 
-  const chart = zooChartInstance;
-  const xPixel = chart.scales.x.getPixelForValue(idx);
-  const yPixel = chart.scales.y.getPixelForValue(val);
+    <!-- Main -->
+    <main class="max-w-7xl mx-auto px-4 py-6 w-full flex-1 grid grid-cols-1 lg:grid-cols-4 gap-6">
+        <aside class="lg:col-span-1 space-y-3">
+            <div class="bg-white p-4 rounded-3xl shadow-sm border border-slate-200 sticky top-24">
+                <h2 class="text-sm font-black text-slate-400 uppercase tracking-wider mb-3 px-2 flex items-center gap-2">
+                    <i class="fa-solid fa-map"></i> أقسام المراجعة
+                </h2>
+                <nav id="sections-nav" class="space-y-2"></nav>
+            </div>
+        </aside>
+        <section class="lg:col-span-3 space-y-6">
+            <div id="section-header" class="bg-gradient-to-r from-brand-purple to-indigo-600 rounded-3xl p-6 text-white shadow-xl relative overflow-hidden flex items-center justify-between">
+                <div class="relative z-10">
+                    <span id="section-badge" class="bg-white/20 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold mb-2 inline-block">القسم 1</span>
+                    <h2 id="section-title" class="text-2xl md:text-3xl font-black mb-1">...</h2>
+                    <p id="section-desc" class="text-white/80 text-sm">...</p>
+                </div>
+                <div class="text-6xl text-white/20 z-0">
+                    <i id="section-icon" class="fa-solid fa-shapes"></i>
+                </div>
+            </div>
+            <div id="questions-container" class="space-y-6"></div>
+        </section>
+    </main>
 
-  const containerRect = zooChartContainer.getBoundingClientRect();
-  const canvasRect = zooChartCanvas.getBoundingClientRect();
-  const offsetX = canvasRect.left - containerRect.left;
-  const offsetY = canvasRect.top - containerRect.top;
+    <footer class="bg-white border-t border-slate-200 py-4 mt-8">
+        <div class="max-w-7xl mx-auto px-4 text-center text-xs text-slate-500 font-bold">
+            مغامر الرياضيات الذكي للصف الرابع الابتدائي - تم التصميم للتلميذ الذكي 🌟
+        </div>
+    </footer>
 
-  const input = document.createElement('input');
-  input.type = 'number';
-  input.className = 'chart-edit-input';
-  input.value = val;
-  input.min = 0;
-  input.style.left = (offsetX + xPixel) + 'px';
-  input.style.top = (offsetY + yPixel - 20) + 'px';
+    <!-- ===== Audio System ===== -->
+    <script>
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        let audioCtx = null;
+        let soundEnabled = true;
 
-  input.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') commitFloatingInput(idx, input.value);
-    else if (e.key === 'Escape') closeFloatingInput();
-  });
+        function initAudio() {
+            if (!audioCtx) audioCtx = new AudioContext();
+        }
 
-  input.addEventListener('blur', () => {
-    setTimeout(() => {
-      if (floatingInput === input) commitFloatingInput(idx, input.value);
-    }, 100);
-  });
+        function playSound(type) {
+            if (!soundEnabled) return;
+            initAudio();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const now = audioCtx.currentTime;
 
-  zooChartContainer.appendChild(input);
-  floatingInput = input;
-  input.focus();
-  input.select();
-}
+            if (type === 'correct') {
+                const notes = [523.25, 659.25, 783.99, 1046.50];
+                notes.forEach((freq, i) => {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'triangle';
+                    osc.frequency.value = freq;
+                    osc.connect(gain); gain.connect(audioCtx.destination);
+                    gain.gain.setValueAtTime(0, now + i * 0.09);
+                    gain.gain.linearRampToValueAtTime(0.25, now + i * 0.09 + 0.02);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.09 + 0.35);
+                    osc.start(now + i * 0.09);
+                    osc.stop(now + i * 0.09 + 0.4);
+                });
+                const extra = audioCtx.createOscillator();
+                const eg = audioCtx.createGain();
+                extra.type = 'sine';
+                extra.frequency.value = 1318.51;
+                extra.connect(eg); eg.connect(audioCtx.destination);
+                eg.gain.setValueAtTime(0.15, now + 0.45);
+                eg.gain.exponentialRampToValueAtTime(0.001, now + 0.9);
+                extra.start(now + 0.45); extra.stop(now + 0.95);
+            } else if (type === 'wrong') {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(392, now);
+                osc.frequency.exponentialRampToValueAtTime(196, now + 0.35);
+                gain.gain.setValueAtTime(0.18, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.45);
+                osc.connect(gain); gain.connect(audioCtx.destination);
+                osc.start(now); osc.stop(now + 0.5);
+                const osc2 = audioCtx.createOscillator();
+                const g2 = audioCtx.createGain();
+                osc2.type = 'triangle';
+                osc2.frequency.setValueAtTime(280, now + 0.05);
+                osc2.frequency.exponentialRampToValueAtTime(140, now + 0.35);
+                g2.gain.setValueAtTime(0.12, now + 0.05);
+                g2.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
+                osc2.connect(g2); g2.connect(audioCtx.destination);
+                osc2.start(now + 0.05); osc2.stop(now + 0.45);
+            } else if (type === 'click') {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(880, now);
+                osc.frequency.exponentialRampToValueAtTime(440, now + 0.05);
+                gain.gain.setValueAtTime(0.08, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+                osc.connect(gain); gain.connect(audioCtx.destination);
+                osc.start(now); osc.stop(now + 0.1);
+            } else if (type === 'levelup') {
+                [523.25, 659.25, 783.99, 1046.50, 1318.51].forEach((freq, i) => {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'square';
+                    osc.frequency.value = freq;
+                    osc.connect(gain); gain.connect(audioCtx.destination);
+                    gain.gain.setValueAtTime(0.001, now + i * 0.1);
+                    gain.gain.linearRampToValueAtTime(0.15, now + i * 0.1 + 0.02);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.1 + 0.25);
+                    osc.start(now + i * 0.1);
+                    osc.stop(now + i * 0.1 + 0.3);
+                });
+            }
+        }
 
-function commitFloatingInput(idx, rawValue) {
-  const num = parseInt(rawValue);
-  if (!isNaN(num) && num >= 0) {
-    zooUserCounts[idx] = num;
-    updateZooDisplay(idx);
-  }
-  closeFloatingInput();
-  renderZooChart();
-}
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            const icon = document.getElementById('sound-icon');
+            icon.className = soundEnabled ? 'fa-solid fa-volume-high text-slate-600' : 'fa-solid fa-volume-xmark text-red-500';
+        }
+    </script>
 
-function closeFloatingInput() {
-  if (floatingInput && floatingInput.parentNode) {
-    floatingInput.parentNode.removeChild(floatingInput);
-  }
-  floatingInput = null;
-}
+    <!-- ===== App Data & Logic ===== -->
+    <script>
+        const appData = [
+            {
+                id: "sec1",
+                title: "الضرب والقسمة ومضاعفات 10، 100، 1000",
+                icon: "fa-bolt",
+                color: "from-purple-600 to-indigo-600",
+                desc: "استمتع بتسهيل عمليات الضرب وخاصية الإبدال والدمج بمضاعفات 10 و100 و1000!",
+                questions: [
+                    { id:"q1_1", type:"number", question:"كم عدد العشرات التي تكون العدد 180 ؟", hint:"اقسم 180 على 10", answer:[18], explanation:"العدد 180 يتكون من 18 عشرة، لأن: 18 × 10 = 180" },
+                    { id:"q1_2", type:"number", question:"اكتب العدد الناقص: 3 × 800 = (3 × 8) × ...............", hint:"3 × 800 = 3 × 8 × 100", answer:[100], explanation:"3 × 800 تعادل (3 × 8) × 100 = 24 × 100 = 2,400" },
+                    { id:"q1_3", type:"multi_input", question:"استخدم تحليل مضاعفات 10، 100، 1,000 لتسهيل عملية الضرب:", subQuestions:[
+                        {label:"أوجد ناتج: 4 × 30", key:"sq1", answer:120},
+                        {label:"أوجد ناتج: 8 × 600", key:"sq2", answer:4800},
+                        {label:"أوجد ناتج: 2 × 7,000", key:"sq3", answer:14000}
+                    ], explanation:"4 × 30 = 120 | 8 × 600 = 4,800 | 2 × 7,000 = 14,000" },
+                    { id:"q1_4", type:"number", question:"الأداء المنزلي (1): 4 × (....... × 4) = 2 × (5 × 2)", hint:"احسب 2 × 10 = 20", answer:[1.25,5], acceptAnswers:[1.25,5], explanation:"2 × 10 = 20. بالتالي 4 × 5 = 20 (أو 4 × 1.25 × 4 = 20)." },
+                    { id:"q1_5", type:"number", question:"الأداء المنزلي (2): (5 × 2) × ....... = (6 × 5) × 2", hint:"الطرف = 60، (5×2)=10", answer:[6], explanation:"(6 × 5) × 2 = 60. إذن 10 × 6 = 60." },
+                    { id:"q1_6", type:"mcq", question:"ضع الأقواس في المكان المناسب: 30 = 5 × 3 × 2", options:["30 = (5 × 3) × 2","30 = 5 × (3 × 2)","كلاهما صحيح"], answer:"كلاهما صحيح", explanation:"خاصية الدمج تسمح بالحالتين." },
+                    { id:"q1_7", type:"mcq", question:"ضع الأقواس: 24 = 6 × 1 × 4", options:["24 = (6 × 1) × 4","24 = 6 × (1 × 4)","كلاهما صحيح"], answer:"كلاهما صحيح", explanation:"كلا الحالتين تعطي 24." },
+                    { id:"q1_8", type:"multi_input", question:"أكمل الفراغات لتحصل على معادلات صحيحة:", subQuestions:[
+                        {label:"4 × (....... × 2) = 2 × (3 × 4)", key:"blank1", answer:3},
+                        {label:"5 × (....... × 1) = (8 × 5) × 1", key:"blank2", answer:8}
+                    ], explanation:"الفراغ الأول = 3، الفراغ الثاني = 8." },
+                    { id:"q1_9", type:"multi_input", question:"أوجد الناتج باستخدام خاصية الإبدال والدمج:", subQuestions:[
+                        {label:"5 × 9 × 2 =", key:"comb1", answer:90},
+                        {label:"4 × 7 × 25 =", key:"comb2", answer:700}
+                    ], explanation:"(5×2)×9=90 | (4×25)×7=700." },
+                    { id:"q1_10", type:"multi_input", question:"اكتب العدد الناقص باستخدام خاصية الإبدال:", subQuestions:[
+                        {label:"4 × 6 = ....... × 6", key:"sw1", answer:4},
+                        {label:"7 × 3 = 3 × .......", key:"sw2", answer:7}
+                    ], explanation:"الترتيب لا يغير الناتج." },
+                    { id:"q1_11", type:"number", question:"اشترى خالد 3 صناديق حلوى، في كل صندوق 8 قطع. كم عدد القطع؟", hint:"3 × 8", answer:[24], explanation:"3 × 8 = 24 قطعة." },
+                    { id:"q1_12", type:"mcq", question:"أحمد يقول: 1,000 × 5 = 500. ماذا تقول له؟", options:["كلامه صحيح!","خطأ، 1,000 × 5 = 5,000","خطأ، الناتج 50"], answer:"خطأ، 1,000 × 5 = 5,000", explanation:"نضع 3 أصفار: 1,000 × 5 = 5,000." },
+                    { id:"q1_13", type:"number", question:"اشترى أبانوب 6 شنط سعر الواحدة 100 جنيه. احسب الإجمالي.", hint:"6 × 100", answer:[600], explanation:"6 × 100 = 600 جنيه." }
+                ]
+            },
+            {
+                id: "sec2",
+                title: "المقارنة بالأضعاف والمعادلات ومخطط الشرائط",
+                icon: "fa-chart-bar",
+                color: "from-blue-600 to-cyan-600",
+                desc: "حل المسائل الكلامية والمعادلات واستخدم مخططات الشرائط بسهولة!",
+                questions: [
+                    { id:"q2_1", type:"number", question:"لدى أحمد 18 قلمًا، ولديه 3 أضعاف عدد أقلام يوسف. كم قلمًا لدى يوسف؟", hint:"18 ÷ 3", answer:[6], explanation:"18 ÷ 3 = 6 أقلام." },
+                    { id:"q2_2", type:"number", question:"حديقة بها 24 وردة، وعدد الياسمين ضعف الورود. كم عدد الياسمين؟", hint:"24 × 2", answer:[48], explanation:"24 × 2 = 48 زهرة." },
+                    { id:"q2_3", type:"number", question:"عداء يقطع 5 كم يوميًا. آخر يقطع 3 أضعاف. كم يقطع الآخر؟", hint:"5 × 3", answer:[15], explanation:"5 × 3 = 15 كم." },
+                    { id:"q2_4", type:"number", question:"عدد يساوي 4 أضعاف العدد 9. ما هو؟", hint:"4 × 9", answer:[36], explanation:"4 × 9 = 36." },
+                    { id:"q2_5", type:"multi_input", question:"حل المعادلات:", subQuestions:[
+                        {label:"35 = ....... × 5", key:"eq1", answer:7},
+                        {label:"....... = 7 × 42", key:"eq2", answer:294},
+                        {label:"50 = ....... × 5", key:"eq3", answer:10}
+                    ], explanation:"7 | 294 | 10" },
+                    { id:"q2_6", type:"mcq", question:"معادلة: '28 يساوي 4 أضعاف عدد ما'", options:["28 = 4 × n","28 = 4 + n","n = 28 × 4"], answer:"28 = 4 × n", explanation:"الصيغة الصحيحة: 28 = 4 × n." },
+                    { id:"q2_7", type:"mcq", question:"ليلى جمعت 10 طوابع، وندى 3 أضعافها. معادلة ندى (n)؟", options:["n = 3 × 10","n = 10 ÷ 3","n = 10 + 3"], answer:"n = 3 × 10", explanation:"n = 3 × 10 = 30." },
+                    { id:"q2_8", type:"mcq", question:"24 بقرة = 4 أضعاف الأغنام (g). المعادلة الصحيحة؟", options:["24 = 4 × g","g = 24 × 4","24 = 4 + g"], answer:"24 = 4 × g", explanation:"24 = 4 × g." },
+                    { id:"q2_9", type:"mcq", question:"عدد القصص 6 أضعاف الدواوين (7). معادلة القصص (p)؟", options:["p = 6 × 7","p = 7 ÷ 6","p = 6 + 7"], answer:"p = 6 × 7", explanation:"p = 42 قصة." },
+                    { id:"q2_10", type:"number", question:"سكان (أ) = 10 أضعاف سكان (ب)=50,000. كم سكان (أ)؟", hint:"50,000 × 10", answer:[500000], explanation:"500,000 نسمة." },
+                    { id:"q2_11", type:"number", question:"ما العدد الذي 5 أضعافه 35؟", hint:"35 ÷ 5", answer:[7], explanation:"35 ÷ 5 = 7." },
+                    { id:"q2_12", type:"number", question:"ما العدد الذي يساوي 7 أضعاف 9؟", hint:"7 × 9", answer:[63], explanation:"7 × 9 = 63." },
+                    { id:"q2_13", type:"interactive_tape", question:"تمثيل مخطط الشرائط: 14 = 7 أضعاف 2.", tapeCount:7, tapeVal:2, totalVal:14, explanation:"7 مربعات كل منها 2 = 14." },
+                    { id:"q2_14", type:"number", question:"ما العدد الذي 5 أضعافه 45؟", hint:"45 ÷ 5", answer:[9], explanation:"45 ÷ 5 = 9." },
+                    { id:"q2_15", type:"number", question:"كم عدد المربعات (9) لتكوين 27؟", hint:"27 ÷ 9", answer:[3], explanation:"3 × 9 = 27." }
+                ]
+            },
+            {
+                id: "sec3",
+                title: "المحيط والمساحة والأشكال الهندسية",
+                icon: "fa-draw-polygon",
+                color: "from-amber-500 to-orange-600",
+                desc: "قوانين وحساب محيط ومساحة المربعات والمستطيلات بخطوات واضحة!",
+                questions: [
+                    { id:"q3_1", type:"number", question:"مربع محيطه 36 سم. ما طول ضلعه؟", hint:"36 ÷ 4", answer:[9], explanation:"36 ÷ 4 = 9 سم." },
+                    { id:"q3_2", type:"number", question:"مربع مساحته 49 سم². طول ضلعه؟", hint:"ابحث عن عدد × نفسه = 49", answer:[7], explanation:"7 × 7 = 49." },
+                    { id:"q3_3", type:"number", question:"مستطيل محيطه 16 سم وطوله 5 سم. العرض a؟", hint:"نصف المحيط = 8", answer:[3], explanation:"8 - 5 = 3 سم." },
+                    { id:"q3_4", type:"number", question:"مربع ضلعه 7 م. مساحته؟", hint:"7 × 7", answer:[49], explanation:"49 م²." },
+                    { id:"q3_5", type:"number", question:"مساحة مستطيل 9×5 سم²؟", hint:"9 × 5", answer:[45], explanation:"45 سم²." },
+                    { id:"q3_6", type:"number", question:"حوض مستطيل 6×3 م. مساحته؟", hint:"6 × 3", answer:[18], explanation:"18 م²." },
+                    { id:"q3_7", type:"multi_input", question:"احسب المحيط والمساحة:", subQuestions:[
+                        {label:"مربع ضلعه 7م -> محيطه", key:"geom1", answer:28},
+                        {label:"مربع ضلعه 7م -> مساحته", key:"geom2", answer:49},
+                        {label:"مستطيل 12×4سم -> محيطه", key:"geom3", answer:32},
+                        {label:"مستطيل 12×4سم -> مساحته", key:"geom4", answer:48}
+                    ], explanation:"28 | 49 | 32 | 48" },
+                    { id:"q3_8", type:"mcq", question:"أيهما أصغر: مستطيل 5×2 أم مربع ضلعه 4؟", options:["مساحة المستطيل (10)","مساحة المربع (16)","متساويتان"], answer:"مساحة المستطيل (10)", explanation:"10 أصغر من 16." },
+                    { id:"q3_9", type:"mcq", question:"قانون محيط المستطيل P؟", options:["P = (L + W) × 2","P = L × W","P = L + W"], answer:"P = (L + W) × 2", explanation:"P = (L+W)×2." },
+                    { id:"q3_10", type:"number", question:"محيط مستطيل 3 و 7 سم؟", hint:"(3+7)×2", answer:[20], explanation:"20 سم." },
+                    { id:"q3_11", type:"number", question:"حمام سباحة 12×8 م. محيطه؟", hint:"(12+8)×2", answer:[40], explanation:"40 م." },
+                    { id:"q3_12", type:"number", question:"محيط مستطيل 6×3 سم؟", hint:"(6+3)×2", answer:[18], explanation:"18 سم." },
+                    { id:"q3_13", type:"number", question:"حديقة مربعة ضلعها 10م. محيطها؟", hint:"10×4", answer:[40], explanation:"40 م." }
+                ]
+            },
+            {
+                id: "sec4",
+                title: "الوقت والكتلة والسعة والقياس والتحويلات",
+                icon: "fa-stopwatch-20",
+                color: "from-emerald-600 to-teal-600",
+                desc: "تحويل وحدات الزمن والكتلة والسعة وحل المسائل الشريطية!",
+                questions: [
+                    { id:"q4_1", type:"number", question:"ثلاث ساعات ونصف بالدقائق؟", hint:"3×60 + 30", answer:[210], explanation:"180 + 30 = 210 دقيقة." },
+                    { id:"q4_2", type:"number", question:"من 5:15 إلى 6:10 مساءً. المدة بالدقائق؟", hint:"45 + 10", answer:[55], explanation:"55 دقيقة." },
+                    { id:"q4_3", type:"multi_input", question:"عصفور طار 25,000م في 5 أيام:", subQuestions:[
+                        {label:"المسافة بالأمتار يوميًا", key:"bird1", answer:5000},
+                        {label:"المسافة بالكيلومتر", key:"bird2", answer:5}
+                    ], explanation:"5000 م = 5 كم." },
+                    { id:"q4_4", type:"number", question:"15,000 ملل في 3 زجاجات. كم لتر بكل زجاجة؟", hint:"15,000 ÷ 3 ثم إلى لتر", answer:[5], explanation:"5000 ملل = 5 لتر." },
+                    { id:"q4_5", type:"multi_input", question:"قطة 2 كجم، تزداد 200جم/أسبوع. بعد 5 أسابيع:", subQuestions:[
+                        {label:"الزيادة (جرام)", key:"cat1", answer:1000},
+                        {label:"الكتلة (جرام)", key:"cat2", answer:3000},
+                        {label:"الكتلة (كجم)", key:"cat3", answer:3}
+                    ], explanation:"1000 جم زيادة، الإجمالي 3 كجم." },
+                    { id:"q4_6", type:"number", question:"شريطان 45 سم و 350 مم. الفرق بالسنتيمتر؟", hint:"350 مم = 35 سم", answer:[10], explanation:"45 - 35 = 10 سم." },
+                    { id:"q4_7", type:"number", question:"مجموع: 950جم + 2كجم + 150جم بالجرام؟", hint:"2 كجم = 2000 جم", answer:[3100], explanation:"3,100 جرام." },
+                    { id:"q4_8", type:"number", question:"طريق 753 كم، قُطع 466 كم. المتبقي؟", hint:"753 - 466", answer:[287], explanation:"287 كم." },
+                    { id:"q4_9", type:"number", question:"6,500 جم فاكهة، أُكل 3 كجم. المتبقي بالجرام؟", hint:"6500 - 3000", answer:[3500], explanation:"3,500 جرام." },
+                    { id:"q4_10", type:"number", question:"إناء 10 لتر به 7,560 ملل. المطلوب إضافته؟", hint:"10,000 - 7,560", answer:[2440], explanation:"2,440 ملليلتر." },
+                    { id:"q4_11", type:"multi_input", question:"احسب الفروق بالأوقات:", subQuestions:[
+                        {label:"7:30 - 2:15 (دقائق كلية)", key:"t1", answer:315},
+                        {label:"3:10 - 40 دقيقة (دقائق كلية)", key:"t2", answer:150},
+                        {label:"من 2:35 إلى 4:45 (دقائق)", key:"t3", answer:130}
+                    ], explanation:"315 | 150 | 130" },
+                    { id:"q4_12", type:"number", question:"من 8:40 إلى 10:40 مساءً. بالساعات؟", hint:"الفرق", answer:[2], explanation:"ساعتان." },
+                    { id:"q4_13", type:"number", question:"ريم قرأت 25 دقيقة صباحًا + 48 مساءً. الإجمالي؟", hint:"25 + 48", answer:[73], explanation:"73 دقيقة." },
+                    { id:"q4_14", type:"multi_input", question:"تحويلات:", subQuestions:[
+                        {label:"كم ثانية في 10 دقائق؟", key:"u1", answer:600},
+                        {label:"كم يومًا في 5 أسابيع و3 أيام؟", key:"u2", answer:38},
+                        {label:"كم دقيقة في 6 ساعات؟", key:"u3", answer:360}
+                    ], explanation:"600 | 38 | 360" },
+                    { id:"q4_15", type:"multi_input", question:"280 دقيقة = ....... ساعات و ....... دقيقة", subQuestions:[
+                        {label:"ساعات", key:"b_hrs", answer:4},
+                        {label:"دقائق متبقية", key:"b_mins", answer:40}
+                    ], explanation:"4 ساعات و40 دقيقة." },
+                    { id:"q4_16", type:"number", question:"6 دقائق و40 ثانية = كم ثانية؟", hint:"(6×60) + 40", answer:[400], explanation:"400 ثانية." },
+                    { id:"q4_17", type:"multi_input", question:"الكتلة والسعة:", subQuestions:[
+                        {label:"كم كجم في 25 طنًا؟", key:"m1", answer:25000},
+                        {label:"كم ملل في 9 لتر و495 ملل؟", key:"m2", answer:9495},
+                        {label:"9,000 جم = 6 كجم + a. a=؟", key:"m3", answer:3000}
+                    ], explanation:"25000 | 9495 | 3000" },
+                    { id:"q4_18", type:"number", question:"3 لتر حليب، شُرب 1,850 ملل. المتبقي؟", hint:"3000 - 1850", answer:[1150], explanation:"1,150 ملليلتر." },
+                    { id:"q4_19", type:"multi_input", question:"أكمل النماذج:", subQuestions:[
+                        {label:"13,025 جم = ....... كجم", key:"tb1", answer:13},
+                        {label:"13,025 جم = ....... جم", key:"tb2", answer:25},
+                        {label:"12 لتر و530 ملل = ....... ملل", key:"tb3", answer:12530}
+                    ], explanation:"13 | 25 | 12530" },
+                    { id:"q4_20", type:"multi_input", question:"الأطوال والمسافات:", subQuestions:[
+                        {label:"كم مترًا في 55 كم؟", key:"l1", answer:55000},
+                        {label:"(10 سم + 60 مم) بالمليمتر", key:"l2", answer:160}
+                    ], explanation:"55000 | 160" },
+                    { id:"q4_21", type:"mcq", question:"رتب من الأقصر للأطول: 6 دسم، 70 سم، 1 م، 500 مم", options:["500 مم < 6 دسم < 70 سم < 1 م","6 دسم < 500 مم < 70 سم < 1 م","1 م < 70 سم < 6 دسم < 500 مم"], answer:"500 مم < 6 دسم < 70 سم < 1 م", explanation:"50 < 60 < 70 < 100 سم." },
+                    { id:"q4_22", type:"multi_input", question:"أكمل النماذج:", subQuestions:[
+                        {label:"275 سم = ....... م", key:"lb1", answer:2},
+                        {label:"275 سم = ....... سم", key:"lb2", answer:75},
+                        {label:"7 م و25 سم = ....... سم", key:"lb3", answer:725}
+                    ], explanation:"2 | 75 | 725" },
+                    { id:"q4_23", type:"multi_input", question:"عصفور طار 412 سم. عبّر:", subQuestions:[
+                        {label:"الأمتار", key:"fly1", answer:4},
+                        {label:"السنتيمترات المتبقية", key:"fly2", answer:12}
+                    ], explanation:"4 م و 12 سم." }
+                ]
+            },
+            {
+                id: "sec5",
+                title: "الجمع والطرح والمسائل الكلامية المركبة",
+                icon: "fa-calculator",
+                color: "from-pink-600 to-rose-600",
+                desc: "حل العمليات الحسابية المتعددة والمسائل الحياتية الذكية!",
+                questions: [
+                    { id:"q5_1", type:"number", question:"56,219 + 80 + 1 =", hint:"+ 81", answer:[56300], explanation:"56,300." },
+                    { id:"q5_2", type:"number", question:"محمد 3 علب × 12 قلم، أعطى 6. المتبقي؟", hint:"(3×12) - 6", answer:[30], explanation:"36 - 6 = 30." },
+                    { id:"q5_3", type:"number", question:"مكتبة 345 كتابًا، تبرع 128، أُعير 97. الباقي؟", hint:"(345+128) - 97", answer:[376], explanation:"376 كتابًا." },
+                    { id:"q5_4", type:"number", question:"مزرعة 415 دجاجة، اشترى 238، باع فأصبح 512. كم باع؟", hint:"(415+238) - 512", answer:[141], explanation:"141 دجاجة." },
+                    { id:"q5_5", type:"number", question:"حافلة 1 بها 45 تلميذ، نزل 9. كم بقي؟", hint:"45 - 9", answer:[36], explanation:"36 تلميذًا." }
+                ]
+            }
+        ];
 
-function updateZooDisplay(idx) {
-  const display = document.getElementById(`zoo-display-${idx}`);
-  const val = zooUserCounts[idx];
-  display.classList.remove('correct', 'wrong');
-}
+        let currentSectionIndex = 0;
+        let solvedQuestions = new Set();
+        let currentScore = 0;
+        const totalQuestionsCount = appData.reduce((sum, sec) => sum + sec.questions.length, 0);
 
-checkZooBtn.addEventListener('click', (e) => {
-  examState.zooAttempted = true;
-  let correct = 0;
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('total-questions').textContent = totalQuestionsCount;
+            renderNavigation();
+            loadSection(0);
+        });
 
-  zooAnimals.forEach((animal, idx) => {
-    const display = document.getElementById(`zoo-display-${idx}`);
-    display.classList.remove('correct', 'wrong');
-    if (zooUserCounts[idx] === animal.correct) {
-      display.classList.add('correct');
-      correct++;
-    } else {
-      display.classList.add('wrong');
-    }
-  });
+        function renderNavigation() {
+            const navContainer = document.getElementById('sections-nav');
+            navContainer.innerHTML = '';
+            appData.forEach((sec, idx) => {
+                const solvedInSec = sec.questions.filter(q => solvedQuestions.has(q.id)).length;
+                const isComplete = solvedInSec === sec.questions.length;
+                const btn = document.createElement('button');
+                btn.className = `w-full text-right p-3 rounded-2xl font-bold text-sm transition flex items-center justify-between border ${
+                    idx === currentSectionIndex 
+                        ? 'bg-slate-900 text-white border-slate-900 shadow-md' 
+                        : 'bg-slate-50 hover:bg-slate-100 text-slate-700 border-slate-200'
+                }`;
+                btn.onclick = () => { playSound('click'); loadSection(idx); };
+                btn.innerHTML = `
+                    <div class="flex items-center gap-2.5 overflow-hidden">
+                        <span class="w-7 h-7 rounded-xl flex items-center justify-center text-xs text-white bg-gradient-to-tr ${sec.color} shrink-0">
+                            <i class="fa-solid ${sec.icon}"></i>
+                        </span>
+                        <span class="truncate">${sec.title}</span>
+                    </div>
+                    <span class="text-xs px-2 py-0.5 rounded-full ${isComplete ? 'bg-emerald-500 text-white' : 'bg-slate-200 text-slate-600'}">
+                        ${solvedInSec}/${sec.questions.length}
+                    </span>`;
+                navContainer.appendChild(btn);
+            });
+        }
 
-  examState.zooCorrectCount = correct;
+        function loadSection(index) {
+            currentSectionIndex = index;
+            const sec = appData[index];
+            document.getElementById('section-badge').textContent = `القسم ${index + 1} من ${appData.length}`;
+            document.getElementById('section-title').textContent = sec.title;
+            document.getElementById('section-desc').textContent = sec.desc;
+            document.getElementById('section-icon').className = `fa-solid ${sec.icon}`;
+            document.getElementById('section-header').className = `bg-gradient-to-r ${sec.color} rounded-3xl p-6 text-white shadow-xl relative overflow-hidden flex items-center justify-between`;
 
-  if (correct === zooAnimals.length) {
-    zooFeedback.textContent = `🎉 PERFECT! All ${correct} animals counted correctly! 🏆`;
-    zooFeedback.className = 'zoo-feedback green-text';
-    launchConfetti(120);
-    starBurst(e.clientX, e.clientY);
-  } else {
-    zooFeedback.textContent = `📝 You got ${correct} out of ${zooAnimals.length} correct. Click the chart to fix wrong answers!`;
-    zooFeedback.className = 'zoo-feedback red-text';
-  }
-  updateProgress();
-  updateSessionExamState();
-});
+            const qContainer = document.getElementById('questions-container');
+            qContainer.innerHTML = '';
 
-resetZooBtn.addEventListener('click', () => {
-  closeFloatingInput();
-  generateRandomZooAnimals();
-  zooUserCounts = zooAnimals.map(() => null);
-  activeAnimalIndex = 0;
-  buildZooCards();
-  renderZooChart();
-  zooFeedback.textContent = '';
-  zooHint.textContent = '🖱️ Click on the chart at the height that matches the number you want to answer.';
-  examState.zooAttempted = false;
-  examState.zooCorrectCount = 0;
-  updateProgress();
-  updateSessionExamState();
-});
+            sec.questions.forEach((q, qIndex) => {
+                const isSolved = solvedQuestions.has(q.id);
+                const card = document.createElement('div');
+                card.id = `card-${q.id}`;
+                card.className = `glass-card rounded-3xl p-6 shadow-sm border border-slate-200 transition duration-300 hover:shadow-md ${isSolved ? 'border-emerald-300 bg-emerald-50/30' : ''}`;
 
-/* ============================================================
-   PROGRESS & SCORE
-============================================================ */
-function updateProgress() {
-  const quizPart = Math.min(examState.quizCorrectCount, 5) / 5 * 35;
-  const zooPart = (examState.zooAttempted ? examState.zooCorrectCount / examState.zooTotal : 0) * 40;
-  const englishPart = ((examState.englishListened?1:0) + (examState.englishBuiltCorrect?1:0)) / 2 * 25;
-  const total = Math.round(quizPart + zooPart + englishPart);
-  progressFill.style.width = total + '%';
-  progressText.textContent = total + '%';
-}
+                let inputHtml = '';
+                if (q.type === 'number') {
+                    inputHtml = `
+                        <div class="flex flex-wrap gap-3 items-center mt-4">
+                            <input type="number" step="any" id="input-${q.id}" placeholder="اكتب إجابتك هنا..." 
+                                class="flex-1 min-w-[200px] px-4 py-3 rounded-2xl border-2 border-slate-200 focus:border-brand-purple focus:outline-none font-black text-lg text-center ${isSolved ? 'bg-emerald-100/50 border-emerald-400' : ''}"
+                                ${isSolved ? 'disabled' : ''}>
+                            <button onclick="checkAnswer('${q.id}')" ${isSolved ? 'disabled' : ''} 
+                                class="btn-fun px-6 py-3 text-white font-black rounded-2xl active:scale-95 transition disabled:opacity-50">
+                                ${isSolved ? '<i class="fa-solid fa-check"></i> تم الحل' : 'تحقق من الإجابة 🚀'}
+                            </button>
+                        </div>`;
+                } else if (q.type === 'mcq') {
+                    inputHtml = `
+                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 mt-4">
+                            ${q.options.map(opt => `
+                                <button onclick="checkMcqAnswer('${q.id}', '${opt}')" ${isSolved ? 'disabled' : ''}
+                                    class="p-3 text-sm font-bold border-2 border-slate-200 rounded-2xl bg-white hover:border-brand-purple hover:bg-purple-50 hover:scale-105 active:scale-95 transition text-slate-700 text-center ${isSolved ? 'disabled:opacity-60' : ''}">
+                                    ${opt}
+                                </button>`).join('')}
+                        </div>`;
+                } else if (q.type === 'multi_input') {
+                    inputHtml = `
+                        <div class="space-y-3 mt-4">
+                            ${q.subQuestions.map(sq => `
+                                <div class="flex flex-wrap items-center justify-between bg-slate-50 p-3 rounded-2xl border border-slate-200 gap-2">
+                                    <label class="font-bold text-sm text-slate-700">${sq.label}</label>
+                                    <input type="number" step="any" id="sub-${q.id}-${sq.key}" placeholder="؟" 
+                                        class="w-28 px-3 py-1.5 border-2 border-slate-300 rounded-xl text-center font-bold focus:border-brand-purple focus:outline-none"
+                                        ${isSolved ? 'disabled' : ''}>
+                                </div>`).join('')}
+                            <button onclick="checkMultiInputAnswer('${q.id}')" ${isSolved ? 'disabled' : ''}
+                                class="mt-2 w-full py-3 btn-fun text-white font-black rounded-2xl active:scale-95 transition disabled:opacity-50">
+                                ${isSolved ? '<i class="fa-solid fa-check"></i> تم الحل' : 'تحقق من جميع الإجابات ✨'}
+                            </button>
+                        </div>`;
+                } else if (q.type === 'interactive_tape') {
+                    inputHtml = `
+                        <div class="mt-4 p-4 bg-purple-50 rounded-2xl border border-purple-200 space-y-3 text-center">
+                            <p class="font-bold text-sm text-purple-900">مخطط الشرائط التفاعلي:</p>
+                            <div class="flex flex-wrap justify-center gap-2">
+                                ${Array(q.tapeCount).fill(0).map(() => `
+                                    <div class="w-12 h-12 bg-gradient-to-tr from-brand-purple to-brand-pink text-white font-black text-lg rounded-xl flex items-center justify-center shadow-md animate-pulse-glow">
+                                        ${q.tapeVal}
+                                    </div>`).join('')}
+                            </div>
+                            <div class="text-xs text-purple-700 font-bold">المجموع = ${q.totalVal}</div>
+                            <button onclick="checkInteractiveTape('${q.id}')" ${isSolved ? 'disabled' : ''}
+                                class="px-6 py-2 btn-fun text-white font-black rounded-xl">
+                                ${isSolved ? 'تم التأكيد ✓' : 'تأكيد 🎯'}
+                            </button>
+                        </div>`;
+                }
 
-function calculateFinalScore() {
-  const quizScore = Math.min(examState.quizCorrectCount, 5) * 7;
-  const zooScore = examState.zooAttempted ? Math.round((examState.zooCorrectCount / examState.zooTotal) * 40) : 0;
-  const englishScore = ((examState.englishListened?1:0) + (examState.englishBuiltCorrect?1:0)) / 2 * 25;
-  return Math.round(quizScore + zooScore + englishScore);
-}
+                card.innerHTML = `
+                    <div class="flex items-start justify-between gap-3">
+                        <div class="flex items-center gap-3">
+                            <span class="w-8 h-8 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center font-black text-sm border border-slate-300">
+                                ${qIndex + 1}
+                            </span>
+                            <h3 class="text-lg font-bold text-slate-800 leading-snug">${q.question}</h3>
+                        </div>
+                        ${isSolved ? '<span class="text-emerald-500 font-bold text-xs bg-emerald-100 px-3 py-1 rounded-full"><i class="fa-solid fa-circle-check"></i> ممتازة</span>' : ''}
+                    </div>
+                    ${inputHtml}
+                    <div class="mt-4 pt-3 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2">
+                        <button onclick="toggleExplanation('${q.id}')" class="text-xs font-bold text-brand-purple hover:underline flex items-center gap-1">
+                            <i class="fa-regular fa-lightbulb text-amber-500 text-sm"></i> عرض طريقة الحل
+                        </button>
+                    </div>
+                    <div id="explain-${q.id}" class="hidden mt-3 p-3 bg-amber-50 rounded-2xl border border-amber-200 text-xs text-amber-900 font-bold leading-relaxed">
+                        <i class="fa-solid fa-circle-info text-amber-600"></i> ${q.explanation}
+                    </div>`;
+                qContainer.appendChild(card);
+            });
+            renderNavigation();
+        }
 
-finishBtn.addEventListener('click', () => {
-  if (examState.quizCorrectCount === 0 && !examState.zooAttempted && !examState.englishListened) {
-    examStatus.textContent = '⚠️ Please try the quiz, English reading, and zoo training before finishing!';
-    examStatus.style.color = 'var(--pink)';
-    return;
-  }
-  showResult();
-});
+        function toggleExplanation(qId) {
+            playSound('click');
+            const el = document.getElementById(`explain-${qId}`);
+            if (el) el.classList.toggle('hidden');
+        }
 
-function showResult() {
-  const score = calculateFinalScore();
-  examState.totalScore = score;
+        function checkAnswer(qId) {
+            const input = document.getElementById(`input-${qId}`);
+            const val = parseFloat(input.value);
+            const question = findQuestion(qId);
+            if (isNaN(val)) { triggerShake(qId); return; }
+            let isCorrect = false;
+            if (question.acceptAnswers) isCorrect = question.acceptAnswers.includes(val);
+            else isCorrect = question.answer.includes(val);
+            isCorrect ? handleSuccess(qId) : handleFailure(qId);
+        }
 
-  let emoji = '🎉', title = 'Excellent!', message = '';
-  if (score >= 90) { emoji = '🏆'; title = 'Outstanding!'; message = 'You are a Large Numbers champion! 🌟'; }
-  else if (score >= 70) { emoji = '🌟'; title = 'Great Job!'; message = 'You did very well! Keep it up! 💪'; }
-  else if (score >= 50) { emoji = '👍'; title = 'Good Effort!'; message = 'A little more practice and you\'ll be a pro! 🚀'; }
-  else { emoji = '📚'; title = 'Keep Practicing!'; message = 'Review the place value chart and try again! 💡'; }
+        function checkMcqAnswer(qId, selectedOption) {
+            const question = findQuestion(qId);
+            selectedOption === question.answer ? handleSuccess(qId) : handleFailure(qId);
+        }
 
-  resultEmoji.textContent = emoji;
-  resultTitle.textContent = title;
-  resultScore.textContent = `${score} / 100`;
-  resultMessage.textContent = message;
+        function checkMultiInputAnswer(qId) {
+            const question = findQuestion(qId);
+            let allCorrect = true;
+            question.subQuestions.forEach(sq => {
+                const input = document.getElementById(`sub-${qId}-${sq.key}`);
+                const val = parseFloat(input.value);
+                if (val !== sq.answer) allCorrect = false;
+            });
+            allCorrect ? handleSuccess(qId) : handleFailure(qId);
+        }
 
-  resultDetails.innerHTML = `
-    <div>👤 <strong>Student:</strong> <span>${currentUser.split('@')[0]}</span></div>
-    <div>❓ <strong>Quiz:</strong> <span>${Math.min(examState.quizCorrectCount, 5)} / 5 correct (${Math.min(examState.quizCorrectCount, 5) * 7} pts)</span></div>
-    <div>🦁 <strong>Zoo:</strong> <span>${examState.zooCorrectCount} / ${examState.zooTotal} correct (${examState.zooAttempted ? Math.round((examState.zooCorrectCount / examState.zooTotal) * 40) : 0} pts)</span></div>
-    <div>🗣️ <strong>English:</strong> <span>${(examState.englishListened?1:0)+(examState.englishBuiltCorrect?1:0)} / 2 skills (${Math.round(((examState.englishListened?1:0)+(examState.englishBuiltCorrect?1:0))/2*25)} pts)</span></div>
-    <div>📅 <strong>Date:</strong> <span>${new Date().toLocaleString('en-US')}</span></div>
-  `;
+        function checkInteractiveTape(qId) { handleSuccess(qId); }
 
-  resultOverlay.classList.add('visible');
-  launchConfetti(150);
-  sendResultEmail(score, emoji, title);
-}
+        function findQuestion(qId) {
+            for (let sec of appData) {
+                const q = sec.questions.find(item => item.id === qId);
+                if (q) return q;
+            }
+            return null;
+        }
 
-/* ============================================================
-   EMAIL
-============================================================ */
-function sendResultEmail(score, emoji, title) {
-  const EMAILJS_SERVICE_ID = 'YOUR_SERVICE_ID';
-  const EMAILJS_TEMPLATE_ID = 'YOUR_TEMPLATE_ID';
-  const EMAILJS_PUBLIC_KEY = 'YOUR_PUBLIC_KEY';
+        function spawnStars(x, y) {
+            const emojis = ['⭐', '🌟', '✨', '💫', '🎉', '🏆'];
+            for (let i = 0; i < 6; i++) {
+                const star = document.createElement('div');
+                star.className = 'floating-star';
+                star.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+                star.style.left = (x + (Math.random() - 0.5) * 120) + 'px';
+                star.style.top = y + 'px';
+                star.style.fontSize = (1.5 + Math.random() * 1.5) + 'rem';
+                document.body.appendChild(star);
+                setTimeout(() => star.remove(), 1300);
+            }
+        }
 
-  if (EMAILJS_SERVICE_ID === 'YOUR_SERVICE_ID') {
-    console.log('📧 Email not sent — EmailJS not configured.');
-    console.log('📊 Result:', {
-      student: currentUser, score,
-      quiz: examState.quizCorrectCount,
-      zoo: `${examState.zooCorrectCount}/${examState.zooTotal}`,
-      english: `${(examState.englishListened?1:0)+(examState.englishBuiltCorrect?1:0)}/2`,
-      date: new Date().toLocaleString()
-    });
-    return;
-  }
+        function handleSuccess(qId) {
+            if (solvedQuestions.has(qId)) return;
+            solvedQuestions.add(qId);
+            currentScore += 10;
+            playSound('correct');
 
-  const templateParams = {
-    to_email: 'marinaaymanae777@gmail.com',
-    student_name: currentUser,
-    score: score + ' / 100',
-    result_title: title,
-    emoji: emoji,
-    quiz_score: `${Math.min(examState.quizCorrectCount, 5)} / 5`,
-    zoo_score: `${examState.zooCorrectCount} / ${examState.zooTotal}`,
-    english_score: `${(examState.englishListened?1:0)+(examState.englishBuiltCorrect?1:0)} / 2`,
-    exam_date: new Date().toLocaleString('en-US'),
-    message: `Student ${currentUser} scored ${score}/100 on the Large Numbers exam.`
-  };
+            confetti({
+                particleCount: 80, spread: 90, origin: { y: 0.6 },
+                colors: ['#7C3AED', '#EC4899', '#F59E0B', '#10B981', '#0EA5E9']
+            });
 
-  emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams, EMAILJS_PUBLIC_KEY)
-    .then(() => console.log('✅ Email sent!'))
-    .catch(err => console.error('❌ Email error:', err));
-}
+            const card = document.getElementById(`card-${qId}`);
+            if (card) {
+                const rect = card.getBoundingClientRect();
+                spawnStars(rect.left + rect.width / 2, rect.top + rect.height / 2);
+                card.classList.add('pop-success');
+                setTimeout(() => card.classList.remove('pop-success'), 600);
+            }
 
-/* ============================================================
-   RESULT MODAL
-============================================================ */
-closeResultBtn.addEventListener('click', () => resultOverlay.classList.remove('visible'));
+            const currentSec = appData[currentSectionIndex];
+            const solvedInSec = currentSec.questions.filter(q => solvedQuestions.has(q.id)).length;
+            if (solvedInSec === currentSec.questions.length) {
+                setTimeout(() => {
+                    playSound('levelup');
+                    confetti({ particleCount: 200, spread: 160, origin: { y: 0.5 }, colors: ['#F59E0B','#EC4899','#7C3AED'] });
+                }, 400);
+            }
 
-tryAgainBtn.addEventListener('click', () => {
-  resultOverlay.classList.remove('visible');
-  resetExamState();
-  currentNumber = 1234567890;
-  updateAllFromNumber();
-  resetZooBtn.click();
-  revealBox.classList.remove('visible');
-  examStatus.textContent = '🎯 Answer quiz questions, build the English reading, and complete the zoo training. Then click below to see your result!';
-  examStatus.style.color = 'var(--text)';
-  updateProgress();
-  updateSessionExamState();
-});
+            document.getElementById('score').textContent = currentScore;
+            document.getElementById('completed-count').textContent = solvedQuestions.size;
+            const progressPct = (solvedQuestions.size / totalQuestionsCount) * 100;
+            document.getElementById('overall-progress').style.width = `${progressPct}%`;
+            loadSection(currentSectionIndex);
+        }
 
-function resetExamState() {
-  examState.quizAttempted = false;
-  examState.quizCorrectCount = 0;
-  examState.quizTotal = 0;
-  examState.zooAttempted = false;
-  examState.zooCorrectCount = 0;
-  examState.englishListened = false;
-  examState.englishBuiltCorrect = false;
-  examState.englishAttempts = 0;
-  examState.totalScore = 0;
-  updateProgress();
-}
+        function handleFailure(qId) {
+            playSound('wrong');
+            triggerShake(qId);
+        }
 
-/* ============================================================
-   INIT
-============================================================ */
-function initApp() {
-  buildPlaceChart();
-  generateRandomZooAnimals();
-  zooUserCounts = zooAnimals.map(() => null);
-  activeAnimalIndex = 0;
-  buildZooCards();
-  updateAllFromNumber();
-  renderZooChart();
-  resetExamState();
-
-  btnHundredMillion.addEventListener('click', () => setNumber(100_000_000));
-  btnBillion.addEventListener('click', () => setNumber(1_000_000_000));
-  btnRandom.addEventListener('click', () => setNumber(Math.floor(Math.random() * 999_999_999_999) + 1_000_000));
-  btnIncrement.addEventListener('click', () => setNumber(currentNumber + 1_000_000));
-  btnDecrement.addEventListener('click', () => setNumber(Math.max(0, currentNumber - 1_000_000)));
-
-  calcAddMillion.addEventListener('click', () => setNumber(currentNumber + 1_000_000));
-  calcSubMillion.addEventListener('click', () => setNumber(Math.max(0, currentNumber - 1_000_000)));
-  calcAddBillion.addEventListener('click', () => setNumber(currentNumber + 1_000_000_000));
-  calcReset.addEventListener('click', () => setNumber(1234567890));
-}
-
-window.addEventListener('resize', () => {
-  if (floatingInput) closeFloatingInput();
-});
-
-// Start floating background immediately
-initFloatingBg();
-
-if (typeof emailjs !== 'undefined') {
-  emailjs.init({ publicKey: 'YOUR_PUBLIC_KEY' });
-}
-
-// 🔐 استرجاع الجلسة عند فتح الصفحة
-window.addEventListener('DOMContentLoaded', () => {
-  restoreSession();
-});
-</script>
+        function triggerShake(qId) {
+            const card = document.getElementById(`card-${qId}`);
+            if (card) {
+                card.classList.add('shake');
+                setTimeout(() => card.classList.remove('shake'), 500);
+            }
+        }
+    </script>
 </body>
 </html>

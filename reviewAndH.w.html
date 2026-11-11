@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>مغامر الرياضيات - الصف الرابع الابتدائي</title>
+    <link rel="stylesheet" href="site-nav.css">
+    <script src="site-nav.js" defer></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
@@ -175,8 +177,9 @@
 </head>
 <body class="text-slate-800 antialiased min-h-screen flex flex-col justify-between selection:bg-brand-pink selection:text-white">
 
+    <div id="site-nav-root"></div>
     <!-- Header -->
-    <header class="sticky top-0 z-50 backdrop-filter backdrop-blur-lg shadow-sm">
+    <header class="relative z-10 backdrop-filter backdrop-blur-lg shadow-sm">
         <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-4">
             <div class="flex items-center gap-3">
                 <div class="w-12 h-12 bg-gradient-to-tr from-brand-purple to-brand-pink rounded-2xl flex items-center justify-center text-white text-2xl shadow-lg animate-float">
@@ -332,6 +335,23 @@
     <!-- ===== App Data & Logic ===== -->
     <script>
         const appData = [
+            {
+                id: "sec0",
+                title: "الأعداد الكبيرة والقيمة المكانية",
+                icon: "fa-hashtag",
+                color: "from-blue-600 to-cyan-600",
+                desc: "تدرّب على القيمة المكانية والمقارنة والتقريب والصيغة التحليلية.",
+                questions: [
+                    { id:"q0_1", type:"number", question:"ما قيمة الرقم 7 في العدد 4,752,806؟", hint:"الرقم 7 في منزلة مئات الألوف", answer:[700000], explanation:"الرقم 7 في منزلة مئات الألوف، لذلك قيمته 700,000." },
+                    { id:"q0_2", type:"mcq", question:"أي العددين أكبر؟", options:["895,432", "895,342", "العددان متساويان"], answer:"895,432", explanation:"تتساوى المنازل حتى الآلاف، ثم نقارن المئات: 4 مئات أكبر من 3 مئات." },
+                    { id:"q0_3", type:"number", question:"قرّب 53,216 إلى أقرب عشرة.", hint:"انظر إلى منزلة الآحاد", answer:[53220], explanation:"منزلة الآحاد 6، فنزيد العشرات واحداً: 53,216 ≈ 53,220." },
+                    { id:"q0_4", type:"multi_input", question:"اكتب قيمة كل رقم:", subQuestions:[
+                        {label:"قيمة الرقم 3 في 238,765,091", key:"pv1", answer:30000000},
+                        {label:"قيمة الرقم 5 في 238,765,091", key:"pv2", answer:5000}
+                    ], explanation:"قيمة 3 هي 30,000,000، وقيمة 5 هي 5,000." },
+                    { id:"q0_5", type:"number", question:"قرّب 238,765,091 إلى أقرب مليون.", hint:"انظر إلى منزلة مئات الألوف", answer:[239000000], explanation:"منزلة مئات الألوف 7، لذا نزيد الملايين واحداً: 238,765,091 ≈ 239,000,000." }
+                ]
+            },
             {
                 id: "sec1",
                 title: "الضرب والقسمة ومضاعفات 10، 100، 1000",
@@ -514,7 +534,9 @@
         document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('total-questions').textContent = totalQuestionsCount;
             renderNavigation();
-            loadSection(0);
+            const requestedSection = new URLSearchParams(window.location.search).get('section');
+            const requestedIndex = appData.findIndex(section => section.id === requestedSection);
+            loadSection(requestedIndex >= 0 ? requestedIndex : 0);
         });
 
         function renderNavigation() {
@@ -627,12 +649,7 @@
                         ${isSolved ? '<span class="text-emerald-500 font-bold text-xs bg-emerald-100 px-3 py-1 rounded-full"><i class="fa-solid fa-circle-check"></i> ممتازة</span>' : ''}
                     </div>
                     ${inputHtml}
-                    <div class="mt-4 pt-3 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2">
-                        <button onclick="toggleExplanation('${q.id}')" class="text-xs font-bold text-brand-purple hover:underline flex items-center gap-1">
-                            <i class="fa-regular fa-lightbulb text-amber-500 text-sm"></i> عرض طريقة الحل
-                        </button>
-                    </div>
-                    <div id="explain-${q.id}" class="hidden mt-3 p-3 bg-amber-50 rounded-2xl border border-amber-200 text-xs text-amber-900 font-bold leading-relaxed">
+                    <div id="explain-${q.id}" class="${isSolved ? '' : 'hidden'} mt-3 p-3 bg-amber-50 rounded-2xl border border-amber-200 text-xs text-amber-900 font-bold leading-relaxed">
                         <i class="fa-solid fa-circle-info text-amber-600"></i> ${q.explanation}
                     </div>`;
                 qContainer.appendChild(card);
@@ -640,10 +657,9 @@
             renderNavigation();
         }
 
-        function toggleExplanation(qId) {
-            playSound('click');
-            const el = document.getElementById(`explain-${qId}`);
-            if (el) el.classList.toggle('hidden');
+        function revealExplanation(qId) {
+            const explanation = document.getElementById(`explain-${qId}`);
+            if (explanation) explanation.classList.remove('hidden');
         }
 
         function checkAnswer(qId) {
@@ -655,11 +671,13 @@
             if (question.acceptAnswers) isCorrect = question.acceptAnswers.includes(val);
             else isCorrect = question.answer.includes(val);
             isCorrect ? handleSuccess(qId) : handleFailure(qId);
+            revealExplanation(qId);
         }
 
         function checkMcqAnswer(qId, selectedOption) {
             const question = findQuestion(qId);
             selectedOption === question.answer ? handleSuccess(qId) : handleFailure(qId);
+            revealExplanation(qId);
         }
 
         function checkMultiInputAnswer(qId) {
@@ -671,9 +689,10 @@
                 if (val !== sq.answer) allCorrect = false;
             });
             allCorrect ? handleSuccess(qId) : handleFailure(qId);
+            revealExplanation(qId);
         }
 
-        function checkInteractiveTape(qId) { handleSuccess(qId); }
+        function checkInteractiveTape(qId) { handleSuccess(qId); revealExplanation(qId); }
 
         function findQuestion(qId) {
             for (let sec of appData) {

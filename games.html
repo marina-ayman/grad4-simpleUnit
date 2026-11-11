@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ألعاب الرياضيات | MathKids</title>
+  <link rel="stylesheet" href="site-nav.css">
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; }
+    :root { --purple:#7C5CFC; --purple-dark:#5B3FD6; --purple-light:#EDE8FF; --pink:#FF6B9D; --yellow:#FFD93D; --green:#4CD97B; --dark:#2D2A5B; --gray:#6B6B8A; --bg:#F8F7FF; }
+    body { margin:0; background:var(--bg); color:var(--dark); font:600 16px/1.6 'Nunito','Cairo',sans-serif; }
+    h1,h2,h3 { font-family:'Baloo 2','Cairo',sans-serif; line-height:1.2; }
+    .games-hero { padding:34px 20px 24px; text-align:center; background:linear-gradient(180deg,#EDE9FF,#F8F7FF); }
+    .games-hero h1 { margin:0 0 8px; font-size:clamp(2rem,4vw,3rem); }
+    .games-hero h1 span { color:var(--purple); }
+    .games-hero p { margin:0 auto 16px; max-width:700px; color:var(--gray); }
+    .lang-toggle { border:0; border-radius:24px; padding:9px 16px; color:#fff; background:var(--purple); font:800 14px 'Nunito',sans-serif; cursor:pointer; }
+    .games-main { max-width:1200px; margin:auto; padding:24px 20px 50px; }
+    .games-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; align-items:start; }
+    .game-card { min-width:0; background:#fff; border:1px solid #E8E5FF; border-radius:18px; padding:20px; box-shadow:0 8px 24px rgba(45,42,91,.08); }
+    .game-card:nth-child(2) { border-top:5px solid var(--pink); }
+    .game-card:nth-child(3) { border-top:5px solid var(--green); }
+    .game-card h2 { margin:0 0 4px; font-size:1.35rem; }
+    .game-card > p { min-height:48px; margin:0 0 14px; color:var(--gray); font-size:.9rem; }
+    .memory-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; }
+    .memory-card { aspect-ratio:1; min-width:0; border:0; border-radius:12px; background:linear-gradient(135deg,#7C5CFC,#FF6B9D); color:#fff; font-size:1.5rem; font-weight:900; cursor:pointer; transition:transform .2s,background .2s; }
+    .memory-card:hover { transform:translateY(-2px); }
+    .memory-card.revealed,.memory-card.matched { background:#EDE8FF; color:var(--dark); }
+    .memory-card.matched { box-shadow:inset 0 0 0 2px var(--green); }
+    .game-status { min-height:28px; margin:10px 0; color:var(--purple-dark); font-size:.88rem; font-weight:800; }
+    .question-box { min-height:82px; display:grid; place-items:center; padding:14px; margin:12px 0; border-radius:14px; background:#F8F7FF; text-align:center; font-size:1.2rem; font-weight:900; }
+    .answer-row { display:flex; gap:8px; }
+    .answer-row input { width:100%; min-width:0; border:2px solid #DED9F8; border-radius:11px; padding:10px; font:800 1rem 'Nunito',sans-serif; text-align:center; direction:ltr; }
+    .answer-row input:focus { outline:3px solid #EDE8FF; border-color:var(--purple); }
+    .game-button { border:0; border-radius:11px; padding:10px 14px; background:var(--purple); color:white; font:800 .9rem 'Nunito',sans-serif; cursor:pointer; white-space:nowrap; }
+    .game-button:hover { background:var(--purple-dark); }
+    .game-button.secondary { background:#FFF1D6; color:#755514; }
+    .solution { display:none; margin-top:10px; padding:10px 12px; border-radius:11px; background:#E8F8EE; color:#23663A; font-weight:800; }
+    .solution.visible { display:block; }
+    .page-footer { padding:20px; text-align:center; color:var(--gray); background:#fff; border-top:1px solid #EEE; }
+    @media(max-width:900px) { .games-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+    @media(max-width:620px) { .games-grid { grid-template-columns:1fr; } .game-card > p { min-height:0; } }
+  </style>
+</head>
+<body>
+  <div id="site-nav-root"></div>
+  <header class="games-hero">
+    <h1 id="page-title"></h1>
+    <p id="page-subtitle"></p>
+    <button class="lang-toggle" id="language-toggle" type="button"></button>
+  </header>
+  <main class="games-main">
+    <div class="games-grid">
+      <section class="game-card" aria-labelledby="memory-title">
+        <h2 id="memory-title"></h2><p id="memory-desc"></p>
+        <div class="memory-grid" id="memory-grid"></div>
+        <div class="game-status" id="memory-status" aria-live="polite"></div>
+        <button class="game-button secondary" id="memory-reset" type="button"></button>
+      </section>
+      <section class="game-card" aria-labelledby="place-title">
+        <h2 id="place-title"></h2><p id="place-desc"></p>
+        <div class="question-box" id="place-question"></div>
+        <div class="answer-row"><input id="place-answer" type="number" inputmode="numeric"><button class="game-button" id="place-check" type="button"></button></div>
+        <div class="solution" id="place-solution" aria-live="polite"></div>
+        <button class="game-button secondary" id="place-next" type="button"></button>
+      </section>
+      <section class="game-card" aria-labelledby="math-title">
+        <h2 id="math-title"></h2><p id="math-desc"></p>
+        <div class="question-box" id="math-question"></div>
+        <div class="answer-row"><input id="math-answer" type="number" inputmode="numeric"><button class="game-button" id="math-check" type="button"></button></div>
+        <div class="solution" id="math-solution" aria-live="polite"></div>
+        <button class="game-button secondary" id="math-next" type="button"></button>
+      </section>
+    </div>
+  </main>
+  <footer class="page-footer" id="page-footer"></footer>
+  <script>
+    const gameText = {
+      ar: { title:'ألعاب الرياضيات <span>المرحة</span>', subtitle:'اختر لعبة، فكّر، ثم جرّب إجابتك.', language:'English', footer:'MathKids • العب وتعلّم كل يوم',
+        memory:'لعبة الذاكرة', memoryDesc:'اقلب البطاقات وابحث عن الأزواج المتطابقة.', moves:'المحاولات', pairs:'الأزواج', reset:'ابدأ من جديد',
+        place:'تحدي القيمة المكانية', placeDesc:'اكتب قيمة الرقم المحدد في العدد.', whatValue:'ما قيمة الرقم', inNumber:'في العدد', check:'تحقق', next:'سؤال جديد', answer:'الإجابة الصحيحة:', correct:'إجابة صحيحة! أحسنت.', retry:'ليست هذه الإجابة. راجع الحل ثم جرّب سؤالاً جديداً.',
+        math:'تحدي العمليات', mathDesc:'حل العملية الحسابية بأسرع ما يمكنك.',
+        memoryDone:'أحسنت! وجدت كل الأزواج في {moves} محاولات.' },
+      en: { title:'Math <span>Games</span>', subtitle:'Pick a game, think it through, and try your answer.', language:'العربية', footer:'MathKids • Play and learn every day',
+        memory:'Memory Match', memoryDesc:'Flip the cards and find all matching pairs.', moves:'Moves', pairs:'Pairs', reset:'Start again',
+        place:'Place Value Challenge', placeDesc:'Enter the place value of the highlighted digit.', whatValue:'What is the value of digit', inNumber:'in', check:'Check', next:'New question', answer:'Correct answer:', correct:'Correct! Well done.', retry:'Not quite. Review the solution, then try a new question.',
+        math:'Math Dash', mathDesc:'Solve the arithmetic problem as quickly as you can.',
+        memoryDone:'Great job! You found every pair in {moves} moves.' }
+    };
+    let language = document.documentElement.lang === 'en' ? 'en' : 'ar';
+    const pairs = ['🍎','⭐','🐠','🚀','📚','🎈','🦋','⚽'];
+    let firstCard = null, lockBoard = false, moves = 0, matchedPairs = 0;
+    let placeValue = { number: 0, digit: 0, value: 0 };
+    let arithmetic = { expression: '', answer: 0 };
+
+    function setText(id, value) { document.getElementById(id).textContent = value; }
+    function shuffle(items) { return [...items].sort(() => Math.random() - .5); }
+    function startMemory() {
+      firstCard = null; lockBoard = false; moves = 0; matchedPairs = 0;
+      setText('memory-status', `${gameText[language].moves}: 0 · ${gameText[language].pairs}: 0/${pairs.length}`);
+      document.getElementById('memory-grid').innerHTML = shuffle([...pairs, ...pairs]).map((emoji, index) => `<button class="memory-card" type="button" data-pair="${emoji}" aria-label="${language === 'ar' ? 'بطاقة' : 'Card'} ${index + 1}">?</button>`).join('');
+      document.querySelectorAll('.memory-card').forEach(card => card.addEventListener('click', () => flipCard(card)));
+    }
+    function flipCard(card) {
+      if (lockBoard || card.classList.contains('revealed') || card.classList.contains('matched')) return;
+      card.textContent = card.dataset.pair; card.classList.add('revealed');
+      if (!firstCard) { firstCard = card; return; }
+      moves += 1;
+      const secondCard = card;
+      if (firstCard.dataset.pair === secondCard.dataset.pair) {
+        firstCard.classList.replace('revealed','matched'); secondCard.classList.replace('revealed','matched');
+        firstCard = null; matchedPairs += 1;
+        if (matchedPairs === pairs.length) setText('memory-status', gameText[language].memoryDone.replace('{moves}', moves));
+        else setText('memory-status', `${gameText[language].moves}: ${moves} · ${gameText[language].pairs}: ${matchedPairs}/${pairs.length}`);
+      } else {
+        lockBoard = true;
+        setText('memory-status', `${gameText[language].moves}: ${moves} · ${gameText[language].pairs}: ${matchedPairs}/${pairs.length}`);
+        window.setTimeout(() => { firstCard.textContent = '?'; secondCard.textContent = '?'; firstCard.classList.remove('revealed'); secondCard.classList.remove('revealed'); firstCard = null; lockBoard = false; }, 750);
+      }
+    }
+    function newPlaceQuestion() {
+      const samples = [[238765091,3],[4752806,7],[530216,2],[894325,9],[6721405,4]];
+      const [number, digit] = samples[Math.floor(Math.random() * samples.length)];
+      const digitsFromRight = String(number).split('').reverse();
+      const value = digit * (10 ** digitsFromRight.indexOf(String(digit)));
+      placeValue = { number, digit, value };
+      setText('place-question', `${gameText[language].whatValue} ${digit} ${gameText[language].inNumber} ${number.toLocaleString('en-US')}?`);
+      document.getElementById('place-answer').value = '';
+      document.getElementById('place-solution').classList.remove('visible');
+    }
+    function checkPlaceAnswer() {
+      const field = document.getElementById('place-answer');
+      if (field.value === '') { field.focus(); return; }
+      const solution = document.getElementById('place-solution');
+      solution.textContent = `${Number(field.value) === placeValue.value ? gameText[language].correct : gameText[language].retry} ${gameText[language].answer} ${placeValue.value.toLocaleString('en-US')}.`;
+      solution.classList.add('visible');
+    }
+    function newMathQuestion() {
+      const a = Math.floor(Math.random() * 12) + 2, b = Math.floor(Math.random() * 12) + 2;
+      const operation = ['+', '−', '×'][Math.floor(Math.random() * 3)];
+      arithmetic = { expression: `${a} ${operation} ${b}`, answer: operation === '+' ? a + b : operation === '−' ? a - b : a * b };
+      setText('math-question', `${arithmetic.expression} = ?`);
+      document.getElementById('math-answer').value = '';
+      document.getElementById('math-solution').classList.remove('visible');
+    }
+    function checkMathAnswer() {
+      const field = document.getElementById('math-answer');
+      if (field.value === '') { field.focus(); return; }
+      const solution = document.getElementById('math-solution');
+      solution.textContent = `${Number(field.value) === arithmetic.answer ? gameText[language].correct : gameText[language].retry} ${gameText[language].answer} ${arithmetic.answer}.`;
+      solution.classList.add('visible');
+    }
+    function renderGames() {
+      const text = gameText[language];
+      document.documentElement.lang = language;
+      document.documentElement.dir = language === 'ar' ? 'rtl' : 'ltr';
+      document.title = language === 'ar' ? 'ألعاب الرياضيات | MathKids' : 'Math Games | MathKids';
+      document.getElementById('page-title').innerHTML = text.title;
+      setText('page-subtitle', text.subtitle); setText('language-toggle', text.language); setText('page-footer', text.footer);
+      setText('memory-title', text.memory); setText('memory-desc', text.memoryDesc); setText('memory-reset', text.reset);
+      setText('place-title', text.place); setText('place-desc', text.placeDesc); setText('place-check', text.check); setText('place-next', text.next);
+      setText('math-title', text.math); setText('math-desc', text.mathDesc); setText('math-check', text.check); setText('math-next', text.next);
+      startMemory(); newPlaceQuestion(); newMathQuestion();
+    }
+    document.getElementById('memory-reset').addEventListener('click', startMemory);
+    document.getElementById('place-check').addEventListener('click', checkPlaceAnswer);
+    document.getElementById('place-next').addEventListener('click', newPlaceQuestion);
+    document.getElementById('math-check').addEventListener('click', checkMathAnswer);
+    document.getElementById('math-next').addEventListener('click', newMathQuestion);
+    document.getElementById('language-toggle').addEventListener('click', () => { language = language === 'ar' ? 'en' : 'ar'; renderGames(); });
+    document.getElementById('place-answer').addEventListener('keydown', event => { if (event.key === 'Enter') checkPlaceAnswer(); });
+    document.getElementById('math-answer').addEventListener('keydown', event => { if (event.key === 'Enter') checkMathAnswer(); });
+    renderGames();
+  </script>
+  <script src="site-nav.js"></script>
+</body>
+</html>

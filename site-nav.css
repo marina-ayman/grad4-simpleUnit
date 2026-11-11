@@ -1,0 +1,33 @@
+#site-nav-root { width: 100%; flex: 0 0 auto; position: sticky; top: 0; z-index: 5000; }
+.site-nav { position: relative; width: 100%; background: rgba(255,255,255,.97); border-bottom: 1px solid #E8E5FF; box-shadow: 0 4px 18px rgba(45,42,91,.08); color: #2D2A5B; font: 700 14px/1.4 'Nunito','Cairo','Segoe UI',sans-serif; }
+.site-nav *, .site-nav *::before, .site-nav *::after { box-sizing: border-box; }
+.site-nav-inner { width: min(1200px,100%); min-height: 68px; margin: auto; padding: 9px 20px; display: flex; align-items: center; gap: 18px; }
+.site-brand { display: inline-flex; align-items: center; gap: 8px; flex: 0 0 auto; color: #2D2A5B; text-decoration: none; font-size: 19px; font-weight: 900; white-space: nowrap; }
+.site-brand-mark { width: 36px; aspect-ratio: 1; display: grid; place-items: center; border-radius: 50%; color: #fff; background: linear-gradient(135deg,#7C5CFC,#FF6B9D,#FF9F43); }
+.site-nav-links { display: flex; align-items: center; justify-content: flex-end; gap: 7px; flex: 1; min-width: 0; }
+.site-nav a, .site-nav summary { color: #2D2A5B; text-decoration: none; }
+.site-nav-link, .site-nav summary { display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 8px 11px; border: 0; border-radius: 12px; background: transparent; font: inherit; white-space: nowrap; cursor: pointer; }
+.site-nav-link:hover, .site-nav summary:hover, .site-nav details[open] > summary { background: #EDE8FF; color: #5B3FD6; }
+.site-nav details { position: relative; }
+.site-nav summary { list-style: none; }
+.site-nav summary::-webkit-details-marker { display: none; }
+.site-nav-panel { position: absolute; top: calc(100% + 8px); inset-inline-start: 0; width: min(670px,calc(100vw - 32px)); padding: 14px; display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 10px; background: #fff; border: 1px solid #E8E5FF; border-radius: 16px; box-shadow: 0 16px 38px rgba(45,42,91,.18); }
+.site-nav-unit { min-width: 0; padding: 12px; border-radius: 12px; background: #F8F7FF; }
+.site-nav-unit:nth-child(4n+2) { background: #FFF4F7; }
+.site-nav-unit:nth-child(4n+3) { background: #F0FAF3; }
+.site-nav-unit:nth-child(4n+4) { background: #FFF8E8; }
+.site-nav-unit h3 { margin: 0 0 8px; color: #5B3FD6; font-size: 14px; }
+.site-nav-unit-actions { display: flex; flex-wrap: wrap; gap: 6px; }
+.site-nav-unit-actions a, .site-nav-tools a { display: inline-flex; padding: 6px 9px; border-radius: 9px; background: #fff; font-size: 12px; font-weight: 800; }
+.site-nav-unit-actions a:hover, .site-nav-tools a:hover { color: #5B3FD6; box-shadow: 0 2px 9px rgba(45,42,91,.12); }
+.site-nav-tools { position: absolute; top: calc(100% + 8px); inset-inline-end: 0; width: 220px; padding: 10px; display: grid; gap: 6px; background: #fff; border: 1px solid #E8E5FF; border-radius: 14px; box-shadow: 0 16px 38px rgba(45,42,91,.18); }
+.site-nav-tools a { font-size: 13px; }
+@media (max-width: 760px) {
+  .site-nav-inner { min-height: 58px; padding: 8px 12px; flex-wrap: wrap; gap: 4px 12px; }
+  .site-brand { font-size: 17px; }
+  .site-nav-links { order: 2; width: 100%; flex: 1 0 100%; justify-content: flex-start; overflow-x: auto; }
+  .site-nav-link, .site-nav summary { padding: 7px 9px; }
+  .site-nav-panel { position: fixed; top: 105px; inset-inline: 8px; width: auto; max-height: calc(100vh - 120px); overflow-y: auto; }
+  .site-nav-tools { position: fixed; top: 105px; inset-inline-end: 8px; max-height: calc(100vh - 120px); overflow-y: auto; }
+}
+@media (max-width: 430px) { .site-nav-panel { grid-template-columns: 1fr; } }

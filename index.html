@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MathKids - Learn • Play • Grow</title>
+<title>رياضيات الصف الرابع | MathKids</title>
+<link rel="stylesheet" href="site-nav.css">
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 /* ============ RESET & VARIABLES ============ */
@@ -1472,8 +1473,169 @@ ul { list-style: none; }
   .container { padding: 0 16px; }
 }
 </style>
+<style>
+body > :not(#grade-home):not(#site-nav-root):not(script) { display: none !important; }
+#grade-home { min-height: 100vh; color: var(--dark); }
+#grade-home { display: flex; flex-direction: column; }
+#grade-home .home-hero { animation: slideDown .65s ease both; }
+#grade-home .hero-copy { animation: fadeInLeft .9s ease both; }
+#grade-home .hero-visual { animation: fadeInRight .9s ease both; }
+#grade-home .hero-board { animation: summaryBoardFloat 4s ease-in-out infinite; }
+#grade-home .unit-card { animation: fadeInText .65s ease both; }
+#grade-home .unit-card:nth-child(2) { animation-delay: .08s; }
+#grade-home .unit-card:nth-child(3) { animation-delay: .16s; }
+#grade-home .unit-card:nth-child(4) { animation-delay: .24s; }
+#grade-home .unit-card:nth-child(5) { animation-delay: .32s; }
+#grade-home .feature-card, #grade-home .path-card, #grade-home .game-link-card { animation: fadeInText .65s ease both; }
+#grade-home .summary-poster { animation: summaryPop .65s cubic-bezier(.2,.8,.2,1) both; }
+#grade-home .summary-language { display: none; }
+#grade-home.home-summary-mode .home-hero,
+#grade-home.home-summary-mode #learning-features,
+#grade-home.home-summary-mode #study-path,
+#grade-home.home-summary-mode #games-preview,
+#grade-home.home-summary-mode #why-love,
+#grade-home.home-summary-mode #learning-stats,
+#grade-home.home-summary-mode #start-learning,
+#grade-home.home-summary-mode #project-pages,
+#grade-home.home-summary-mode .home-footer { display: none !important; }
+#grade-home.home-summary-mode main { min-height: calc(100vh - 70px); padding-block: 18px; }
+#grade-home.home-summary-mode .summary-language { display: inline-flex; }
+#grade-home.home-summary-mode .section-heading.summary-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+@keyframes summaryBoardFloat { 0%,100% { transform: rotate(-2deg) translateY(0); } 50% { transform: rotate(-1deg) translateY(-8px); } }
+@keyframes summaryPop { from { opacity: 0; transform: translateY(14px) scale(.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+#grade-home .language-btn { border: 0; background: var(--purple); color: #fff; padding: 10px 16px; border-radius: 30px; font: 800 .9rem 'Nunito',sans-serif; cursor: pointer; white-space: nowrap; }
+#grade-home .home-hero { padding: 48px 0 50px; background: linear-gradient(180deg,#EDE9FF 0%,#F8F7FF 100%); overflow: hidden; }
+#grade-home .home-hero-grid { display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 30px; }
+#grade-home .hero-copy { max-width: 680px; text-align: start; }
+#grade-home .hero-copy h1 { font-size: clamp(2rem,4vw,3.4rem); color: var(--dark); margin-bottom: 12px; }
+#grade-home .hero-copy h1 span { color: var(--purple); }
+#grade-home .hero-copy p { margin: 0 0 24px; max-width: 560px; color: var(--gray); font-size: 1.05rem; }
+#grade-home .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+#grade-home .hero-visual { position: relative; min-height: 310px; display: grid; place-items: center; border-radius: 28px; overflow: hidden; background: linear-gradient(180deg,#E7F5FF 0%,#FFF4D6 100%); }
+#grade-home .hero-visual::before, #grade-home .hero-visual::after { content: ''; position: absolute; width: 130px; aspect-ratio: 1; border-radius: 50%; background: rgba(255,255,255,.65); }
+#grade-home .hero-visual::before { top: 30px; inset-inline-start: 28px; }
+#grade-home .hero-visual::after { bottom: 24px; inset-inline-end: 30px; width: 90px; }
+#grade-home .hero-board { position: relative; z-index: 1; width: min(78%,360px); padding: 26px 18px; border: 10px solid #C8956A; border-radius: 18px; background: #2D5A3D; color: white; text-align: center; font: 800 clamp(1.3rem,3vw,2rem) 'Baloo 2',cursive; box-shadow: 0 14px 30px rgba(45,42,91,.2); transform: rotate(-2deg); }
+#grade-home .hero-board span { color: var(--yellow); }
+#grade-home .hero-mascot { position: absolute; z-index: 2; bottom: 8px; inset-inline-start: 16px; font-size: 4.5rem; filter: drop-shadow(0 6px 6px rgba(0,0,0,.14)); animation: kidBob 3s ease-in-out infinite; }
+#grade-home .hero-star { position: absolute; z-index: 2; top: 22px; inset-inline-end: 28px; font-size: 2.4rem; animation: rotateStar 3s ease-in-out infinite; }
+#grade-home .home-section { padding: 38px 0 48px; }
+#grade-home main { display: flex; flex-direction: column; }
+#grade-home .home-section.lessons { background: #fff; }
+#grade-home .section-heading { margin-bottom: 20px; }
+#grade-home .section-heading h2 { font-size: clamp(1.45rem,2.6vw,2rem); color: var(--dark); }
+#grade-home .section-heading p { color: var(--gray); margin-top: 5px; }
+#grade-home .resource-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(210px,1fr)); gap: 14px; }
+#grade-home .resource-card { min-height: 148px; padding: 18px; border-radius: var(--radius); display: flex; flex-direction: column; justify-content: space-between; transition: transform .25s, box-shadow .25s; }
+#grade-home .resource-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-md); }
+#grade-home .resource-card:nth-child(5n+1) { background: linear-gradient(135deg,#E8E1FF,#D5C9FF); }
+#grade-home .resource-card:nth-child(5n+2) { background: linear-gradient(135deg,#DFF5E1,#C8F0CE); }
+#grade-home .resource-card:nth-child(5n+3) { background: linear-gradient(135deg,#FFF1D6,#FFE0B3); }
+#grade-home .resource-card:nth-child(5n+4) { background: linear-gradient(135deg,#D6E8FF,#B8D8FF); }
+#grade-home .resource-card:nth-child(5n) { background: linear-gradient(135deg,#FFE0EC,#FFC7DD); }
+#grade-home .resource-card h3 { font-size: 1.08rem; margin-bottom: 6px; }
+#grade-home .resource-card p { color: var(--gray); font-size: .84rem; }
+#grade-home .resource-card a { align-self: flex-start; margin-top: 14px; padding: 7px 12px; background: white; border-radius: 20px; color: var(--purple-dark); font-size: .85rem; font-weight: 800; }
+#grade-home .lesson-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 18px; }
+#grade-home .lesson-card { padding: 22px; background: #fff; border: 1px solid #E8E5FF; border-radius: var(--radius); box-shadow: var(--shadow-sm); }
+#grade-home .lesson-card h3 { color: var(--purple-dark); font-size: 1.2rem; margin-bottom: 5px; }
+#grade-home .lesson-card .unit-name { color: var(--pink); font-weight: 800; font-size: .84rem; margin-bottom: 14px; }
+#grade-home .lesson-card .lesson-resources { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 15px; }
+#grade-home .lesson-card .lesson-resources a { background: var(--purple-light); color: var(--purple-dark); padding: 8px 12px; border-radius: 18px; font-size: .84rem; font-weight: 800; }
+#grade-home .lesson-card .lesson-resources a:hover { background: var(--purple); color: white; }
+#grade-home .unit-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(220px,1fr)); gap: 16px; }
+#grade-home .lesson-grid.unit-grid { grid-template-columns: repeat(auto-fit,minmax(220px,1fr)); }
+#grade-home .lesson-grid.summary-grid { grid-template-columns: 1fr; }
+#grade-home .unit-card { min-width: 0; overflow: hidden; background: #fff; border: 1px solid #E8E5FF; border-radius: var(--radius); box-shadow: var(--shadow-sm); transition: transform .25s,box-shadow .25s; }
+#grade-home .unit-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+#grade-home .review-cover { aspect-ratio: .72; margin: 12px 12px 0; padding: 0; display: block; overflow: hidden; position: relative; border: 6px solid rgba(255,255,255,.92); outline: 1px solid #E8E5FF; border-radius: 12px; color: var(--dark); background: #fff; }
+#grade-home .review-cover .unit-review-image { display: block; width: 100%; height: 100%; object-fit: contain; background: #fff; }
+#grade-home .unit-card:nth-child(5n+2) .review-cover { background: linear-gradient(140deg,#FFF0F5,#FFE0EC); }
+#grade-home .unit-card:nth-child(5n+3) .review-cover { background: linear-gradient(140deg,#E7F7EB,#C8F0CE); }
+#grade-home .unit-card:nth-child(5n+4) .review-cover { background: linear-gradient(140deg,#FFF5DC,#FFE0B3); }
+#grade-home .unit-card:nth-child(5n) .review-cover { background: linear-gradient(140deg,#E9E4FF,#D5C9FF); }
+#grade-home .review-cover::after { content: '✦  ✧  ✦'; position: absolute; inset-inline-end: 10px; bottom: 8px; color: rgba(91,63,214,.35); font-size: 1.3rem; }
+#grade-home .review-cover .cover-unit { position: absolute; top: 8px; inset-inline-start: 8px; z-index: 1; padding: 5px 8px; border-radius: 9px; background: rgba(255,255,255,.94); font-size: .75rem; font-weight: 900; color: var(--purple-dark); }
+#grade-home .review-cover .cover-equation { font: 800 clamp(1.05rem,2vw,1.55rem) 'Baloo 2',cursive; text-align: center; }
+#grade-home .review-cover .cover-icon { position: absolute; inset-inline-end: 12px; bottom: 10px; font-size: 1.8rem; }
+#grade-home .unit-card-body { padding: 14px 16px 16px; }
+#grade-home .unit-card-body h3 { margin: 0 0 4px; color: var(--purple-dark); font-size: 1rem; }
+#grade-home .unit-card-body p { margin: 0; color: var(--gray); font-size: .84rem; }
+#grade-home .unit-actions { display: flex; gap: 8px; margin-top: 13px; }
+#grade-home .unit-actions a { flex: 1; text-align: center; padding: 8px 7px; border-radius: 11px; background: var(--purple-light); color: var(--purple-dark); font-weight: 900; font-size: .83rem; }
+#grade-home .unit-actions a.solve { background: var(--pink); color: #fff; }
+#grade-home .summary-detail { display: grid; grid-template-columns: minmax(210px,.8fr) minmax(0,1.2fr); gap: 20px; }
+#grade-home .summary-poster { min-height: 0; aspect-ratio: .72; padding: 8px; display: grid; grid-template-rows: minmax(0,1fr) auto; gap: 8px; overflow: hidden; border: 8px solid #fff; outline: 1px solid #E8E5FF; border-radius: 14px; color: var(--dark); background: #fff; box-shadow: var(--shadow-sm); text-align: center; }
+#grade-home .summary-poster .unit-review-image { display: block; width: 100%; height: 100%; min-height: 0; object-fit: contain; }
+#grade-home .summary-poster .poster-caption { display: grid; gap: 3px; padding: 7px; border-radius: 10px; background: var(--bg); font-size: .78rem; }
+#grade-home .summary-poster strong { font: 800 1.5rem 'Baloo 2',cursive; }
+#grade-home .summary-poster .poster-equation { padding: 12px 8px; border-radius: 12px; background: rgba(255,255,255,.75); font-size: 1.25rem; font-weight: 900; direction: ltr; }
+#grade-home .summary-copy { min-width: 0; }
+#grade-home .section-lead { max-width: 740px; color: var(--gray); }
+#grade-home .path-grid { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 12px; }
+#grade-home .path-card { padding: 16px; border-radius: 14px; background: #fff; box-shadow: var(--shadow-sm); }
+#grade-home .path-card strong { display: block; color: var(--purple-dark); margin-bottom: 5px; }
+#grade-home .path-card p { margin: 0; color: var(--gray); font-size: .85rem; }
+#grade-home .games-band { padding: 38px 0; background: linear-gradient(180deg,#F0F4FF,#F8F7FF); }
+#grade-home .games-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 14px; }
+#grade-home .game-link-card { display: flex; align-items: center; gap: 12px; padding: 16px; border-radius: 14px; background: #fff; box-shadow: var(--shadow-sm); font-weight: 900; }
+#grade-home .game-link-card span { font-size: 1.8rem; }
+#grade-home .game-link-card:hover { color: var(--purple-dark); box-shadow: var(--shadow-md); }
+#grade-home .summary-back { display: inline-flex; margin-bottom: 14px; color: var(--purple-dark); font-weight: 900; }
+#grade-home .lesson-card h4 { font-size: .94rem; color: var(--dark); margin: 12px 0 5px; }
+#grade-home .lesson-card ul { list-style: disc; padding-inline-start: 22px; color: var(--gray); font-size: .9rem; }
+#grade-home .lesson-card li { margin: 4px 0; }
+#grade-home .math-example { padding: 11px 14px; background: var(--bg); border-radius: 12px; color: var(--dark); font-size: .9rem; }
+#grade-home .memory-note { margin-top: 12px; padding: 10px 12px; background: #FFF4D6; border-radius: 12px; color: #72521A; font-size: .86rem; font-weight: 700; }
+#grade-home .home-footer { padding: 20px 0; text-align: center; color: var(--gray); background: white; border-top: 1px solid #EEE; font-size: .85rem; }
+@media (max-width: 760px) {
+  #grade-home .home-hero { padding: 34px 0; }
+  #grade-home .home-hero-grid { grid-template-columns: 1fr; }
+  #grade-home .hero-copy { text-align: center; margin: 0 auto; }
+  #grade-home .hero-copy p { margin-inline: auto; }
+  #grade-home .hero-actions { justify-content: center; }
+  #grade-home .hero-visual { min-height: 250px; }
+  #grade-home .lesson-grid { grid-template-columns: 1fr; }
+  #grade-home .summary-detail { grid-template-columns: 1fr; }
+  #grade-home .summary-poster { width: min(100%,360px); margin-inline: auto; }
+  #grade-home .path-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  #grade-home .games-grid { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #grade-home *, #site-nav-root { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; }
+}
+</style>
 </head>
 <body>
+<div id="grade-home">
+  <div id="site-nav-root"></div>
+  <header class="home-hero" id="home">
+    <div class="container home-hero-grid">
+      <div class="hero-copy">
+        <h1 id="hero-title"></h1>
+        <p id="hero-description"></p>
+        <div class="hero-actions"><a class="btn btn-primary" href="#unit-summary" id="start-link"></a><a class="btn btn-outline" href="#project-pages" id="pages-link"></a><button class="language-btn" id="language-toggle" type="button"></button></div>
+      </div>
+      <div class="hero-visual" aria-hidden="true">
+        <div class="hero-board">238,765,091<br><span>6 × 7 = 42</span><br>4,752,806</div><div class="hero-mascot">👧🏻</div><div class="hero-star">⭐</div></div>
+    </div>
+  </header>
+  <main>
+    <section class="features-section" id="learning-features"><div class="container"><div class="features-grid" id="feature-grid"></div></div></section>
+    <section class="home-section lessons" id="unit-summary">
+      <div class="container"><div class="section-heading summary-heading"><div><h2 id="lessons-title"></h2><p id="lessons-description"></p></div><button class="language-btn summary-language" id="summary-language-toggle" type="button"></button></div><div class="lesson-grid" id="lesson-grid"></div></div>
+    </section>
+    <section class="path-section" id="study-path"><div class="container"><div class="section-heading"><h2 id="path-title"></h2><p id="path-description"></p></div><div class="path-grid" id="path-grid"></div></div></section>
+    <section class="games-band" id="games-preview"><div class="container"><div class="section-heading"><h2 id="games-title"></h2><p id="games-description"></p></div><div class="games-grid" id="games-grid"></div></div></section>
+    <section class="why-section" id="why-love"><div class="container"><h2 class="main-title" id="why-title"></h2><p class="subtitle" id="why-description"></p><div class="why-grid"><div class="why-col left" id="why-left"></div><div class="why-center"><div class="family-emoji">👨‍👩‍👦</div><h3 id="why-center-text"></h3><div class="monster">⭐</div></div><div class="why-col right" id="why-right"></div></div></div></section>
+    <section class="stats-section" id="learning-stats"><div class="stats-box reveal"><div class="stat-item"><div class="icon">🚀</div><div class="stat-number" data-target="10000">0</div><div class="stat-label" id="stat-students"></div></div><div class="stat-item"><div class="icon">📚</div><div class="stat-number" data-target="500">0</div><div class="stat-label" id="stat-lessons"></div></div><div class="stat-item"><div class="icon">🎮</div><div class="stat-number" data-target="100">0</div><div class="stat-label" id="stat-games"></div></div><div class="stat-item"><div class="icon">💜</div><div class="stat-number" data-target="98" data-suffix="%">0</div><div class="stat-label" id="stat-satisfaction"></div></div></div></section>
+    <section class="cta-section" id="start-learning"><div class="cta-box reveal"><div class="cta-kid cta-kid-left">👦🎉</div><div class="cta-kid cta-kid-right">🎉👧</div><h2 id="cta-title"></h2><p id="cta-description"></p><a class="btn-white" href="#unit-summary" id="cta-link"></a></div></section>
+    <section class="home-section project-pages" id="project-pages">
+      <div class="container"><div class="section-heading"><h2 id="pages-title"></h2><p id="pages-description"></p></div><div class="resource-grid" id="resource-grid"></div></div>
+    </section>
+  </main>
+  <footer class="home-footer"><div class="container" id="footer-text"></div></footer>
+</div>
 
 <!-- ============ NAVBAR ============ -->
 <nav class="navbar">
@@ -2023,5 +2185,251 @@ document.querySelectorAll('.nav-links > li > a').forEach(link => {
   });
 });
 </script>
+<script>
+const homeContent = {
+  ar: {
+    language: 'English',
+    languageLabel: 'التبديل إلى الإنجليزية',
+    heroTitle: 'رياضيات الصف الرابع <span>بسهولة ومتعة</span>',
+    heroDescription: 'ملخصات قصيرة وواضحة لأهم دروس الرياضيات، مع أمثلة محلولة وروابط أنشطة وصفحات المشروع.',
+    start: 'ابدأ بالمراجعة ←',
+    pagesAction: 'تصفح صفحات المشروع',
+    pagesTitle: 'أدوات وصفحات إضافية',
+    pagesDescription: 'أنشطة أخرى موجودة في المشروع وليست مرتبطة بملخص درس محدد.',
+    lessonsTitle: 'ملخصات دروس الرياضيات',
+    lessonsDescription: 'اقرأ الفكرة والقانون، ثم تابع المثال خطوة بخطوة.',
+    unitsTitle: 'وحدات المنهج', unitsDescription: 'اختر الوحدة لعرض ورقة مراجعتها أو الانتقال إلى نشاط الحل.',
+    open: 'افتح الصفحة ←',
+    ideas: 'أهم الأفكار',
+    rules: 'القواعد المهمة',
+    example: 'مثال محلول خطوة بخطوة',
+    note: 'تذكّر',
+    summaryAction: 'التلخيص', solveAction: 'حل', backToUnits: '← كل الوحدات',
+    features: [['📖','دروس تفاعلية','تعلم خطوة بخطوة مع أمثلة وأسئلة للتدريب.'],['🎮','ألعاب رياضيات','تدرّب على المهارات عبر ألعاب مشوقة.'],['🏆','اختبارات ومراجعات','تحقق من فهمك بعد كل وحدة.'],['📈','متابعة التقدم','لاحظ المهارات التي أتقنتها.'],['💡','أفكار إبداعية','ألغاز وأنشطة لتجربة الرياضيات.']],
+    pathTitle: 'خطوات مراجعة بسيطة', pathDescription: 'انتقل من فهم الفكرة إلى حل السؤال بنفسك.',
+    pathSteps: [['١','تعلّم','شاهد الدرس وافهم الفكرة الجديدة.'],['٢','تدرّب','حلّ أمثلة وأسئلة قصيرة.'],['٣','العب','ثبّت مهاراتك من خلال الألعاب.'],['٤','اختبر نفسك','تأكد من فهمك بعد كل درس.'],['٥','تقدّم','احتفل بما تعلمته واستمر.']],
+    gamesTitle: 'وقت اللعب والتعلّم', gamesDescription: 'ثلاث ألعاب قصيرة لتقوية مهاراتك.', gameCards: [['🧠','لعبة الذاكرة'],['🔢','تحدي القيمة المكانية'],['⚡','تحدي العمليات']],
+    whyTitle: 'لماذا يحب الأطفال والأهل MathKids؟', whyDescription: 'نجعل تعلّم الرياضيات بسيطاً وممتعاً وفعّالاً.', whyCenter: 'نتعلّم معاً، وننمو معاً',
+    benefits: [['✓','آمن ومناسب للأطفال','بيئة تعليمية هادئة وخالية من الإعلانات.'],['🎓','متوافق مع المنهج','دروس مصممة لمهارات الصف الرابع.'],['❤️','تعلّم تفاعلي','أنشطة وألعاب ورسوم تحفّز المشاركة.'],['📊','تقدّم تلاحظه','تابع المهارات والإنجازات خطوة بخطوة.']],
+    stats: ['طالب سعيد','درس تفاعلي','لعبة رياضيات','رضا أولياء الأمور'],
+    ctaTitle: 'ابدأ مغامرتك في الرياضيات اليوم!', ctaDescription: 'انضم إلى رحلة تعلّم الرياضيات بطريقة ممتعة.', ctaLink: '🚀 ابدأ التعلّم الآن',
+    unitCovers: [['🔢','238,765,091'],['➕','45 + 12 = 57'],['✖️','4 × 6 = 24'],['📏','2 كم = 2000 م'],['📐','P = 2 × (L + W)']],
+    footer: 'MathKids • ملخصات تعليمية للصف الرابع الابتدائي',
+    pages: [
+      ['📚', 'أنشطة MathKids', 'صفحة تعليمية تفاعلية من صفحات المشروع.', 'deepseek_html_20260921_ffe7c0.html'],
+      ['📏', 'مجموعات على خط الأعداد', 'تدرّب على تحديد المجموعات وتمثيلها.', 'sets.html']
+    ],
+    lessons: [
+      {
+        unit: 'الوحدة الأولى: الأعداد الكبيرة والقيمة المكانية', title: 'قراءة الأعداد والقيمة المكانية',
+        ideas: ['لكل رقم قيمة تتحدد بمكانه في العدد.', 'نقرأ العدد في مجموعات من ثلاث خانات: آحاد، آلاف، ملايين.', 'الصيغة التحليلية تكتب العدد كمجموع قيم أرقامه.'],
+        rules: ['قيمة الرقم = الرقم × قيمة المنزلة.', 'للمقارنة نبدأ بأكبر منزلة، وإذا تساوت ننتقل إلى التالية.'],
+        example: 'في العدد 238,765,091: <br>١. قيمة الرقم 8 هي 8,000,000 لأنه في منزلة الملايين. <br>٢. الصيغة التحليلية: 200,000,000 + 30,000,000 + 8,000,000 + 700,000 + 60,000 + 5,000 + 90 + 1.',
+        note: 'قسّم العدد إلى مجموعات من ثلاثة أرقام لتسهيل قراءته ومقارنته.',
+        resources: [['ابدأ النشاط التفاعلي', 'أجب عن أسئلة القيمة المكانية وشاهد الحل بعد إجابتك', 'reviewAndH.w.html?section=sec0'], ['افتح مختبر الأعداد الكبيرة', 'تدريب على القيمة المكانية', 'Big%20Numbers%20.html'], ['اختبار الأعداد الكبيرة', 'أسئلة للتدرب والتحقق', 'largeNo.html']]
+      },
+      {
+        unit: 'الوحدة الثانية: استراتيجيات الجمع والطرح', title: 'الجمع والطرح وإعادة التسمية',
+        ideas: ['رتّب الآحاد تحت الآحاد والعشرات تحت العشرات.', 'في الجمع نعيد تسمية 10 آحاد بعشرة واحدة، وفي الطرح نعيد التجميع عند الحاجة.', 'في المسائل الكلامية حدّد المطلوب والعملية المناسبة أولاً.'],
+        rules: ['خاصية الإبدال:  a + b = b + a.', 'خاصية العنصر المحايد:  a + 0 = a.', 'نتحقق من الطرح بالجمع: الناتج + المطروح = العدد الأصلي.'],
+        example: 'اشترى أحمد كتاباً بـ 45 جنيهاً وقلماً بـ 12 جنيهاً، ودفع 100 جنيه. <br>١. ثمن المشتريات: 45 + 12 = 57 جنيهاً. <br>٢. الباقي: 100 − 57 = 43 جنيهاً.',
+        note: 'قدّر الإجابة أولاً؛ فالتقدير يساعدك على اكتشاف الناتج غير المعقول.',
+        resources: [['ابدأ النشاط التفاعلي', 'أجب عن الأسئلة وشاهد الحل بعد إجابتك', 'reviewAndH.w.html?section=sec5']]
+      },
+      {
+        unit: 'الوحدة الخامسة: عملية الضرب كعلاقة', title: 'الضرب والأنماط والخصائص',
+        ideas: ['الضرب جمع متكرر أو مقارنة بين كميتين.', 'يمكن تمثيل المسألة بمعادلة فيها عدد مجهول.', 'الأنماط تساعد على إيجاد نواتج الضرب بسرعة.'],
+        rules: ['خاصية الإبدال:  3 × 5 = 5 × 3.', 'العنصر المحايد:  a × 1 = a، وخاصية الصفر:  a × 0 = 0.', 'لإيجاد العامل المجهول نقسم حاصل الضرب على العامل المعروف.'],
+        example: 'عدد الأقلام 4 أمثال 6 أقلام. <br>١. نمثل ذلك بـ: 4 × 6 = ؟ <br>٢. نحسب: 4 × 6 = 24. إذن العدد 24 قلماً. <br>٣. للتحقق: 24 ÷ 4 = 6.',
+        note: 'عند الضرب في 5 تتناوب آحاد النواتج بين 5 و0.',
+        resources: [['ابدأ النشاط التفاعلي', 'أجب عن الأسئلة وشاهد الحل بعد إجابتك', 'reviewAndH.w.html?section=sec1']]
+      },
+      {
+        unit: 'الوحدة الثالثة: مفاهيم القياس', title: 'تحويل وحدات الطول والكتلة والسعة',
+        ideas: ['اختر الوحدة المناسبة لما تقيسه: طول أو كتلة أو سعة.', 'الكيلومتر أكبر من المتر، والكيلوجرام أكبر من الجرام، واللتر أكبر من الملليلتر.', 'عند التحويل إلى وحدة أصغر نضرب، وإلى وحدة أكبر نقسم.'],
+        rules: ['1 كم = 1000 م، و1 م = 100 سم.', '1 كجم = 1000 جم.', '1 لتر = 1000 ملليلتر.'],
+        example: 'حوّل 2 كم إلى أمتار: <br>١. كل كيلومتر يساوي 1000 متر. <br>٢. نضرب: 2 × 1000 = 2000. <br>إذن 2 كم = 2000 م.',
+        note: 'اكتب الوحدة في الإجابة، وتأكد أن اتجاه التحويل يناسب حجم الوحدة.',
+        resources: [['ابدأ النشاط التفاعلي', 'أجب عن الأسئلة وشاهد الحل بعد إجابتك', 'reviewAndH.w.html?section=sec4']]
+      },
+      {
+        unit: 'الوحدة الرابعة: الهندسة والقياس', title: 'محيط ومساحة المستطيل والمربع',
+        ideas: ['المحيط هو مجموع أطوال الأضلاع حول الشكل.', 'المساحة هي عدد الوحدات المربعة التي تغطي الشكل.', 'في المربع الأضلاع الأربعة متساوية.'],
+        rules: ['محيط المستطيل = 2 × (الطول + العرض).', 'مساحة المستطيل = الطول × العرض.', 'محيط المربع = 4 × طول الضلع، ومساحته = طول الضلع × نفسه.'],
+        example: 'مستطيل طوله 7 سم وعرضه 3 سم: <br>١. المحيط = 2 × (7 + 3) = 20 سم. <br>٢. المساحة = 7 × 3 = 21 سم².',
+        note: 'المحيط يقاس بوحدات طول مثل سم، أما المساحة فبوحدات مربعة مثل سم².',
+        resources: [['ابدأ النشاط التفاعلي', 'أجب عن الأسئلة وشاهد الحل بعد إجابتك', 'reviewAndH.w.html?section=sec3']]
+      }
+    ]
+  },
+  en: {
+    language: 'العربية',
+    languageLabel: 'Switch to Arabic',
+    heroTitle: 'Grade 4 Math <span>Made Clear and Fun</span>',
+    heroDescription: 'Short, friendly summaries of key math lessons, with worked examples and links to the project pages.',
+    start: 'Start reviewing →',
+    pagesAction: 'Explore project pages',
+    pagesTitle: 'More Pages and Tools',
+    pagesDescription: 'Other project activities that do not match a specific lesson summary.',
+    lessonsTitle: 'Grade 4 Math Summaries',
+    lessonsDescription: 'Read the idea and rule, then follow each worked example step by step.',
+    unitsTitle: 'Course Units', unitsDescription: 'Choose a unit to view its review summary or open its practice activity.',
+    open: 'Open page →',
+    ideas: 'Key ideas',
+    rules: 'Important rules',
+    example: 'Worked example',
+    note: 'Remember',
+    summaryAction: 'Summary', solveAction: 'Solve', backToUnits: '← All units',
+    features: [['📖','Interactive Lessons','Learn step by step with examples and practice questions.'],['🎮','Fun Math Games','Practice skills with exciting games.'],['🏆','Exams and Quizzes','Check what you understand after each unit.'],['📈','Progress Tracking','See which skills you have mastered.'],['💡','Creative Ideas','Explore math with puzzles and activities.']],
+    pathTitle: 'A Simple Review Path', pathDescription: 'Move from understanding the idea to solving problems on your own.',
+    pathSteps: [['1','Learn','Understand a new idea step by step.'],['2','Practice','Try examples and short questions.'],['3','Play','Strengthen your skills with games.'],['4','Test Yourself','Check what you learned after each lesson.'],['5','Achieve','Celebrate your progress and keep going.']],
+    gamesTitle: 'Play and Learn', gamesDescription: 'Three short games to strengthen your skills.', gameCards: [['🧠','Memory Match'],['🔢','Place Value Challenge'],['⚡','Math Dash']],
+    whyTitle: 'Why Kids & Parents Love MathKids', whyDescription: 'We make learning math simple, fun, and effective.', whyCenter: 'Learning together, growing together',
+    benefits: [['✓','Safe & Kid-Friendly','A calm learning environment with no ads.'],['🎓','Curriculum Aligned','Lessons designed for Grade 4 skills.'],['❤️','Engaging & Interactive','Activities and games that invite children to participate.'],['📊','Progress You Can See','Track skills and achievements step by step.']],
+    stats: ['Happy Students','Interactive Lessons','Fun Math Games','Parents Satisfied'],
+    ctaTitle: 'Start Your Math Adventure Today!', ctaDescription: 'Join a fun journey to learn and enjoy mathematics.', ctaLink: '🚀 Start Learning Now',
+    unitCovers: [['🔢','238,765,091'],['➕','45 + 12 = 57'],['✖️','4 × 6 = 24'],['📏','2 km = 2,000 m'],['📐','P = 2 × (L + W)']],
+    footer: 'MathKids • Learning summaries for Grade 4',
+    pages: [
+      ['📚', 'MathKids Activities', 'An interactive learning page included in this project.', 'deepseek_html_20260921_ffe7c0.html'],
+      ['📏', 'Sets on a Number Line', 'Practice identifying and representing sets.', 'sets.html']
+    ],
+    lessons: [
+      {
+        unit: 'Unit 1: Large Numbers and Place Value', title: 'Reading Numbers and Place Value',
+        ideas: ['A digit’s value depends on its place in the number.', 'Read numbers in groups of three digits: ones, thousands, and millions.', 'Expanded form writes a number as the sum of its place values.'],
+        rules: ['Digit value = digit × place value.', 'To compare numbers, start with the greatest place and move right when places are equal.'],
+        example: 'In 238,765,091: <br>1. The value of 8 is 8,000,000 because it is in the millions place. <br>2. Expanded form: 200,000,000 + 30,000,000 + 8,000,000 + 700,000 + 60,000 + 5,000 + 90 + 1.',
+        note: 'Group digits in threes to make large numbers easier to read and compare.',
+        resources: [['Start interactive activity', 'Answer place-value questions and see the solution after responding', 'reviewAndH.w.html?section=sec0'], ['Open Big Numbers Lab', 'Practice place value', 'Big%20Numbers%20.html'], ['Take the Large Numbers Exam', 'Practice questions and check your skills', 'largeNo.html']]
+        // img: img/unit1.png
+      },
+      {
+        unit: 'Unit 2: Addition and Subtraction Strategies', title: 'Addition, Subtraction, and Regrouping',
+        ideas: ['Line up ones with ones and tens with tens.', 'Regroup 10 ones as 1 ten when adding; regroup when needed to subtract.', 'For a word problem, identify what is asked and choose the operation first.'],
+        rules: ['Commutative property:  a + b = b + a.', 'Identity property:  a + 0 = a.', 'Check subtraction with addition: difference + subtracted number = original number.'],
+        example: 'Ahmed buys a book for 45 pounds and a pen for 12 pounds. He pays 100 pounds. <br>1. Total cost: 45 + 12 = 57 pounds. <br>2. Change: 100 − 57 = 43 pounds.',
+        note: 'Estimate first. An estimate helps you spot an answer that does not make sense.',
+        resources: [['Start interactive activity', 'Answer questions and see the solution after responding', 'reviewAndH.w.html?section=sec5']]
+      },
+      {
+        unit: 'Unit 5: Multiplication as a Relationship', title: 'Multiplication, Patterns, and Properties',
+        ideas: ['Multiplication is repeated addition or a comparison between quantities.', 'Represent a problem with an equation containing an unknown.', 'Patterns help you find multiplication products quickly.'],
+        rules: ['Commutative property:  3 × 5 = 5 × 3.', 'Identity:  a × 1 = a; zero property:  a × 0 = 0.', 'To find a missing factor, divide the product by the known factor.'],
+        example: 'There are 4 times as many pencils as 6 pencils. <br>1. Write: 4 × 6 = ? <br>2. Calculate: 4 × 6 = 24, so there are 24 pencils. <br>3. Check: 24 ÷ 4 = 6.',
+        note: 'When multiplying by 5, product ones digits alternate between 5 and 0.',
+        resources: [['Start interactive activity', 'Answer questions and see the solution after responding', 'reviewAndH.w.html?section=sec1']]
+      },
+      {
+        unit: 'Unit 3: Measurement Concepts', title: 'Converting Length, Mass, and Capacity',
+        ideas: ['Choose a suitable unit for what you measure: length, mass, or capacity.', 'Kilometers are larger than meters; kilograms larger than grams; liters larger than milliliters.', 'Multiply when converting to a smaller unit; divide when converting to a larger unit.'],
+        rules: ['1 km = 1,000 m, and 1 m = 100 cm.', '1 kg = 1,000 g.', '1 L = 1,000 mL.'],
+        example: 'Convert 2 km to meters: <br>1. One kilometer equals 1,000 meters. <br>2. Multiply: 2 × 1,000 = 2,000. <br>So, 2 km = 2,000 m.',
+        note: 'Include the unit in your answer and check that the conversion direction makes sense.',
+        resources: [['Start interactive activity', 'Answer questions and see the solution after responding', 'reviewAndH.w.html?section=sec4']]
+      },
+      {
+        unit: 'Unit 4: Geometry and Measurement', title: 'Perimeter and Area of Rectangles and Squares',
+        ideas: ['Perimeter is the total distance around a shape.', 'Area is the number of square units that cover a shape.', 'A square has four equal sides.'],
+        rules: ['Rectangle perimeter = 2 × (length + width).', 'Rectangle area = length × width.', 'Square perimeter = 4 × side; square area = side × side.'],
+        example: 'A rectangle is 7 cm long and 3 cm wide: <br>1. Perimeter = 2 × (7 + 3) = 20 cm. <br>2. Area = 7 × 3 = 21 cm².',
+        note: 'Perimeter uses length units such as cm; area uses square units such as cm².',
+        resources: [['Start interactive activity', 'Answer questions and see the solution after responding', 'reviewAndH.w.html?section=sec3']]
+      }
+    ]
+  }
+};
+
+const resourceGrid = document.getElementById('resource-grid');
+const lessonGrid = document.getElementById('lesson-grid');
+const languageToggle = document.getElementById('language-toggle');
+const summaryLanguageToggle = document.getElementById('summary-language-toggle');
+const unitReviewImages = ['img/unit1.jpeg','img/unit2.jpeg','img/unit5.png','img/unit33.jpeg','img/unit44.jpeg'];
+const requestedLessonIndex = Number(new URLSearchParams(location.search).get('unit'));
+let selectedLessonIndex = Number.isInteger(requestedLessonIndex) && requestedLessonIndex >= 0 && requestedLessonIndex < 5 ? requestedLessonIndex : 0;
+
+function renderSelectedLesson(language) {
+  const content = homeContent[language];
+  const lesson = content.lessons[selectedLessonIndex];
+  const [coverIcon, coverEquation] = content.unitCovers[selectedLessonIndex];
+  lessonGrid.innerHTML = `<article class="lesson-card summary-detail"><div class="summary-poster" role="img" aria-label="${lesson.unit} ${lesson.title}"><img class="unit-review-image" src="${unitReviewImages[selectedLessonIndex]}" alt=""><div class="poster-caption"><strong>${coverIcon} ${lesson.title}</strong><div class="poster-equation">${coverEquation}</div></div></div><div class="summary-copy"><a class="summary-back" href="index.html#unit-summary">${content.backToUnits}</a><div class="unit-name">${lesson.unit}</div><h3>${lesson.title}</h3><h4>${content.ideas}</h4><ul>${lesson.ideas.map(idea => `<li>${idea}</li>`).join('')}</ul><h4>${content.rules}</h4><ul>${lesson.rules.map(rule => `<li>${rule}</li>`).join('')}</ul><h4>${content.example}</h4><div class="math-example">${lesson.example}</div><div class="memory-note">💡 ${content.note}: ${lesson.note}</div><div class="lesson-resources">${lesson.resources.map(([label, description, href]) => `<a href="${href}" title="${description}">${label}</a>`).join('')}</div></div></article>`;
+}
+
+function renderUnitCards(language) {
+  const content = homeContent[language];
+  const unitOrder = [0, 1, 3, 4, 2];
+  lessonGrid.innerHTML = unitOrder.map((lessonIndex, cardIndex) => {
+    const lesson = content.lessons[lessonIndex];
+    const [coverIcon, coverEquation] = content.unitCovers[lessonIndex];
+    const solveLink = lesson.resources[0][2];
+    const summaryLink = `index.html?unit=${lessonIndex}#unit-summary`;
+    return `<article class="unit-card reveal"><a class="review-cover" href="${summaryLink}" aria-label="${lesson.unit}: ${lesson.title}"><span class="cover-unit">${lesson.unit}</span><img class="unit-review-image" src="${unitReviewImages[lessonIndex]}" alt=""></a><div class="unit-card-body"><h3>${lesson.unit}</h3><p>${lesson.title}</p><div class="unit-actions"><a href="${summaryLink}">📘 ${content.summaryAction}</a><a class="solve" href="${solveLink}">✏️ ${content.solveAction}</a></div></div></article>`;
+  }).join('');
+}
+
+function renderHome(language) {
+  const content = homeContent[language];
+  const hasSelectedUnit = new URLSearchParams(location.search).has('unit');
+  document.getElementById('grade-home').classList.toggle('home-summary-mode', hasSelectedUnit);
+  document.documentElement.lang = language;
+  document.documentElement.dir = language === 'ar' ? 'rtl' : 'ltr';
+  document.title = hasSelectedUnit ? `${content.lessonsTitle} | MathKids` : language === 'ar' ? 'رياضيات الصف الرابع | MathKids' : 'Grade 4 Mathematics | MathKids';
+  languageToggle.textContent = content.language;
+  languageToggle.setAttribute('aria-label', content.languageLabel);
+  summaryLanguageToggle.textContent = content.language;
+  summaryLanguageToggle.setAttribute('aria-label', content.languageLabel);
+  document.getElementById('hero-title').innerHTML = content.heroTitle;
+  document.getElementById('hero-description').textContent = content.heroDescription;
+  document.getElementById('start-link').textContent = content.start;
+  document.getElementById('pages-link').textContent = content.pagesAction;
+  document.getElementById('pages-title').textContent = content.pagesTitle;
+  document.getElementById('pages-description').textContent = content.pagesDescription;
+  lessonGrid.classList.toggle('unit-grid', !hasSelectedUnit);
+  lessonGrid.classList.toggle('summary-grid', hasSelectedUnit);
+  document.getElementById('lessons-title').textContent = hasSelectedUnit ? content.lessonsTitle : content.unitsTitle;
+  document.getElementById('lessons-description').textContent = hasSelectedUnit ? content.lessonsDescription : content.unitsDescription;
+  document.getElementById('path-title').textContent = content.pathTitle;
+  document.getElementById('path-description').textContent = content.pathDescription;
+  document.getElementById('games-title').textContent = content.gamesTitle;
+  document.getElementById('games-description').textContent = content.gamesDescription;
+  document.getElementById('why-title').textContent = content.whyTitle;
+  document.getElementById('why-description').textContent = content.whyDescription;
+  document.getElementById('why-center-text').textContent = content.whyCenter;
+  document.getElementById('why-left').innerHTML = content.benefits.slice(0,2).map(([icon,title,description],index) => `<article class="why-item reveal"><div class="why-icon w-icon-${index+1}">${icon}</div><div><h5>${title}</h5><p>${description}</p></div></article>`).join('');
+  document.getElementById('why-right').innerHTML = content.benefits.slice(2).map(([icon,title,description],index) => `<article class="why-item reveal"><div class="why-icon w-icon-${index+3}">${icon}</div><div><h5>${title}</h5><p>${description}</p></div></article>`).join('');
+  ['stat-students','stat-lessons','stat-games','stat-satisfaction'].forEach((id,index) => { document.getElementById(id).textContent = content.stats[index]; });
+  document.getElementById('cta-title').textContent = content.ctaTitle;
+  document.getElementById('cta-description').textContent = content.ctaDescription;
+  document.getElementById('cta-link').textContent = content.ctaLink;
+  document.getElementById('footer-text').textContent = content.footer;
+  document.getElementById('feature-grid').innerHTML = content.features.map(([icon,title,description],index) => `<article class="feature-card reveal"><div class="feature-icon f-icon-${index+1}">${icon}</div><h4>${title}</h4><p>${description}</p></article>`).join('');
+  document.getElementById('path-grid').innerHTML = content.pathSteps.map(([number,title,description]) => `<article class="path-card reveal"><strong>${number}. ${title}</strong><p>${description}</p></article>`).join('');
+  document.getElementById('games-grid').innerHTML = content.gameCards.map(([icon,title]) => `<a class="game-link-card reveal" href="games.html"><span>${icon}</span>${title}</a>`).join('');
+  resourceGrid.innerHTML = content.pages.map(([icon, title, description, href]) => `<article class="resource-card"><div><h3>${icon} ${title}</h3><p>${description}</p></div><a href="${href}">${content.open}</a></article>`).join('');
+  if (hasSelectedUnit) renderSelectedLesson(language);
+  else renderUnitCards(language);
+  document.querySelectorAll('#grade-home .reveal:not(.active)').forEach(element => landingRevealObserver.observe(element));
+}
+
+let currentLanguage = localStorage.getItem('mathkids-language') === 'en' ? 'en' : 'ar';
+const landingRevealObserver = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('active');
+      landingRevealObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: .12 });
+
+renderHome(currentLanguage);
+function toggleLanguage() {
+  currentLanguage = currentLanguage === 'ar' ? 'en' : 'ar';
+  localStorage.setItem('mathkids-language', currentLanguage);
+  renderHome(currentLanguage);
+}
+languageToggle.addEventListener('click', toggleLanguage);
+summaryLanguageToggle.addEventListener('click', toggleLanguage);
+</script>
+<script src="site-nav.js"></script>
 </body>
 </html>

@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>🔢 Large Numbers · Grade 4 · Exam</title>
+  <link rel="stylesheet" href="site-nav.css">
+  <script src="site-nav.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.0.1/dist/chartjs-plugin-annotation.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
@@ -30,81 +32,6 @@
       unicode-bidi: isolate;
     }
 
-    /* ============ Login ============ */
-    .login-wrapper {
-      position: fixed; inset: 0;
-      background: linear-gradient(135deg, #e0f2fe 0%, #fef3c7 100%);
-      display: flex; justify-content: center; align-items: center;
-      z-index: 1000; padding: 1rem;
-    }
-    .login-card {
-      background: white;
-      border-radius: 28px;
-      padding: 2.5rem 2rem;
-      max-width: 460px; width: 100%;
-      box-shadow: 0 20px 50px rgba(30,58,95,0.15);
-      border: 1px solid #e2e8f0;
-      text-align: center;
-      position: relative;
-    }
-    .login-card::before {
-      content: '🎓';
-      position: absolute;
-      top: -28px; left: 50%;
-      transform: translateX(-50%);
-      font-size: 3rem;
-      filter: drop-shadow(0 6px 10px rgba(0,0,0,0.15));
-    }
-    .login-card h2 {
-      font-size: 1.9rem; color: #1e3a5f;
-      margin: 0.8rem 0 0.4rem;
-    }
-    .login-card p.subtitle { color: #64748b; margin-bottom: 1.8rem; font-size: 1rem; }
-
-    .login-field { margin-bottom: 1rem; text-align: start; }
-    .login-field label {
-      display: block; font-weight: 600; color: #334155;
-      margin-bottom: 0.4rem; font-size: 0.95rem;
-    }
-    .login-field input {
-      width: 100%; padding: 0.8rem 1rem;
-      border-radius: 14px;
-      border: 2px solid #cbd5e1;
-      font-size: 1rem;
-      background: #f8fafc;
-      outline: none; transition: all 0.2s;
-      font-family: inherit;
-    }
-    .login-field input:focus {
-      border-color: #3b82f6;
-      background: white;
-      box-shadow: 0 0 0 4px rgba(59,130,246,0.12);
-    }
-
-    .login-btn {
-      width: 100%; margin-top: 0.8rem;
-      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
-      color: white; border: none;
-      padding: 0.95rem; border-radius: 14px;
-      font-size: 1.1rem; font-weight: 700;
-      cursor: pointer; font-family: inherit;
-      box-shadow: 0 6px 20px rgba(59,130,246,0.35);
-      transition: all 0.15s;
-    }
-    .login-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(59,130,246,0.45); }
-    .login-btn:active { transform: translateY(1px); }
-
-    .login-error {
-      color: #b91c1c; font-weight: 600;
-      margin-top: 0.8rem; min-height: 1.3rem; font-size: 0.9rem;
-    }
-    .login-hint {
-      margin-top: 1.3rem; font-size: 0.85rem; color: #64748b;
-      background: #f8fafc; padding: 0.9rem 1rem;
-      border-radius: 14px; line-height: 1.7;
-      border: 1px dashed #cbd5e1;
-    }
-
     /* ============ App ============ */
     .app-container {
       max-width: 1200px; width: 100%;
@@ -121,24 +48,6 @@
       from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
     }
-
-    .user-bar {
-      display: flex; justify-content: space-between; align-items: center;
-      background: #f8fafc;
-      padding: 0.7rem 1.2rem; border-radius: 16px;
-      margin-bottom: 1.2rem;
-      flex-wrap: wrap; gap: 0.5rem;
-      border: 1px solid #e2e8f0;
-    }
-    .user-bar .welcome { font-weight: 600; color: #1e3a5f; font-size: 1rem; }
-    .logout-btn {
-      background: #ef4444; color: white;
-      border: none; padding: 0.55rem 1.2rem;
-      border-radius: 12px; font-weight: 600; cursor: pointer;
-      font-family: inherit; font-size: 0.9rem;
-      transition: all 0.15s;
-    }
-    .logout-btn:hover { background: #dc2626; }
 
     .lang-toggle {
       position: fixed;
@@ -677,41 +586,13 @@
   </style>
 </head>
 <body>
+<div id="site-nav-root"></div>
 
 <!-- زر تبديل اللغة (ثابت) -->
 <button class="lang-toggle" id="langToggle">🌐 العربية</button>
 
-<!-- ============ LOGIN ============ -->
-<div class="login-wrapper" id="loginWrapper">
-  <div class="login-card">
-    <h2 data-i18n="loginTitle">Welcome! 🎁 Grade 4</h2>
-    <p class="subtitle" data-i18n="loginSubtitle">🔓 Sign in to start the fun exam</p>
-
-    <div class="login-field">
-      <label for="loginUser" data-i18n="loginUserLabel">👤 Username</label>
-      <input type="text" id="loginUser" placeholder="Enter your username" autocomplete="off">
-    </div>
-    <div class="login-field">
-      <label for="loginPass" data-i18n="loginPassLabel">🔑 Password</label>
-      <input type="password" id="loginPass" placeholder="Enter your password">
-    </div>
-    <button class="login-btn" id="loginBtn" data-i18n="loginBtn">🚀 Let's Go!</button>
-    <div class="login-error" id="loginError"></div>
-    <div class="login-hint">
-      <strong data-i18n="loginHintTitle">🎁 Grade 4:</strong><br>
-      { username: student4, password: 12345 }<br>
-      <span data-i18n="loginHintMade">👩‍🏫 Made By Eng. Marina Ayman (Teacher)</span>
-    </div>
-  </div>
-</div>
-
 <!-- ============ APP ============ -->
-<div class="app-container" id="appContainer">
-
-  <div class="user-bar">
-    <div class="welcome" id="welcomeMsg">👋 Welcome!</div>
-    <button class="logout-btn" id="logoutBtn" data-i18n="logoutBtn">↩ Logout</button>
-  </div>
+<div class="app-container visible" id="appContainer">
 
   <h1>🔢 <span data-i18n="appTitle">Large Numbers</span> 🎯</h1>
 
@@ -862,14 +743,6 @@
 ============================================================ */
 const translations = {
   en: {
-    loginTitle: 'Welcome! 🎁 Grade 4',
-    loginSubtitle: '🔓 Sign in to start the fun exam',
-    loginUserLabel: '👤 Username',
-    loginPassLabel: '🔑 Password',
-    loginBtn: "🚀 Let's Go!",
-    loginHintTitle: '🎁 Grade 4:',
-    loginHintMade: '👩‍🏫 Made By Eng. Marina Ayman (Teacher)',
-    logoutBtn: '↩ Logout',
     appTitle: 'Large Numbers',
     progressLabel: '🚀 Progress:',
     placeChartTitle: 'Place Value Chart',
@@ -908,9 +781,6 @@ const translations = {
     closeResultBtn: '❌ Close',
     langBtn: '🌐 العربية',
     // dynamic
-    welcomeUser: (name) => `👋 Welcome, ${name}! 🎉`,
-    loginErrorEmpty: '⚠️ Please enter username and password.',
-    loginErrorWrong: '❌ Wrong username or password. Please try again.',
     placeGroups: { billions: 'Billions', millions: 'Millions', thousands: 'Thousands', ones: 'Ones' },
     placeNames: { hundred: 'Hundred', ten: 'Ten', one: 'One' },
     quizQuestion: (digit, num) => `What is the place value of the digit ${digit} in ${num}?`,
@@ -953,14 +823,6 @@ const translations = {
     }
   },
   ar: {
-    loginTitle: 'مرحبًا! 🎁 الصف الرابع',
-    loginSubtitle: '🔓 سجّل الدخول لبدء الامتحان الممتع',
-    loginUserLabel: '👤 اسم المستخدم',
-    loginPassLabel: '🔑 كلمة المرور',
-    loginBtn: '🚀 هيا بنا!',
-    loginHintTitle: '🎁 الصف الرابع:',
-    loginHintMade: '👩‍🏫 إعداد: م. مارينا أيمن (المعلمة)',
-    logoutBtn: '↩ خروج',
     appTitle: 'الأعداد الكبيرة',
     progressLabel: '🚀 التقدم:',
     placeChartTitle: 'جدول القيم المكانية',
@@ -999,8 +861,6 @@ const translations = {
     closeResultBtn: '❌ إغلاق',
     langBtn: '🌐 English',
     welcomeUser: (name) => `👋 مرحبًا، ${name}! 🎉`,
-    loginErrorEmpty: '⚠️ من فضلك أدخل اسم المستخدم وكلمة المرور.',
-    loginErrorWrong: '❌ اسم المستخدم أو كلمة المرور غير صحيحة. حاول مجددًا.',
     placeGroups: { billions: 'المليارات', millions: 'الملايين', thousands: 'الآلاف', ones: 'الآحاد' },
     placeNames: { hundred: 'مئات', ten: 'عشرات', one: 'آحاد' },
     quizQuestion: (digit, num) => `ما القيمة المكانية للرقم ${digit} في العدد ${num}؟`,
@@ -1067,18 +927,12 @@ function applyLanguage(lang) {
   });
 
   document.getElementById('langToggle').textContent = t('langBtn');
-  document.getElementById('loginUser').placeholder = lang === 'ar' ? 'أدخل اسم المستخدم' : 'Enter your username';
-  document.getElementById('loginPass').placeholder = lang === 'ar' ? 'أدخل كلمة المرور' : 'Enter your password';
-
   // إعادة بناء العناصر الديناميكية باللغة الجديدة
   if (appContainer.classList.contains('visible')) {
     buildPlaceChart();
     updateAllFromNumber();
     buildZooCards();
     renderZooChart();
-    if (currentUser) {
-      welcomeMsg.textContent = t('welcomeUser')(currentUser.split('@')[0]);
-    }
   }
 }
 
@@ -1122,7 +976,7 @@ function starBurst(x, y) {
 /* ============================================================
    Global state
 ============================================================ */
-let currentUser = '';
+let currentUser = 'Student';
 let currentNumber = 1234567890;
 
 const examState = {
@@ -1172,22 +1026,10 @@ function computeChartScale() {
   else { zooChartMax = 600; zooChartStep = 50; }
 }
 
-const VALID_USERS = [
-  { username: 'student4', password: '12345' },
-  { username: 'Marina@teacher', password: 'Marina777#' }
-];
-
 /* ============================================================
    DOM refs
 ============================================================ */
-const loginWrapper = document.getElementById('loginWrapper');
 const appContainer = document.getElementById('appContainer');
-const loginUser = document.getElementById('loginUser');
-const loginPass = document.getElementById('loginPass');
-const loginBtn = document.getElementById('loginBtn');
-const loginError = document.getElementById('loginError');
-const welcomeMsg = document.getElementById('welcomeMsg');
-const logoutBtn = document.getElementById('logoutBtn');
 
 const chartContainer = document.getElementById('placeValueChart');
 const currentNumberDisplay = document.getElementById('currentNumberDisplay');
@@ -1243,43 +1085,6 @@ const resultMessage = document.getElementById('resultMessage');
 const resultDetails = document.getElementById('resultDetails');
 const tryAgainBtn = document.getElementById('tryAgainBtn');
 const closeResultBtn = document.getElementById('closeResultBtn');
-
-/* ============================================================
-   Login
-============================================================ */
-loginBtn.addEventListener('click', handleLogin);
-loginPass.addEventListener('keydown', e => { if (e.key === 'Enter') handleLogin(); });
-loginUser.addEventListener('keydown', e => { if (e.key === 'Enter') loginPass.focus(); });
-
-function handleLogin() {
-  const user = loginUser.value.trim();
-  const pass = loginPass.value.trim();
-  if (!user || !pass) { loginError.textContent = t('loginErrorEmpty'); return; }
-
-  const valid = VALID_USERS.find(u => u.username === user && u.password === pass);
-  if (valid) {
-    currentUser = user;
-    loginError.textContent = '';
-    loginWrapper.style.display = 'none';
-    appContainer.classList.add('visible');
-    welcomeMsg.textContent = t('welcomeUser')(user.split('@')[0]);
-    launchConfetti(80);
-    initApp();
-  } else {
-    loginError.textContent = t('loginErrorWrong');
-    loginPass.value = '';
-  }
-}
-
-logoutBtn.addEventListener('click', () => {
-  currentUser = '';
-  appContainer.classList.remove('visible');
-  loginWrapper.style.display = 'flex';
-  loginUser.value = '';
-  loginPass.value = '';
-  loginError.textContent = '';
-  resetExamState();
-});
 
 /* ============================================================
    Place value chart
@@ -2084,6 +1889,7 @@ if (typeof emailjs !== 'undefined') {
 
 // التهيئة الأولى للغة
 applyLanguage('en');
+initApp();
 </script>
 </body>
 </html>

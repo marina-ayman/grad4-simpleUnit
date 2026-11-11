@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>10 Sets on a Number Line</title>
+    <link rel="stylesheet" href="site-nav.css">
+    <script src="site-nav.js" defer></script>
     <style>
         * { box-sizing: border-box; font-family: system-ui, 'Segoe UI', Roboto, sans-serif; }
 
@@ -13,6 +15,7 @@
             display: flex; justify-content: center; align-items: center;
             padding: 20px; margin: 0;
         }
+        body:has(> #site-nav-root) { flex-direction: column; align-items: stretch; justify-content: flex-start; }
         body.lang-ar {
             direction: rtl;
             font-family: 'Segoe UI', Tahoma, 'Cairo', Arial, sans-serif;
@@ -257,6 +260,7 @@
     </style>
 </head>
 <body>
+<div id="site-nav-root"></div>
 <div class="app-card">
     <button class="lang-toggle" id="langToggle">🌐 العربية</button>
 

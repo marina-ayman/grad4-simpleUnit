@@ -18,9 +18,11 @@
     const isArabic = document.documentElement.lang === 'ar';
     const text = isArabic ? {
       home: 'الرئيسية', units: 'الوحدات', summary: 'الملخص', activity: 'النشاط التفاعلي', review: 'المراجعة', games: 'الألعاب', tools: 'أدوات إضافية',
+      monthlyReview: 'مراجعة الشهر الثاني', fullReview: 'المراجعة التفاعلية الشاملة',
       bigLab: 'مختبر الأعداد الكبيرة', exam: 'اختبار الأعداد الكبيرة', sets: 'المجموعات على خط الأعداد', oldHome: 'صفحة MathKids التعليمية'
     } : {
       home: 'Home', units: 'Units', summary: 'Summary', activity: 'Interactive activity', review: 'Review', games: 'Games', tools: 'More tools',
+      monthlyReview: 'Second-month review', fullReview: 'Interactive review',
       bigLab: 'Big Numbers Lab', exam: 'Large Numbers Exam', sets: 'Sets on a Number Line', oldHome: 'MathKids learning page'
     };
     const unitCards = lessons.map(lesson => `
@@ -42,7 +44,13 @@
               <summary>📚 ${text.units} <span aria-hidden="true">⌄</span></summary>
               <div class="site-nav-panel">${unitCards}</div>
             </details>
-            <a class="site-nav-link" href="reviewAndH.w.html">📝 ${text.review}</a>
+            <details>
+              <summary>📝 ${text.review} <span aria-hidden="true">⌄</span></summary>
+              <div class="site-nav-tools">
+                <a href="reviewNov.html">⭐ ${text.monthlyReview}</a>
+                <a href="reviewAndH.w.html">📘 ${text.fullReview}</a>
+              </div>
+            </details>
             <a class="site-nav-link" href="games.html">🎮 ${text.games}</a>
             <details>
               <summary>🧰 ${text.tools} <span aria-hidden="true">⌄</span></summary>

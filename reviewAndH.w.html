@@ -82,15 +82,45 @@
         }
         #questions-container .question-enter {
             opacity: 0;
-            translate: 48px 0;
-            transition: opacity 0.9s ease-out, translate 0.9s cubic-bezier(0.2, 0.75, 0.3, 1);
+            translate: 56px 8px;
+            rotate: 1deg;
+            scale: 0.96;
+            filter: blur(1px);
+            transition: opacity 0.95s ease-out, translate 0.95s cubic-bezier(0.2, 0.75, 0.3, 1),
+                rotate 0.95s ease-out, scale 0.95s ease-out, filter 0.95s ease-out,
+                transform 0.28s ease, box-shadow 0.28s ease, border-color 0.28s ease;
         }
         #questions-container .question-enter.is-visible {
             opacity: 1;
             translate: 0;
+            rotate: 0deg;
+            scale: 1;
+            filter: blur(0);
+        }
+        #questions-container .question-enter:hover {
+            rotate: -0.3deg;
+            scale: 1.01;
+        }
+        #questions-container .question-enter > div:first-child > div:first-child > span:first-child {
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        #questions-container .question-enter:hover > div:first-child > div:first-child > span:first-child {
+            transform: rotate(-8deg) scale(1.12);
         }
         @media (prefers-reduced-motion: reduce) {
-            #questions-container .question-enter { opacity: 1; translate: none; transition: none; }
+            #questions-container .question-enter {
+                opacity: 1;
+                translate: none;
+                rotate: none;
+                scale: none;
+                filter: none;
+                transition: none;
+            }
+            #questions-container .question-enter:hover { transform: none; rotate: none; scale: none; }
+            #questions-container .question-enter:hover > div:first-child > div:first-child > span:first-child {
+                transform: none;
+                transition: none;
+            }
         }
         .btn-fun {
             background: linear-gradient(135deg, #7C3AED 0%, #EC4899 50%, #F59E0B 100%);

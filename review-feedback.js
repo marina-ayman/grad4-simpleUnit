@@ -25,7 +25,7 @@
       'img/welcome/Wlcm Sticker – Wlcm – discover and share GIFs.gif'
     ],
     thanks: [
-      'img/welcome/5e21d7221e7e4e22464bc3f36f1c3419.jpg',
+      'img/thanks/5e21d7221e7e4e22464bc3f36f1c3419.jpg',
       'img/thanks/download (7).jfif',
       'img/thanks/Thnx Pengu Sticker – Thnx Pengu Thank you – GIFlar bilan tanishing va ulashing.gif'
     ]

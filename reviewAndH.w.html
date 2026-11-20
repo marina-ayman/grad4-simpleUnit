@@ -196,7 +196,7 @@
             <div class="flex items-center gap-4 bg-slate-100 p-2 rounded-2xl border border-slate-200">
                 <div class="flex items-center gap-1.5 px-3 py-1 bg-amber-100 text-amber-700 rounded-xl font-black text-sm">
                     <i class="fa-solid fa-star text-amber-500 text-lg star-glow animate-bounce"></i>
-                    <span id="score">0</span> نقاط
+                    <span id="score">0</span> درجة
                 </div>
                 <div class="flex items-center gap-1.5 px-3 py-1 bg-emerald-100 text-emerald-700 rounded-xl font-black text-sm">
                     <i class="fa-solid fa-circle-check text-emerald-500 text-lg"></i>
@@ -234,7 +234,6 @@
                 </div>
             </div>
             <div id="questions-container" class="space-y-6"></div>
-            <div id="review-completion"></div>
         </section>
     </main>
 
@@ -530,7 +529,9 @@
 
         let currentSectionIndex = 0;
         let solvedQuestions = new Set();
+        const answeredQuestions = new Set();
         const questionsWithErrors = new Set();
+        const submittedSections = new Set();
         let currentScore = 0;
         const totalQuestionsCount = appData.reduce((sum, sec) => sum + sec.questions.length, 0);
 
@@ -546,8 +547,8 @@
             const navContainer = document.getElementById('sections-nav');
             navContainer.innerHTML = '';
             appData.forEach((sec, idx) => {
-                const solvedInSec = sec.questions.filter(q => solvedQuestions.has(q.id)).length;
-                const isComplete = solvedInSec === sec.questions.length;
+                const answeredInSec = sec.questions.filter(q => answeredQuestions.has(q.id)).length;
+                const isComplete = submittedSections.has(sec.id);
                 const btn = document.createElement('button');
                 btn.className = `w-full text-right p-3 rounded-2xl font-bold text-sm transition flex items-center justify-between border ${
                     idx === currentSectionIndex 
@@ -563,10 +564,16 @@
                         <span class="truncate">${sec.title}</span>
                     </div>
                     <span class="text-xs px-2 py-0.5 rounded-full ${isComplete ? 'bg-emerald-500 text-white' : 'bg-slate-200 text-slate-600'}">
-                        ${solvedInSec}/${sec.questions.length}
+                        ${answeredInSec}/${sec.questions.length}
                     </span>`;
                 navContainer.appendChild(btn);
             });
+        }
+
+        function updateAnswerProgress() {
+            document.getElementById('completed-count').textContent = answeredQuestions.size;
+            const progressPct = (answeredQuestions.size / totalQuestionsCount) * 100;
+            document.getElementById('overall-progress').style.width = `${progressPct}%`;
         }
 
         function loadSection(index) {
@@ -584,9 +591,11 @@
 
             sec.questions.forEach((q, qIndex) => {
                 const isSolved = solvedQuestions.has(q.id);
+                const isAnswered = answeredQuestions.has(q.id);
+                const isWrong = isAnswered && !isSolved;
                 const card = document.createElement('div');
                 card.id = `card-${q.id}`;
-                card.className = `glass-card rounded-3xl p-6 shadow-sm border border-slate-200 transition duration-300 hover:shadow-md ${isSolved ? 'border-emerald-300 bg-emerald-50/30' : ''}`;
+                card.className = `glass-card rounded-3xl p-6 shadow-sm border border-slate-200 transition duration-300 hover:shadow-md ${isSolved ? 'border-emerald-300 bg-emerald-50/30' : isWrong ? 'border-rose-300 bg-rose-50/50' : ''}`;
 
                 let inputHtml = '';
                 if (q.type === 'number') {
@@ -650,28 +659,55 @@
                             </span>
                             <h3 class="text-lg font-bold text-slate-800 leading-snug">${q.question}</h3>
                         </div>
-                        ${isSolved ? '<span class="text-emerald-500 font-bold text-xs bg-emerald-100 px-3 py-1 rounded-full"><i class="fa-solid fa-circle-check"></i> ممتازة</span>' : ''}
+                        ${isSolved ? '<span class="text-emerald-500 font-bold text-xs bg-emerald-100 px-3 py-1 rounded-full"><i class="fa-solid fa-circle-check"></i> ممتازة</span>' : isWrong ? '<span class="text-rose-700 font-bold text-xs bg-rose-100 px-3 py-1 rounded-full">إجابة خاطئة ومقفلة</span>' : ''}
                     </div>
                     ${inputHtml}
-                    <div id="explain-${q.id}" class="${isSolved ? '' : 'hidden'} mt-3 p-3 bg-amber-50 rounded-2xl border border-amber-200 text-xs text-amber-900 font-bold leading-relaxed">
+                    <div id="feedback-${q.id}" class="hidden mt-3 rounded-2xl border-2 border-rose-300 bg-rose-100 p-3 text-xs font-bold text-rose-800"></div>
+                    <div id="explain-${q.id}" class="${isAnswered ? '' : 'hidden'} mt-3 p-3 bg-amber-50 rounded-2xl border border-amber-200 text-xs text-amber-900 font-bold leading-relaxed">
                         <i class="fa-solid fa-circle-info text-amber-600"></i> ${q.explanation}
                     </div>`;
                 qContainer.appendChild(card);
+                if (isAnswered) reviewFeedback.lockQuestionControls(card);
+                if (isWrong) {
+                    const feedback = document.getElementById(`feedback-${q.id}`);
+                    feedback.textContent = 'تم تسجيل الإجابة خطأ ولا يمكن تعديلها.';
+                    feedback.classList.remove('hidden');
+                }
             });
-            const sectionComplete = sec.questions.every(q => solvedQuestions.has(q.id));
-            if (sectionComplete) {
-                const wrongQuestions = sec.questions.filter(q => questionsWithErrors.has(q.id)).length;
-                qContainer.insertAdjacentHTML('beforeend', reviewFeedback.result(
-                    `reviewAndH-${sec.id}`,
-                    sec.questions.length - wrongQuestions,
-                    sec.questions.length,
-                    wrongQuestions
-                ));
-            }
-            if (solvedQuestions.size === totalQuestionsCount) {
-                document.getElementById('review-completion').innerHTML = reviewFeedback.thanks();
-            }
+            const sendButton = document.createElement('button');
+            sendButton.type = 'button';
+            sendButton.className = 'w-full rounded-2xl bg-gradient-to-r from-brand-purple to-brand-pink px-6 py-4 text-lg font-black text-white shadow-lg transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60';
+            sendButton.disabled = submittedSections.has(sec.id);
+            sendButton.textContent = sendButton.disabled ? 'تم إرسال المجموعة' : 'إرسال المجموعة وعرض النتيجة';
+            sendButton.onclick = submitCurrentSection;
+            qContainer.appendChild(sendButton);
             renderNavigation();
+        }
+
+        function submitCurrentSection() {
+            const sec = appData[currentSectionIndex];
+            if (submittedSections.has(sec.id)) return;
+
+            sec.questions.forEach(q => {
+                if (!answeredQuestions.has(q.id)) {
+                    answeredQuestions.add(q.id);
+                    questionsWithErrors.add(q.id);
+                }
+            });
+            submittedSections.add(sec.id);
+            updateAnswerProgress();
+            loadSection(currentSectionIndex);
+
+            const wrongQuestions = sec.questions.filter(q => questionsWithErrors.has(q.id)).length;
+            const points = sec.questions.filter(q => solvedQuestions.has(q.id)).length;
+            reviewFeedback.showResultPopup(
+                `reviewAndH-${sec.id}`,
+                sec.title,
+                points,
+                sec.questions.length,
+                wrongQuestions,
+                submittedSections.size === appData.length
+            );
         }
 
         function revealExplanation(qId) {
@@ -734,9 +770,10 @@
         }
 
         function handleSuccess(qId) {
-            if (solvedQuestions.has(qId)) return;
+            if (answeredQuestions.has(qId)) return;
+            answeredQuestions.add(qId);
             solvedQuestions.add(qId);
-            currentScore += 10;
+            if (!questionsWithErrors.has(qId)) currentScore += 1;
             playSound('correct');
 
             confetti({
@@ -762,15 +799,27 @@
             }
 
             document.getElementById('score').textContent = currentScore;
-            document.getElementById('completed-count').textContent = solvedQuestions.size;
-            const progressPct = (solvedQuestions.size / totalQuestionsCount) * 100;
-            document.getElementById('overall-progress').style.width = `${progressPct}%`;
+            updateAnswerProgress();
             loadSection(currentSectionIndex);
         }
 
         function handleFailure(qId) {
+            if (answeredQuestions.has(qId)) return;
+            answeredQuestions.add(qId);
             questionsWithErrors.add(qId);
             playSound('wrong');
+            const card = document.getElementById(`card-${qId}`);
+            if (card) {
+                card.classList.add('border-rose-300', 'bg-rose-50/50');
+                reviewFeedback.lockQuestionControls(card);
+            }
+            const feedback = document.getElementById(`feedback-${qId}`);
+            if (feedback) {
+                feedback.textContent = 'تم تسجيل الإجابة خطأ ولا يمكن تعديلها.';
+                feedback.classList.remove('hidden');
+            }
+            updateAnswerProgress();
+            renderNavigation();
             triggerShake(qId);
         }
 

@@ -6,6 +6,7 @@
     <title>مغامر الرياضيات - الصف الرابع الابتدائي</title>
     <link rel="stylesheet" href="site-nav.css">
     <script src="site-nav.js" defer></script>
+    <script src="review-feedback.js" defer></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
@@ -233,6 +234,7 @@
                 </div>
             </div>
             <div id="questions-container" class="space-y-6"></div>
+            <div id="review-completion"></div>
         </section>
     </main>
 
@@ -528,6 +530,7 @@
 
         let currentSectionIndex = 0;
         let solvedQuestions = new Set();
+        const questionsWithErrors = new Set();
         let currentScore = 0;
         const totalQuestionsCount = appData.reduce((sum, sec) => sum + sec.questions.length, 0);
 
@@ -577,6 +580,7 @@
 
             const qContainer = document.getElementById('questions-container');
             qContainer.innerHTML = '';
+            qContainer.insertAdjacentHTML('beforeend', reviewFeedback.welcome(`reviewAndH-${sec.id}`));
 
             sec.questions.forEach((q, qIndex) => {
                 const isSolved = solvedQuestions.has(q.id);
@@ -654,6 +658,19 @@
                     </div>`;
                 qContainer.appendChild(card);
             });
+            const sectionComplete = sec.questions.every(q => solvedQuestions.has(q.id));
+            if (sectionComplete) {
+                const wrongQuestions = sec.questions.filter(q => questionsWithErrors.has(q.id)).length;
+                qContainer.insertAdjacentHTML('beforeend', reviewFeedback.result(
+                    `reviewAndH-${sec.id}`,
+                    sec.questions.length - wrongQuestions,
+                    sec.questions.length,
+                    wrongQuestions
+                ));
+            }
+            if (solvedQuestions.size === totalQuestionsCount) {
+                document.getElementById('review-completion').innerHTML = reviewFeedback.thanks();
+            }
             renderNavigation();
         }
 
@@ -752,6 +769,7 @@
         }
 
         function handleFailure(qId) {
+            questionsWithErrors.add(qId);
             playSound('wrong');
             triggerShake(qId);
         }

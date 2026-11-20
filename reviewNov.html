@@ -6,6 +6,7 @@
     <title>تدريبات نهاية الشهر الثاني - كابتن ماث 🚀</title>
     <link rel="stylesheet" href="site-nav.css">
     <script src="site-nav.js" defer></script>
+    <script src="review-feedback.js" defer></script>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome -->
@@ -284,6 +285,7 @@
             <div id="questions-container" class="space-y-6">
                 <!-- Question cards injected by JS -->
             </div>
+            <div id="review-completion"></div>
 
         </section>
     </main>
@@ -796,6 +798,7 @@
         // State
         let currentTab = 0;
         let solvedSet = new Set();
+        const questionsWithErrors = new Set();
         let score = 0;
 
         // Interactive widget state
@@ -881,6 +884,7 @@
 
             const container = document.getElementById('questions-container');
             container.innerHTML = '';
+            container.insertAdjacentHTML('beforeend', reviewFeedback.welcome(`reviewNov-${sec.id}`));
 
             sec.questions.forEach(q => {
                 const isSolved = solvedSet.has(q.id);
@@ -914,6 +918,20 @@
                 `;
                 container.appendChild(card);
             });
+
+            const sectionComplete = sec.questions.every(q => solvedSet.has(q.id));
+            if (sectionComplete) {
+                const wrongQuestions = sec.questions.filter(q => questionsWithErrors.has(q.id)).length;
+                container.insertAdjacentHTML('beforeend', reviewFeedback.result(
+                    `reviewNov-${sec.id}`,
+                    sec.questions.length - wrongQuestions,
+                    sec.questions.length,
+                    wrongQuestions
+                ));
+            }
+            if (solvedSet.size === totalQuestions) {
+                document.getElementById('review-completion').innerHTML = reviewFeedback.thanks();
+            }
 
             renderNav();
         }
@@ -1479,6 +1497,7 @@
         }
 
         function markError(qId, msg) {
+            questionsWithErrors.add(qId);
             playSound('wrong');
             document.getElementById('mascot-speech').textContent = "لا بأس يا بطل! حاول مرة أخرى وستنجح بالتأكيد 💡";
             const card = document.getElementById(`card-${qId}`);

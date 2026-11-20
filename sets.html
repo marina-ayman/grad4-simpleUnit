@@ -38,24 +38,6 @@
             position: relative;
         }
 
-        .lang-toggle {
-            position: absolute;
-            top: 1.5rem; inset-inline-end: 1.5rem;
-            background: white;
-            border: 2px solid #1f5e87;
-            color: #1f5e87;
-            padding: 0.5rem 1rem;
-            border-radius: 30px;
-            font-weight: 700;
-            cursor: pointer;
-            font-family: inherit;
-            font-size: 0.85rem;
-            z-index: 10;
-            box-shadow: 0 4px 12px rgba(31,94,135,0.2);
-            transition: all 0.2s;
-        }
-        .lang-toggle:hover { background: #1f5e87; color: white; }
-
         h1 { font-size: 1.8rem; font-weight: 700; color: #0a2e4b; margin: 0 0 4px 0; }
         .subhead {
             font-size: 0.95rem; color: #2c5779;
@@ -262,7 +244,6 @@
 <body>
 <div id="site-nav-root"></div>
 <div class="app-card">
-    <button class="lang-toggle" id="langToggle">🌐 العربية</button>
 
     <h1 id="title">📏 10 Sets on a Number Line</h1>
     <div class="subhead" id="subhead">
@@ -582,19 +563,19 @@
         });
     });
 
-    document.getElementById('langToggle').addEventListener('click', () => {
-        currentLang = currentLang === 'en' ? 'ar' : 'en';
-        document.documentElement.lang = currentLang;
+    function applyLanguage(language) {
+        currentLang = language;
         document.body.classList.toggle('lang-ar', currentLang === 'ar');
         document.body.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
-
-        // ثوابت النصوص
-        document.getElementById('langToggle').textContent = t('langBtn');
+        document.title = t('title');
         document.getElementById('title').textContent = t('title');
         document.getElementById('subhead').textContent = t('subhead');
         document.getElementById('footnote').textContent = t('footnote');
-
         renderAll();
+    }
+
+    window.addEventListener('mathkids:languagechange', event => {
+        if (event.detail.language !== currentLang) applyLanguage(event.detail.language);
     });
 
     // البدء

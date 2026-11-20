@@ -6,7 +6,11 @@
 .site-brand-mark { width: 36px; aspect-ratio: 1; display: grid; place-items: center; border-radius: 50%; color: #fff; background: linear-gradient(135deg,#7C5CFC,#FF6B9D,#FF9F43); }
 .site-nav-links { display: flex; align-items: center; justify-content: flex-end; gap: 7px; flex: 1; min-width: 0; }
 .site-nav a, .site-nav summary { color: #2D2A5B; text-decoration: none; }
-.site-nav-link, .site-nav summary { display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 8px 11px; border: 0; border-radius: 12px; background: transparent; font: inherit; white-space: nowrap; cursor: pointer; }
+.site-nav-link, .site-nav summary { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 8px 11px; border: 0; border-radius: 12px; background: transparent; font: inherit; white-space: nowrap; cursor: pointer; }
+.site-nav-language { min-height: 44px; padding: 8px 13px; border: 1px solid #D9D2FF; border-radius: 12px; background: #F7F5FF; color: #5B3FD6; font: inherit; font-weight: 900; white-space: nowrap; cursor: pointer; transition: background .2s, color .2s, transform .2s; }
+.site-nav-language:hover { background: #5B3FD6; color: #fff; transform: translateY(-1px); }
+.site-nav-language:focus-visible { outline: 3px solid #FF9F43; outline-offset: 2px; }
+.site-nav-link:focus-visible, .site-nav summary:focus-visible, .site-nav-panel a:focus-visible, .site-nav-tools a:focus-visible { outline: 3px solid #FF9F43; outline-offset: 2px; }
 .site-nav-link:hover, .site-nav summary:hover, .site-nav details[open] > summary { background: #EDE8FF; color: #5B3FD6; }
 .site-nav details { position: relative; }
 .site-nav summary { list-style: none; }
@@ -25,9 +29,14 @@
 @media (max-width: 760px) {
   .site-nav-inner { min-height: 58px; padding: 8px 12px; flex-wrap: wrap; gap: 4px 12px; }
   .site-brand { font-size: 17px; }
+  .site-nav-language { order: 1; margin-inline-start: auto; }
   .site-nav-links { order: 2; width: 100%; flex: 1 0 100%; justify-content: flex-start; overflow-x: auto; }
   .site-nav-link, .site-nav summary { padding: 7px 9px; }
   .site-nav-panel { position: fixed; top: 105px; inset-inline: 8px; width: auto; max-height: calc(100vh - 120px); overflow-y: auto; }
   .site-nav-tools { position: fixed; top: 105px; inset-inline-end: 8px; max-height: calc(100vh - 120px); overflow-y: auto; }
 }
 @media (max-width: 430px) { .site-nav-panel { grid-template-columns: 1fr; } }
+@media (prefers-reduced-motion: reduce) {
+  .site-nav-language { transition: none; }
+  .site-nav-language:hover { transform: none; }
+}

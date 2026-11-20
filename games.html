@@ -15,7 +15,6 @@
     .games-hero h1 { margin:0 0 8px; font-size:clamp(2rem,4vw,3rem); }
     .games-hero h1 span { color:var(--purple); }
     .games-hero p { margin:0 auto 16px; max-width:700px; color:var(--gray); }
-    .lang-toggle { border:0; border-radius:24px; padding:9px 16px; color:#fff; background:var(--purple); font:800 14px 'Nunito',sans-serif; cursor:pointer; }
     .games-main { max-width:1200px; margin:auto; padding:24px 20px 50px; }
     .games-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; align-items:start; }
     .game-card { min-width:0; background:#fff; border:1px solid #E8E5FF; border-radius:18px; padding:20px; box-shadow:0 8px 24px rgba(45,42,91,.08); }
@@ -48,7 +47,6 @@
   <header class="games-hero">
     <h1 id="page-title"></h1>
     <p id="page-subtitle"></p>
-    <button class="lang-toggle" id="language-toggle" type="button"></button>
   </header>
   <main class="games-main">
     <div class="games-grid">
@@ -77,12 +75,12 @@
   <footer class="page-footer" id="page-footer"></footer>
   <script>
     const gameText = {
-      ar: { title:'ألعاب الرياضيات <span>المرحة</span>', subtitle:'اختر لعبة، فكّر، ثم جرّب إجابتك.', language:'English', footer:'MathKids • العب وتعلّم كل يوم',
+      ar: { title:'ألعاب الرياضيات <span>المرحة</span>', subtitle:'اختر لعبة، فكّر، ثم جرّب إجابتك.', footer:'MathKids • العب وتعلّم كل يوم',
         memory:'لعبة الذاكرة', memoryDesc:'اقلب البطاقات وابحث عن الأزواج المتطابقة.', moves:'المحاولات', pairs:'الأزواج', reset:'ابدأ من جديد',
         place:'تحدي القيمة المكانية', placeDesc:'اكتب قيمة الرقم المحدد في العدد.', whatValue:'ما قيمة الرقم', inNumber:'في العدد', check:'تحقق', next:'سؤال جديد', answer:'الإجابة الصحيحة:', correct:'إجابة صحيحة! أحسنت.', retry:'ليست هذه الإجابة. راجع الحل ثم جرّب سؤالاً جديداً.',
         math:'تحدي العمليات', mathDesc:'حل العملية الحسابية بأسرع ما يمكنك.',
         memoryDone:'أحسنت! وجدت كل الأزواج في {moves} محاولات.' },
-      en: { title:'Math <span>Games</span>', subtitle:'Pick a game, think it through, and try your answer.', language:'العربية', footer:'MathKids • Play and learn every day',
+      en: { title:'Math <span>Games</span>', subtitle:'Pick a game, think it through, and try your answer.', footer:'MathKids • Play and learn every day',
         memory:'Memory Match', memoryDesc:'Flip the cards and find all matching pairs.', moves:'Moves', pairs:'Pairs', reset:'Start again',
         place:'Place Value Challenge', placeDesc:'Enter the place value of the highlighted digit.', whatValue:'What is the value of digit', inNumber:'in', check:'Check', next:'New question', answer:'Correct answer:', correct:'Correct! Well done.', retry:'Not quite. Review the solution, then try a new question.',
         math:'Math Dash', mathDesc:'Solve the arithmetic problem as quickly as you can.',
@@ -157,7 +155,7 @@
       document.documentElement.dir = language === 'ar' ? 'rtl' : 'ltr';
       document.title = language === 'ar' ? 'ألعاب الرياضيات | MathKids' : 'Math Games | MathKids';
       document.getElementById('page-title').innerHTML = text.title;
-      setText('page-subtitle', text.subtitle); setText('language-toggle', text.language); setText('page-footer', text.footer);
+      setText('page-subtitle', text.subtitle); setText('page-footer', text.footer);
       setText('memory-title', text.memory); setText('memory-desc', text.memoryDesc); setText('memory-reset', text.reset);
       setText('place-title', text.place); setText('place-desc', text.placeDesc); setText('place-check', text.check); setText('place-next', text.next);
       setText('math-title', text.math); setText('math-desc', text.mathDesc); setText('math-check', text.check); setText('math-next', text.next);
@@ -168,7 +166,12 @@
     document.getElementById('place-next').addEventListener('click', newPlaceQuestion);
     document.getElementById('math-check').addEventListener('click', checkMathAnswer);
     document.getElementById('math-next').addEventListener('click', newMathQuestion);
-    document.getElementById('language-toggle').addEventListener('click', () => { language = language === 'ar' ? 'en' : 'ar'; renderGames(); });
+    window.addEventListener('mathkids:languagechange', event => {
+      if (event.detail.language !== language) {
+        language = event.detail.language;
+        renderGames();
+      }
+    });
     document.getElementById('place-answer').addEventListener('keydown', event => { if (event.key === 'Enter') checkPlaceAnswer(); });
     document.getElementById('math-answer').addEventListener('keydown', event => { if (event.key === 'Enter') checkMathAnswer(); });
     renderGames();

@@ -42,24 +42,6 @@
   header h1 { font-size: 2rem; margin-bottom: 0.3rem; }
   header p { opacity: 0.95; font-size: 1rem; }
 
-  /* زر تبديل اللغة */
-  .lang-toggle {
-    position: absolute;
-    top: 1rem;
-    inset-inline-end: 1rem;
-    background: rgba(255,255,255,0.25);
-    border: 2px solid rgba(255,255,255,0.6);
-    color: white;
-    padding: 0.5rem 1rem;
-    border-radius: 30px;
-    font-weight: bold;
-    cursor: pointer;
-    font-family: inherit;
-    font-size: 0.95rem;
-    transition: all 0.2s;
-  }
-  .lang-toggle:hover { background: rgba(255,255,255,0.4); }
-
   /* ===== Tool Tabs ===== */
   .tabs {
     display: flex;
@@ -542,7 +524,6 @@
 <div class="container">
 
   <header>
-    <button class="lang-toggle" id="langToggle">🌐 العربية</button>
     <h1 data-i18n="title">🔢 Big Numbers Lab</h1>
     <p data-i18n="subtitle">3 simple tools to master large numbers!</p>
   </header>
@@ -771,17 +752,14 @@
       }
     });
 
-    // زر اللغة
-    document.getElementById('langToggle').textContent = t('langBtn');
-
     // إعادة رسم العناصر الديناميكية باللغة الجديدة
     updateZeros();
     drawNumberLine();
     generateQuestion(true); // true = لا نعيد اختيار أرقام جديدة، فقط نعيد تطبيق النصوص
   }
 
-  document.getElementById('langToggle').addEventListener('click', () => {
-    applyLanguage(currentLang === 'en' ? 'ar' : 'en');
+  window.addEventListener('mathkids:languagechange', event => {
+    if (event.detail.language !== currentLang) applyLanguage(event.detail.language);
   });
 
   // ============================================

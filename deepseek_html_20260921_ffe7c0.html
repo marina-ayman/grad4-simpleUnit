@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MathKids - Learn • Play • Grow</title>
 <link rel="stylesheet" href="site-nav.css">
+<script src="deepseek-translations.js" defer></script>
 <script src="site-nav.js" defer></script>
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -1457,7 +1458,7 @@ img { max-width: 100%; display: block; }
       <div class="footer-brand">
         <div class="logo">
           <div class="logo-icon">⭐</div>
-          <span><span>Math</span>Kids</span>
+          <span>MathKids</span>
         </div>
         <p>Making math learning fun, interactive, and effective for Grade 4 students.</p>
         <div class="socials">
@@ -1502,7 +1503,7 @@ img { max-width: 100%; display: block; }
       <div class="footer-col">
         <h5>Stay Updated!</h5>
         <p style="font-size:0.82rem; color:var(--gray); margin-bottom:8px;">Subscribe to get the latest updates and learning tips.</p>
-        <form class="newsletter" onsubmit="event.preventDefault(); this.reset(); alert('Subscribed! 🎉');">
+        <form class="newsletter" onsubmit="event.preventDefault(); this.reset(); alert(document.documentElement.lang === 'ar' ? 'تم الاشتراك! 🎉' : 'Subscribed! 🎉');">
           <input type="email" placeholder="Enter your email" required>
           <button type="submit">➤</button>
         </form>

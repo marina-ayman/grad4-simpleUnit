@@ -49,24 +49,6 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    .lang-toggle {
-      position: fixed;
-      top: 1rem; inset-inline-end: 1rem;
-      background: white;
-      border: 2px solid #3b82f6;
-      color: #3b82f6;
-      padding: 0.55rem 1rem;
-      border-radius: 30px;
-      font-weight: 700;
-      cursor: pointer;
-      font-family: inherit;
-      font-size: 0.9rem;
-      z-index: 1500;
-      box-shadow: 0 4px 15px rgba(59,130,246,0.2);
-      transition: all 0.2s;
-    }
-    .lang-toggle:hover { background: #3b82f6; color: white; }
-
     h1 {
       font-size: 2rem; text-align: center; color: #1e3a5f;
       margin-bottom: 1.2rem; font-weight: 800;
@@ -588,9 +570,6 @@
 <body>
 <div id="site-nav-root"></div>
 
-<!-- زر تبديل اللغة (ثابت) -->
-<button class="lang-toggle" id="langToggle">🌐 العربية</button>
-
 <!-- ============ APP ============ -->
 <div class="app-container visible" id="appContainer">
 
@@ -926,7 +905,6 @@ function applyLanguage(lang) {
     }
   });
 
-  document.getElementById('langToggle').textContent = t('langBtn');
   // إعادة بناء العناصر الديناميكية باللغة الجديدة
   if (appContainer.classList.contains('visible')) {
     buildPlaceChart();
@@ -936,8 +914,8 @@ function applyLanguage(lang) {
   }
 }
 
-document.getElementById('langToggle').addEventListener('click', () => {
-  applyLanguage(currentLang === 'en' ? 'ar' : 'en');
+window.addEventListener('mathkids:languagechange', event => {
+  if (event.detail.language !== currentLang) applyLanguage(event.detail.language);
 });
 
 /* ============================================================

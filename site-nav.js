@@ -5,6 +5,15 @@
     document.body.prepend(element);
     return element;
   })();
+  const savedLanguage = localStorage.getItem('mathkids-language');
+  const initialLanguage = savedLanguage === 'en' || savedLanguage === 'ar'
+    ? savedLanguage
+    : 'ar';
+  let currentLanguage = '';
+  const pageTranslations = window.MathKidsPageTranslations;
+  const originalText = new WeakMap();
+  const translatedText = new WeakMap();
+  const originalAttributes = new WeakMap();
 
   const lessons = [
     { ar: 'الوحدة الأولى: الأعداد الكبيرة', en: 'Unit 1: Large Numbers', key: 0, section: 'sec0' },
@@ -15,7 +24,7 @@
   ];
 
   function render() {
-    const isArabic = document.documentElement.lang === 'ar';
+    const isArabic = currentLanguage === 'ar';
     const text = isArabic ? {
       home: 'الرئيسية', units: 'الوحدات', summary: 'الملخص', activity: 'النشاط التفاعلي', review: 'المراجعة', games: 'الألعاب', tools: 'أدوات إضافية',
       monthlyReview: 'مراجعة الشهر الثاني', fullReview: 'المراجعة التفاعلية الشاملة',
@@ -62,6 +71,7 @@
               </div>
             </details>
           </div>
+          <button class="site-nav-language" type="button" aria-label="${isArabic ? 'Switch language to English' : 'التبديل إلى العربية'}">${isArabic ? 'English' : 'العربية'}</button>
         </div>
       </nav>`;
 
@@ -75,6 +85,114 @@
     });
   }
 
-  render();
-  new MutationObserver(render).observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
+  function translatedValue(source, language) {
+    if (!pageTranslations || language === pageTranslations.sourceLanguage) return source;
+
+    const dictionary = pageTranslations.translations && pageTranslations.translations[language];
+    if (dictionary && Object.prototype.hasOwnProperty.call(dictionary, source)) {
+      return dictionary[source];
+    }
+
+    for (const rule of pageTranslations.patterns || []) {
+      rule.pattern.lastIndex = 0;
+      if (rule.pattern.test(source)) return source.replace(rule.pattern, rule.replace);
+    }
+
+    return source;
+  }
+
+  function translateTextNode(node) {
+    if (!node.nodeValue || !node.nodeValue.trim()) return;
+    const parent = node.parentElement;
+    if (!parent || parent.closest('script, style, noscript, textarea, code, pre')) return;
+
+    if (!originalText.has(node) || node.nodeValue !== translatedText.get(node)) {
+      originalText.set(node, node.nodeValue);
+    }
+    const source = originalText.get(node);
+    const leading = source.match(/^\s*/)[0];
+    const trailing = source.match(/\s*$/)[0];
+    const value = source.slice(leading.length, source.length - trailing.length);
+    const translated = `${leading}${translatedValue(value, currentLanguage)}${trailing}`;
+    translatedText.set(node, translated);
+    if (node.nodeValue !== translated) node.nodeValue = translated;
+  }
+
+  function translateAttributes(element) {
+    if (element.matches('script, style, noscript, textarea')) return;
+    const names = ['alt', 'aria-label', 'placeholder', 'title'];
+    if (element instanceof HTMLInputElement && ['button', 'submit', 'reset'].includes(element.type)) {
+      names.push('value');
+    }
+
+    if (!originalAttributes.has(element)) originalAttributes.set(element, new Map());
+    const originals = originalAttributes.get(element);
+    names.forEach(name => {
+      if (!element.hasAttribute(name)) return;
+      const current = element.getAttribute(name);
+      let original = originals.get(name);
+      if (!original || current !== original.translated) {
+        original = { source: current, translated: current };
+        originals.set(name, original);
+      }
+      const translated = translatedValue(original.source, currentLanguage);
+      original.translated = translated;
+      if (current !== translated) element.setAttribute(name, translated);
+    });
+  }
+
+  function translateSubtree(node) {
+    if (node.nodeType === Node.TEXT_NODE) {
+      translateTextNode(node);
+      return;
+    }
+    if (node.nodeType !== Node.ELEMENT_NODE && node.nodeType !== Node.DOCUMENT_NODE) return;
+
+    if (node.nodeType === Node.ELEMENT_NODE) translateAttributes(node);
+    const walker = document.createTreeWalker(node, NodeFilter.SHOW_TEXT);
+    let textNode;
+    while ((textNode = walker.nextNode())) translateTextNode(textNode);
+    if (node.nodeType === Node.ELEMENT_NODE) {
+      node.querySelectorAll('*').forEach(translateAttributes);
+    }
+  }
+
+  function dispatchLanguageChange() {
+    window.dispatchEvent(new CustomEvent('mathkids:languagechange', {
+      detail: { language: currentLanguage }
+    }));
+  }
+
+  function setLanguage(language, persist) {
+    if (language !== 'ar' && language !== 'en') return;
+    const changed = currentLanguage !== language;
+    currentLanguage = language;
+    document.documentElement.lang = language;
+    document.documentElement.dir = language === 'ar' ? 'rtl' : 'ltr';
+    if (persist) localStorage.setItem('mathkids-language', language);
+    render();
+    translateSubtree(document.documentElement);
+    if (changed) dispatchLanguageChange();
+  }
+
+  root.addEventListener('click', event => {
+    if (!(event.target instanceof Element)) return;
+    if (event.target.closest('.site-nav-language')) {
+      setLanguage(currentLanguage === 'ar' ? 'en' : 'ar', true);
+    }
+  });
+
+  setLanguage(initialLanguage, false);
+
+  new MutationObserver(() => {
+    const language = document.documentElement.lang === 'en' ? 'en' : 'ar';
+    if (language !== currentLanguage) setLanguage(language, true);
+  }).observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
+
+  new MutationObserver(records => {
+    records.forEach(record => {
+      if (record.type === 'characterData') translateTextNode(record.target);
+      record.addedNodes.forEach(translateSubtree);
+    });
+  }).observe(document.documentElement, { childList: true, characterData: true, subtree: true });
 })();

@@ -1488,7 +1488,6 @@ body > :not(#grade-home):not(#site-nav-root):not(script) { display: none !import
 #grade-home .unit-card:nth-child(5) { animation-delay: .32s; }
 #grade-home .feature-card, #grade-home .path-card, #grade-home .game-link-card { animation: fadeInText .65s ease both; }
 #grade-home .summary-poster { animation: summaryPop .65s cubic-bezier(.2,.8,.2,1) both; }
-#grade-home .summary-language { display: none; }
 #grade-home.home-summary-mode .home-hero,
 #grade-home.home-summary-mode #learning-features,
 #grade-home.home-summary-mode #study-path,
@@ -1499,11 +1498,9 @@ body > :not(#grade-home):not(#site-nav-root):not(script) { display: none !import
 #grade-home.home-summary-mode #project-pages,
 #grade-home.home-summary-mode .home-footer { display: none !important; }
 #grade-home.home-summary-mode main { min-height: calc(100vh - 70px); padding-block: 18px; }
-#grade-home.home-summary-mode .summary-language { display: inline-flex; }
 #grade-home.home-summary-mode .section-heading.summary-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
 @keyframes summaryBoardFloat { 0%,100% { transform: rotate(-2deg) translateY(0); } 50% { transform: rotate(-1deg) translateY(-8px); } }
 @keyframes summaryPop { from { opacity: 0; transform: translateY(14px) scale(.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
-#grade-home .language-btn { border: 0; background: var(--purple); color: #fff; padding: 10px 16px; border-radius: 30px; font: 800 .9rem 'Nunito',sans-serif; cursor: pointer; white-space: nowrap; }
 #grade-home .home-hero { padding: 48px 0 50px; background: linear-gradient(180deg,#EDE9FF 0%,#F8F7FF 100%); overflow: hidden; }
 #grade-home .home-hero-grid { display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 30px; }
 #grade-home .hero-copy { max-width: 680px; text-align: start; }
@@ -1614,7 +1611,7 @@ body > :not(#grade-home):not(#site-nav-root):not(script) { display: none !import
       <div class="hero-copy">
         <h1 id="hero-title"></h1>
         <p id="hero-description"></p>
-        <div class="hero-actions"><a class="btn btn-primary" href="#unit-summary" id="start-link"></a><a class="btn btn-outline" href="#project-pages" id="pages-link"></a><button class="language-btn" id="language-toggle" type="button"></button></div>
+        <div class="hero-actions"><a class="btn btn-primary" href="#unit-summary" id="start-link"></a><a class="btn btn-outline" href="#project-pages" id="pages-link"></a></div>
       </div>
       <div class="hero-visual" aria-hidden="true">
         <div class="hero-board">238,765,091<br><span>6 × 7 = 42</span><br>4,752,806</div><div class="hero-mascot">👧🏻</div><div class="hero-star">⭐</div></div>
@@ -1623,7 +1620,7 @@ body > :not(#grade-home):not(#site-nav-root):not(script) { display: none !import
   <main>
     <section class="features-section" id="learning-features"><div class="container"><div class="features-grid" id="feature-grid"></div></div></section>
     <section class="home-section lessons" id="unit-summary">
-      <div class="container"><div class="section-heading summary-heading"><div><h2 id="lessons-title"></h2><p id="lessons-description"></p></div><button class="language-btn summary-language" id="summary-language-toggle" type="button"></button></div><div class="lesson-grid" id="lesson-grid"></div></div>
+      <div class="container"><div class="section-heading summary-heading"><div><h2 id="lessons-title"></h2><p id="lessons-description"></p></div></div><div class="lesson-grid" id="lesson-grid"></div></div>
     </section>
     <section class="path-section" id="study-path"><div class="container"><div class="section-heading"><h2 id="path-title"></h2><p id="path-description"></p></div><div class="path-grid" id="path-grid"></div></div></section>
     <section class="games-band" id="games-preview"><div class="container"><div class="section-heading"><h2 id="games-title"></h2><p id="games-description"></p></div><div class="games-grid" id="games-grid"></div></div></section>
@@ -2342,8 +2339,6 @@ const homeContent = {
 
 const resourceGrid = document.getElementById('resource-grid');
 const lessonGrid = document.getElementById('lesson-grid');
-const languageToggle = document.getElementById('language-toggle');
-const summaryLanguageToggle = document.getElementById('summary-language-toggle');
 const unitReviewImages = ['img/unit1.jpeg','img/unit2.jpeg','img/unit5.png','img/unit33.jpeg','img/unit44.jpeg'];
 const requestedLessonIndex = Number(new URLSearchParams(location.search).get('unit'));
 let selectedLessonIndex = Number.isInteger(requestedLessonIndex) && requestedLessonIndex >= 0 && requestedLessonIndex < 5 ? requestedLessonIndex : 0;
@@ -2374,10 +2369,6 @@ function renderHome(language) {
   document.documentElement.lang = language;
   document.documentElement.dir = language === 'ar' ? 'rtl' : 'ltr';
   document.title = hasSelectedUnit ? `${content.lessonsTitle} | MathKids` : language === 'ar' ? 'رياضيات الصف الرابع | MathKids' : 'Grade 4 Mathematics | MathKids';
-  languageToggle.textContent = content.language;
-  languageToggle.setAttribute('aria-label', content.languageLabel);
-  summaryLanguageToggle.textContent = content.language;
-  summaryLanguageToggle.setAttribute('aria-label', content.languageLabel);
   document.getElementById('hero-title').innerHTML = content.heroTitle;
   document.getElementById('hero-description').textContent = content.heroDescription;
   document.getElementById('start-link').textContent = content.start;
@@ -2422,13 +2413,12 @@ const landingRevealObserver = new IntersectionObserver(entries => {
 }, { threshold: .12 });
 
 renderHome(currentLanguage);
-function toggleLanguage() {
-  currentLanguage = currentLanguage === 'ar' ? 'en' : 'ar';
-  localStorage.setItem('mathkids-language', currentLanguage);
-  renderHome(currentLanguage);
-}
-languageToggle.addEventListener('click', toggleLanguage);
-summaryLanguageToggle.addEventListener('click', toggleLanguage);
+window.addEventListener('mathkids:languagechange', event => {
+  if (event.detail.language !== currentLanguage) {
+    currentLanguage = event.detail.language;
+    renderHome(currentLanguage);
+  }
+});
 </script>
 <script src="site-nav.js"></script>
 </body>

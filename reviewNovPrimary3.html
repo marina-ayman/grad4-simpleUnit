@@ -3,399 +3,375 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>مدينة أبطال الرياضيات السحرية - تدريبات الشهر الثاني (الصف الثالث الابتدائي)</title>
+  <title>مدينة أبطال الرياضيات السحرية - الصف الثالث الابتدائي</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;700;800;900&family=Tajawal:wght@700;800;900&display=swap" rel="stylesheet">
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            cairo: ['Cairo', 'Tajawal', 'sans-serif'],
-          },
-          animation: {
-            'float-slow': 'floatSlow 4s ease-in-out infinite',
-            'wiggle': 'wiggle 1.2s ease-in-out infinite',
-            'bounce-soft': 'bounceSoft 2.2s infinite',
-            'pop-in': 'popIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards',
-            'pulse-star': 'pulseStar 1.8s infinite',
-          },
-          keyframes: {
-            floatSlow: {
-              '0%, 100%': { transform: 'translateY(0px) rotate(0deg)' },
-              '50%': { transform: 'translateY(-10px) rotate(2deg)' },
-            },
-            wiggle: {
-              '0%, 100%': { transform: 'rotate(-4deg)' },
-              '50%': { transform: 'rotate(4deg)' },
-            },
-            bounceSoft: {
-              '0%, 100%': { transform: 'translateY(0)' },
-              '50%': { transform: 'translateY(-7px)' },
-            },
-            popIn: {
-              '0%': { opacity: '0', transform: 'scale(0.85)' },
-              '100%': { opacity: '1', transform: 'scale(1)' },
-            },
-            pulseStar: {
-              '0%, 100%': { boxShadow: '0 0 12px rgba(251, 191, 36, 0.45)' },
-              '50%': { boxShadow: '0 0 26px rgba(244, 63, 94, 0.7)' },
-            }
-          }
-        }
-      }
-    }
-  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@500;700;800;900&display=swap" rel="stylesheet">
   <style>
     body {
       font-family: 'Cairo', sans-serif;
-      background: linear-gradient(135deg, #f8fafc 0%, #f0f9ff 35%, #fdf4ff 70%, #f0fdf4 100%);
-      background-attachment: fixed;
+      background: linear-gradient(135deg, #f0f9ff 0%, #fffbeb 45%, #fdf2f8 100%);
       min-height: 100vh;
       overflow-x: hidden;
     }
+
     .magic-card {
       background: #ffffff;
-      border-radius: 28px;
-      border: 3px solid #e0f2fe;
-      box-shadow: 0 10px 25px -5px rgba(148, 163, 184, 0.14), 0 4px 10px -4px rgba(148, 163, 184, 0.08);
-      transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.25s ease;
+      border-radius: 26px;
+      border: 3px solid #e2e8f0;
+      box-shadow: 0 10px 25px -8px rgba(14, 165, 233, 0.14);
+      transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
     }
+
     .magic-card:hover {
-      transform: translateY(-3px);
-      border-color: #bae6fd;
+      transform: translateY(-2px);
+      border-color: #7dd3fc;
+      box-shadow: 0 14px 28px -8px rgba(14, 165, 233, 0.2);
     }
+
     .squishy-btn {
-      transition: all 0.16s cubic-bezier(0.34, 1.56, 0.64, 1);
-      box-shadow: 0 4px 0 rgba(100, 116, 139, 0.18);
+      transition: transform 0.14s ease, box-shadow 0.14s ease, background-color 0.2s ease;
+      box-shadow: 0 4px 0 rgba(15, 23, 42, 0.12);
     }
-    .squishy-btn:hover:not(:disabled) {
-      filter: brightness(1.03);
-      transform: translateY(-1px);
+
+    .squishy-btn:hover {
+      filter: brightness(0.98);
     }
-    .squishy-btn:active:not(:disabled) {
+
+    .squishy-btn:active {
       transform: translateY(3px);
-      box-shadow: 0 1px 0 rgba(100, 116, 139, 0.18);
+      box-shadow: 0 1px 0 rgba(15, 23, 42, 0.12);
     }
+
+    @keyframes floatSlow {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-6px); }
+    }
+
+    @keyframes wiggle {
+      0%, 100% { transform: rotate(-4deg); }
+      50% { transform: rotate(4deg); }
+    }
+
     @keyframes shakeWrong {
       0%, 100% { transform: translateX(0); }
-      20% { transform: translateX(-8px) rotate(-1deg); }
-      40% { transform: translateX(8px) rotate(1deg); }
-      60% { transform: translateX(-6px); }
-      80% { transform: translateX(6px); }
+      25% { transform: translateX(-7px); }
+      75% { transform: translateX(7px); }
     }
-    .shake-card {
-      animation: shakeWrong 0.4s ease-in-out;
-      border-color: #fecdd3 !important;
+
+    @keyframes popIn {
+      from { opacity: 0; transform: translateY(10px) scale(0.98); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
     }
-    .solved-card {
-      border-color: #86efac !important;
-      background: linear-gradient(180deg, #ffffff 0%, #f0fdf4 100%) !important;
-    }
+
+    .animate-float { animation: floatSlow 3.2s ease-in-out infinite; }
+    .animate-wiggle { animation: wiggle 2.4s ease-in-out infinite; display: inline-block; }
+    .animate-shake { animation: shakeWrong 0.35s ease-in-out; }
+    .animate-pop-in { animation: popIn 0.32s ease-out forwards; }
+
     .world-active {
-      transform: scale(1.03);
-      box-shadow: 0 8px 20px -4px rgba(56, 189, 248, 0.35);
-      border-width: 3px !important;
+      background: linear-gradient(135deg, #0284c7, #4f46e5) !important;
+      color: #ffffff !important;
+      border-color: transparent !important;
+      box-shadow: 0 8px 18px -4px rgba(37, 99, 235, 0.35);
+      transform: scale(1.02);
     }
-    input[type="number"], input[type="text"] {
+
+    .world-active span,
+    .world-active div {
+      color: #ffffff !important;
+    }
+
+    input[type="number"],
+    input[type="text"],
+    select {
       text-align: center;
-      font-weight: 900;
+      font-weight: 800;
     }
+
     input::-webkit-outer-spin-button,
     input::-webkit-inner-spin-button {
       -webkit-appearance: none;
       margin: 0;
     }
-    .cloud-decor {
-      position: fixed;
-      pointer-events: none;
-      z-index: 0;
-      opacity: 0.45;
-    }
   </style>
 </head>
-<body class="pb-16 text-slate-700 select-none">
-
-  <!-- عناصر ديكورية متحركة في الخلفية -->
-  <div class="cloud-decor top-24 left-8 text-5xl animate-float-slow">☁️</div>
-  <div class="cloud-decor top-44 left-16 text-4xl animate-float-slow" style="animation-delay: 1.2s;">🎈</div>
-  <div class="cloud-decor bottom-28 left-12 text-4xl animate-float-slow" style="animation-delay: 2s;">🌟</div>
-  <div class="cloud-decor bottom-14 left-6 text-5xl animate-float-slow" style="animation-delay: 0.7s;">🌈</div>
+<body class="pb-20 text-slate-800">
 
   <!-- الهيدر العلوي الفاتح -->
-  <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b-4 border-sky-100 shadow-sm">
+  <header class="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b-4 border-sky-100 shadow-xs">
     <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
       <div class="flex items-center gap-3">
-        <div class="w-12 h-12 p-2 rounded-2xl bg-gradient-to-tr from-sky-200 via-pink-200 to-amber-200 flex items-center justify-center text-3xl shadow-sm animate-bounce-soft border-2 border-white">
-          🏰
+        <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-sky-200 via-amber-100 to-pink-200 border-2 border-sky-300 flex items-center justify-center text-2xl animate-float">
+          🌈
         </div>
         <div>
-          <div class="flex items-center gap-2 flex-wrap">
-            <h1 class="text-lg md:text-2xl font-black text-sky-900">
-              مدينة أبطال الرياضيات السحرية
-            </h1>
-            <span class="bg-amber-100 text-amber-800 border border-amber-200 text-xs font-black px-3 py-0.5 rounded-full">الصف الثالث الابتدائي</span>
-          </div>
-          <p class="text-xs font-bold text-slate-400">تدريبات نهاية الشهر الثاني كاملة (60 سؤالاً تفاعلياً • ص 45 - 50)</p>
+          <h1 class="text-lg md:text-2xl font-black text-sky-950">مدينة أبطال الرياضيات السحرية</h1>
+          <p class="text-xs font-bold text-slate-500">تدريبات نهاية الشهر الثاني • الصف الثالث الابتدائي</p>
         </div>
       </div>
 
-      <!-- لوحة النجوم والتقدم -->
-      <div class="flex items-center gap-3">
+      <!-- لوحة النجوم والأوسمة والصوت -->
+      <div class="flex flex-wrap items-center gap-2.5">
         <div class="flex items-center gap-2 bg-amber-50 border-2 border-amber-200 px-3.5 py-1.5 rounded-2xl">
           <span class="text-2xl animate-wiggle">⭐</span>
           <div>
             <div class="text-[10px] font-black text-amber-700 leading-none">نجومي</div>
-            <div class="text-lg font-black text-amber-900 leading-tight"><span id="scoreDisplay">0</span> <span class="text-xs text-amber-600">/ 60</span></div>
+            <div class="text-base md:text-lg font-black text-amber-950 leading-tight">
+              <span id="scoreDisplay">0</span>
+              <span class="text-xs text-amber-600">/ <span id="totalQuestionsDisplay">95</span></span>
+            </div>
           </div>
         </div>
 
-        <button onclick="openBadgesModal()" class="squishy-btn bg-pink-100 hover:bg-pink-200 text-pink-900 font-black text-xs md:text-sm px-3.5 py-2 rounded-2xl flex items-center gap-1.5 border-2 border-pink-200">
-          <span>🏆</span> أوسمتي (<span id="badgeCount">0</span>/4)
+        <button onclick="openBadgesModal()" class="squishy-btn bg-pink-100 hover:bg-pink-200 text-pink-950 font-black text-xs md:text-sm px-3.5 py-2.5 rounded-2xl flex items-center gap-1.5 border-2 border-pink-200">
+          <span>🏆</span> أوسمتي (<span id="badgeCount">0</span>/5)
         </button>
 
-        <button onclick="toggleSound()" id="soundBtn" class="squishy-btn w-10 h-10 rounded-2xl bg-sky-50 border-2 border-sky-200 flex items-center justify-center text-xl" title="تشغيل/كتم الصوت">
+        <button onclick="toggleSound()" id="soundBtn" class="squishy-btn w-10 h-10 rounded-2xl bg-sky-50 hover:bg-sky-100 border-2 border-sky-200 flex items-center justify-center text-xl" title="تشغيل أو كتم الصوت">
           🔊
         </button>
       </div>
     </div>
-    <!-- شريط التقدم الباستيل -->
-    <div class="w-full h-2.5 bg-slate-100 overflow-hidden">
-      <div id="progressBar" class="h-full bg-gradient-to-l from-emerald-300 via-sky-300 to-pink-300 transition-all duration-500" style="width: 0%"></div>
+
+    <!-- شريط التقدم العام -->
+    <div class="max-w-7xl mx-auto px-4 pb-2.5">
+      <div class="w-full h-3 bg-sky-100 rounded-full overflow-hidden border border-sky-200">
+        <div id="progressBar" class="h-full bg-gradient-to-l from-emerald-400 via-sky-400 to-indigo-500 transition-all duration-500 rounded-full" style="width: 0%"></div>
+      </div>
     </div>
   </header>
 
-  <!-- الهيكل الرئيسي: قائمة جانبية على اليمين + منطقة الأسئلة في عمود واحد -->
-  <div class="relative z-10 max-w-7xl mx-auto px-4 mt-6 flex flex-col lg:flex-row gap-6 items-start">
+  <!-- التخطيط الرئيسي: قائمة تبويبات جانبية على اليمين + محتوى الأسئلة في صفوف مستقلة -->
+  <div class="max-w-7xl mx-auto px-4 mt-6 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
 
-    <!-- القائمة الجانبية على اليمين (Sidebar Navigation) -->
-    <aside class="w-full lg:w-80 shrink-0 lg:sticky lg:top-24 space-y-4">
-      <div class="bg-white/95 rounded-3xl p-4 border-3 border-purple-100 shadow-sm">
-        <div class="text-xs font-black text-purple-800 bg-purple-50 px-3 py-1.5 rounded-xl mb-3 text-center border border-purple-100">
-          🗺️ خريطة العوالم الأربعة
+    <!-- القائمة الجانبية على اليمين -->
+    <aside class="lg:col-span-4 xl:col-span-3 space-y-4 lg:sticky lg:top-28">
+      <div class="magic-card p-4 bg-white/95">
+        <div class="text-xs font-black text-sky-900 mb-3 px-1 flex items-center justify-between">
+          <span>🗺️ أقسام التدريبات</span>
+          <span class="bg-sky-50 text-sky-700 px-2 py-0.5 rounded-lg border border-sky-200">5 أقسام</span>
         </div>
-        <nav class="flex flex-col gap-3">
-          <button onclick="switchSection('sec1')" id="tab-sec1" class="world-active squishy-btn w-full p-3.5 rounded-2xl font-black text-right bg-sky-100 text-sky-950 border-2 border-sky-300 flex items-center justify-between gap-2 transition-all">
-            <div class="flex items-center gap-3">
-              <span class="text-2xl bg-white p-1.5 rounded-xl shadow-xs">🏝️</span>
+
+        <nav class="space-y-2.5" id="sidebarTabs">
+          <button onclick="switchSection('sec1')" id="tab-sec1" class="world-active squishy-btn w-full p-3.5 rounded-2xl font-black text-right bg-sky-50 hover:bg-sky-100 text-sky-950 border-2 border-sky-200 flex items-center justify-between gap-2">
+            <div class="flex items-center gap-2.5">
+              <span class="text-2xl bg-white/90 text-slate-800 p-1.5 rounded-xl border border-sky-100">📏</span>
               <div>
                 <div class="text-sm leading-snug">1. القياس والخريطة</div>
                 <div class="text-[11px] font-bold text-sky-700">الأسئلة (1 - 11)</div>
               </div>
             </div>
-            <span class="text-xs bg-white text-sky-800 px-2.5 py-1 rounded-full border border-sky-200 shrink-0" id="prog-sec1">0 / 11</span>
+            <span class="text-xs bg-white text-sky-900 px-2.5 py-1 rounded-full border border-sky-200 shrink-0" id="prog-sec1">0 / 11</span>
           </button>
 
-          <button onclick="switchSection('sec2')" id="tab-sec2" class="squishy-btn w-full p-3.5 rounded-2xl font-black text-right bg-purple-50 hover:bg-purple-100 text-purple-950 border-2 border-purple-200 opacity-90 flex items-center justify-between gap-2 transition-all">
-            <div class="flex items-center gap-3">
-              <span class="text-2xl bg-white p-1.5 rounded-xl shadow-xs">📊</span>
+          <button onclick="switchSection('sec2')" id="tab-sec2" class="squishy-btn w-full p-3.5 rounded-2xl font-black text-right bg-purple-50 hover:bg-purple-100 text-purple-950 border-2 border-purple-200 opacity-90 flex items-center justify-between gap-2">
+            <div class="flex items-center gap-2.5">
+              <span class="text-2xl bg-white/90 text-slate-800 p-1.5 rounded-xl border border-purple-100">📊</span>
               <div>
                 <div class="text-sm leading-snug">2. الرسوم والجداول</div>
                 <div class="text-[11px] font-bold text-purple-700">الأسئلة (12 - 30)</div>
               </div>
             </div>
-            <span class="text-xs bg-white text-purple-800 px-2.5 py-1 rounded-full border border-purple-200 shrink-0" id="prog-sec2">0 / 19</span>
+            <span class="text-xs bg-white text-purple-900 px-2.5 py-1 rounded-full border border-purple-200 shrink-0" id="prog-sec2">0 / 19</span>
           </button>
 
-          <button onclick="switchSection('sec3')" id="tab-sec3" class="squishy-btn w-full p-3.5 rounded-2xl font-black text-right bg-emerald-50 hover:bg-emerald-100 text-emerald-950 border-2 border-emerald-200 opacity-90 flex items-center justify-between gap-2 transition-all">
-            <div class="flex items-center gap-3">
-              <span class="text-2xl bg-white p-1.5 rounded-xl shadow-xs">🏰</span>
+          <button onclick="switchSection('sec3')" id="tab-sec3" class="squishy-btn w-full p-3.5 rounded-2xl font-black text-right bg-emerald-50 hover:bg-emerald-100 text-emerald-950 border-2 border-emerald-200 opacity-90 flex items-center justify-between gap-2">
+            <div class="flex items-center gap-2.5">
+              <span class="text-2xl bg-white/90 text-slate-800 p-1.5 rounded-xl border border-emerald-100">🧠</span>
               <div>
                 <div class="text-sm leading-snug">3. الحساب والقسمة</div>
                 <div class="text-[11px] font-bold text-emerald-700">الأسئلة (31 - 45)</div>
               </div>
             </div>
-            <span class="text-xs bg-white text-emerald-800 px-2.5 py-1 rounded-full border border-emerald-200 shrink-0" id="prog-sec3">0 / 15</span>
+            <span class="text-xs bg-white text-emerald-900 px-2.5 py-1 rounded-full border border-emerald-200 shrink-0" id="prog-sec3">0 / 15</span>
           </button>
 
-          <button onclick="switchSection('sec4')" id="tab-sec4" class="squishy-btn w-full p-3.5 rounded-2xl font-black text-right bg-pink-50 hover:bg-pink-100 text-pink-950 border-2 border-pink-200 opacity-90 flex items-center justify-between gap-2 transition-all">
-            <div class="flex items-center gap-3">
-              <span class="text-2xl bg-white p-1.5 rounded-xl shadow-xs">🚀</span>
+          <button onclick="switchSection('sec4')" id="tab-sec4" class="squishy-btn w-full p-3.5 rounded-2xl font-black text-right bg-pink-50 hover:bg-pink-100 text-pink-950 border-2 border-pink-200 opacity-90 flex items-center justify-between gap-2">
+            <div class="flex items-center gap-2.5">
+              <span class="text-2xl bg-white/90 text-slate-800 p-1.5 rounded-xl border border-pink-100">📝</span>
               <div>
                 <div class="text-sm leading-snug">4. المسائل الكلامية</div>
                 <div class="text-[11px] font-bold text-pink-700">الأسئلة (46 - 60)</div>
               </div>
             </div>
-            <span class="text-xs bg-white text-pink-800 px-2.5 py-1 rounded-full border border-pink-200 shrink-0" id="prog-sec4">0 / 15</span>
+            <span class="text-xs bg-white text-pink-900 px-2.5 py-1 rounded-full border border-pink-200 shrink-0" id="prog-sec4">0 / 15</span>
+          </button>
+
+          <button onclick="switchSection('sec5')" id="tab-sec5" class="squishy-btn w-full p-3.5 rounded-2xl font-black text-right bg-amber-50 hover:bg-amber-100 text-amber-950 border-2 border-amber-200 opacity-90 flex items-center justify-between gap-2">
+            <div class="flex items-center gap-2.5">
+              <span class="text-2xl bg-white/90 text-slate-800 p-1.5 rounded-xl border border-amber-100">🌟</span>
+              <div>
+                <div class="text-sm leading-snug">5. الأسئلة الإضافية</div>
+                <div class="text-[11px] font-bold text-amber-700">مجموعات وواجبات وتقييم</div>
+              </div>
+            </div>
+            <span class="text-xs bg-white text-amber-900 px-2.5 py-1 rounded-full border border-amber-200 shrink-0" id="prog-sec5">0 / 35</span>
           </button>
         </nav>
       </div>
 
-      <!-- بطاقة كابتن ماث الجانبية -->
-      <div class="bg-gradient-to-br from-sky-50 via-purple-50 to-pink-50 rounded-3xl p-4 border-3 border-white shadow-sm text-center">
-        <div id="mascotAvatar" class="text-5xl inline-block bg-white p-3 rounded-3xl shadow-xs animate-float-slow mb-2">🦁</div>
-        <div class="inline-block bg-amber-100 text-amber-900 text-xs font-black px-3 py-0.5 rounded-full mb-1.5 border border-amber-200">
-          كابتن ماث الأسد البطل
+      <!-- بطاقة كابتن ماث المشجعة -->
+      <div class="magic-card p-4 bg-gradient-to-br from-sky-50 via-white to-amber-50 border-2 border-sky-200">
+        <div class="flex items-center gap-3">
+          <div id="mascotAvatar" class="text-4xl bg-amber-100 border-2 border-amber-200 p-2.5 rounded-2xl animate-float shrink-0">🦁</div>
+          <div>
+            <div class="text-xs font-black text-sky-700">كابتن ماث يشجعك</div>
+            <p id="mascotMsg" class="text-xs md:text-sm font-extrabold text-slate-700 leading-relaxed mt-0.5">
+              أهلاً بك يا بطل! كل سؤال معروض في صف لوحده ليكون واضحاً وممتعاً 🌟
+            </p>
+          </div>
         </div>
-        <p id="mascotMsg" class="text-xs md:text-sm font-extrabold text-slate-700 leading-relaxed">
-          أهلاً بك يا بطل في مغامرة الشهر الثاني! اختر القسم من القائمة واجمع الـ 60 نجمة الذهبية 🌟
-        </p>
       </div>
     </aside>
 
-    <!-- محتوى الأسئلة (كل سؤال في صف كامل لوحده - Single Column Layout) -->
-    <main class="flex-1 w-full min-w-0 space-y-6">
+    <!-- منطقة الأسئلة الرئيسية: كل سؤال في صف مستقل كامل العرض -->
+    <main class="lg:col-span-8 xl:col-span-9 space-y-6">
 
-      <!-- ==================== العالم 1: جزيرة القياس والخريطة (1 - 11) ==================== -->
-      <section id="sec1" class="space-y-6 animate-pop-in">
-        <div class="bg-sky-100/80 border-3 border-sky-200 rounded-3xl p-5 flex items-center gap-4 shadow-xs">
-          <span class="text-4xl bg-white p-2.5 rounded-2xl">📏</span>
+      <!-- ==================== القسم 1: القياس والخريطة (1 - 11) ==================== -->
+      <section id="sec1" class="space-y-5 animate-pop-in">
+        <div class="bg-sky-100/80 border-2 border-sky-200 rounded-3xl p-4 flex items-center gap-3.5">
+          <span class="text-3xl bg-white p-2.5 rounded-2xl border border-sky-200">📏</span>
           <div>
-            <h2 class="text-xl font-black text-sky-950">1. جزيرة القياس والخريطة (الأسئلة 1 إلى 11)</h2>
-            <p class="text-xs md:text-sm font-bold text-sky-800 mt-0.5">قاعدة الأبطال: 1 سم = 10 مم &nbsp;|&nbsp; 1 م = 100 سم &nbsp;|&nbsp; 1 كم = 1000 م</p>
+            <h2 class="text-lg md:text-xl font-black text-sky-950">أولاً: وحدات القياس (مم، سم، م، كم) والخريطة (1 - 11)</h2>
+            <p class="text-xs md:text-sm font-bold text-sky-800">تذكر: 1 سم = 10 مم • 1 م = 100 سم • 1 كم = 1000 م</p>
           </div>
         </div>
 
-        <!-- سؤال 1 في صف كامل لوحده -->
+        <!-- سؤال 1 -->
         <div class="magic-card p-6 w-full" id="card-q1">
           <div class="flex justify-between items-center mb-3">
             <span class="bg-sky-100 text-sky-900 border border-sky-200 font-black px-4 py-1 rounded-2xl text-sm">سؤال (1)</span>
             <span id="badge-q1" class="text-2xl">⬜</span>
           </div>
-          <p class="font-black text-lg text-slate-800 mb-4">الطول الذي يشير إليه السهم على المسطرة يساوي:</p>
-          <div class="bg-amber-50/70 p-4 rounded-2xl border-2 border-amber-200 mb-4 overflow-x-auto">
+          <p class="font-black text-lg mb-3">الطول الذي يشير إليه السهم على المسطرة يساوي:</p>
+          <div class="bg-amber-50/80 p-4 rounded-2xl border-2 border-amber-200 mb-4 overflow-x-auto">
             <svg viewBox="0 0 340 95" class="w-full max-w-md mx-auto">
-              <polygon points="59,26 51,10 67,10" fill="#f43f5e" />
-              <rect x="56" y="2" width="6" height="10" fill="#f43f5e" />
-              <rect x="10" y="30" width="320" height="55" rx="8" fill="#fef9c3" stroke="#eab308" stroke-width="2.5"/>
-              <g id="ruler1-ticks" stroke="#334155"></g>
+              <polygon points="62,25 54,10 70,10" fill="#ef4444" />
+              <rect x="59" y="2" width="6" height="10" fill="#ef4444" />
+              <rect x="10" y="30" width="320" height="55" rx="8" fill="#fef9c3" stroke="#eab308" stroke-width="2.5" />
+              <g id="ruler1-ticks" stroke="#1e293b"></g>
             </svg>
           </div>
           <div class="flex flex-wrap items-center justify-center gap-3">
-            <input type="number" id="ans-q1" placeholder="؟" class="w-28 py-2 px-3 rounded-2xl border-2 border-sky-300 text-xl bg-sky-50/40 focus:outline-none focus:border-sky-500">
+            <input type="number" id="ans-q1" placeholder="؟" class="w-24 py-2 px-3 rounded-2xl border-2 border-sky-300 bg-sky-50/40 text-xl focus:outline-none focus:border-sky-600">
             <span class="font-black text-lg text-slate-700">مم</span>
-            <button onclick="checkSingle('q1', 85, 'رائع! السهم في المنتصف تماماً بين 80 مم و 90 مم أي 85 مم.')" class="squishy-btn bg-sky-200 hover:bg-sky-300 text-sky-950 border-2 border-sky-300 font-black px-6 py-2 rounded-2xl">تحقق 🎯</button>
-          </div>
-          <div class="mt-3 text-center">
-            <button onclick="toggleHint('hint-q1')" class="text-xs font-black text-sky-700 hover:underline">💡 طريقة الحل</button>
-          </div>
-          <div id="hint-q1" class="hidden mt-2 p-3 bg-amber-50 rounded-2xl border border-amber-200 text-xs font-bold text-amber-900 text-center">
-            السهم يشير إلى الشرطة الخامسة بعد 80 مم، إذن 80 + 5 = 85 مم.
+            <button onclick="checkSingle('q1', 85, 'رائع! السهم يقع في المنتصف تماماً بين 80 مم و 90 مم أي 85 مم.')" class="squishy-btn bg-sky-200 hover:bg-sky-300 text-sky-950 border-2 border-sky-300 font-black px-6 py-2 rounded-2xl">تحقق 🎯</button>
           </div>
           <div id="fb-q1" class="mt-3 text-sm font-black text-center hidden"></div>
         </div>
 
-        <!-- الأسئلة 2 إلى 5 كل سؤال في صف كامل لوحده -->
-        <div id="conversions-top-container" class="space-y-4"></div>
+        <!-- الأسئلة 2 إلى 5 (كل سؤال في صف مستقل) -->
+        <div id="conversions-top-container" class="space-y-5"></div>
 
-        <!-- سؤال 6 في صف كامل لوحده -->
+        <!-- سؤال 6 -->
         <div class="magic-card p-6 w-full" id="card-q6">
           <div class="flex justify-between items-center mb-3">
             <span class="bg-sky-100 text-sky-900 border border-sky-200 font-black px-4 py-1 rounded-2xl text-sm">سؤال (6)</span>
             <span id="badge-q6" class="text-2xl">⬜</span>
           </div>
-          <p class="font-black text-lg text-slate-800 mb-4">الطول الذي يشير إليه السهم يمثل:</p>
+          <p class="font-black text-lg mb-3">الطول الذي يشير إليه السهم يمثل:</p>
           <div class="bg-sky-50/70 p-4 rounded-2xl border-2 border-sky-200 mb-4 overflow-x-auto">
             <svg viewBox="0 0 340 95" class="w-full max-w-md mx-auto">
-              <polygon points="174,26 166,10 182,10" fill="#f43f5e" />
-              <rect x="171" y="2" width="6" height="10" fill="#f43f5e" />
-              <rect x="10" y="30" width="320" height="55" rx="8" fill="#e0f2fe" stroke="#38bdf8" stroke-width="2.5"/>
-              <g id="ruler2-ticks" stroke="#334155"></g>
+              <polygon points="174,25 166,10 182,10" fill="#ef4444" />
+              <rect x="171" y="2" width="6" height="10" fill="#ef4444" />
+              <rect x="10" y="30" width="320" height="55" rx="8" fill="#e0f2fe" stroke="#0284c7" stroke-width="2.5" />
+              <g id="ruler2-ticks" stroke="#1e293b"></g>
             </svg>
           </div>
           <div class="flex flex-wrap items-center justify-center gap-2.5">
-            <input type="number" id="ans-q6-cm" placeholder="؟" class="w-20 py-2 rounded-2xl border-2 border-sky-300 text-xl bg-sky-50/40">
+            <input type="number" id="ans-q6-cm" placeholder="؟" class="w-20 py-2 rounded-2xl border-2 border-sky-300 bg-sky-50/40 text-xl">
             <span class="font-black text-slate-700">سم و</span>
-            <input type="number" id="ans-q6-mm" placeholder="؟" class="w-20 py-2 rounded-2xl border-2 border-sky-300 text-xl bg-sky-50/40">
+            <input type="number" id="ans-q6-mm" placeholder="؟" class="w-20 py-2 rounded-2xl border-2 border-sky-300 bg-sky-50/40 text-xl">
             <span class="font-black text-slate-700">مم =</span>
-            <input type="number" id="ans-q6-tot" placeholder="؟" class="w-24 py-2 rounded-2xl border-2 border-sky-300 text-xl bg-sky-50/40">
+            <input type="number" id="ans-q6-tot" placeholder="؟" class="w-24 py-2 rounded-2xl border-2 border-sky-300 bg-sky-50/40 text-xl">
             <span class="font-black text-slate-700">مم</span>
             <button onclick="checkQ6()" class="squishy-btn bg-sky-200 hover:bg-sky-300 text-sky-950 border-2 border-sky-300 font-black px-5 py-2 rounded-2xl">تحقق 🎯</button>
-          </div>
-          <div class="mt-3 text-center">
-            <button onclick="toggleHint('hint-q6')" class="text-xs font-black text-sky-700 hover:underline">💡 طريقة الحل</button>
-          </div>
-          <div id="hint-q6" class="hidden mt-2 p-3 bg-amber-50 rounded-2xl border border-amber-200 text-xs font-bold text-amber-900 text-center">
-            كل 10 مم = 1 سم. السهم يقع بعد 10 مم بـ 6 شرطات، أي 1 سم و 6 مم = 16 مم.
           </div>
           <div id="fb-q6" class="mt-3 text-sm font-black text-center hidden"></div>
         </div>
 
-        <!-- الأسئلة 7 إلى 9 كل سؤال في صف كامل لوحده -->
-        <div id="conversions-bottom-container" class="space-y-4"></div>
+        <!-- الأسئلة 7 إلى 9 (كل سؤال في صف مستقل) -->
+        <div id="conversions-bottom-container" class="space-y-5"></div>
 
-        <!-- الخريطة التفاعلية للأسئلة 10 و 11 -->
+        <!-- الخريطة المشتركة لسؤال 10 و 11 -->
         <div class="magic-card p-6 w-full">
-          <div class="flex items-center gap-2 mb-4">
+          <div class="flex items-center gap-2 mb-3">
             <span class="bg-emerald-100 text-emerald-900 border border-emerald-200 font-black px-4 py-1 rounded-2xl text-sm">خريطة الأسئلة (10) و (11)</span>
-            <h3 class="text-lg font-black text-slate-800">استخدم الخريطة المقابلة للإجابة على السؤالين التاليين:</h3>
+            <h3 class="text-base md:text-lg font-black text-slate-800">انظر إلى الخريطة لتحديد المسافات بين البيت والأشجار:</h3>
           </div>
-          <div class="bg-emerald-50/70 p-4 rounded-3xl border-2 border-emerald-200">
-            <svg viewBox="0 0 360 220" class="w-full max-w-md mx-auto rounded-2xl bg-emerald-100/80 border-2 border-emerald-300">
-              <path d="M 60 50 L 180 40 L 300 165" stroke="#e2e8f0" stroke-width="18" fill="none" stroke-linecap="round"/>
-              <path d="M 60 50 L 300 165" stroke="#cbd5e1" stroke-width="14" fill="none" stroke-dasharray="10,6"/>
-              <circle cx="60" cy="50" r="26" fill="#fef9c3" stroke="#facc15" stroke-width="3"/>
+          <div class="bg-emerald-50/70 p-4 rounded-2xl border-2 border-emerald-200">
+            <svg viewBox="0 0 360 220" class="w-full max-w-md mx-auto rounded-xl bg-emerald-100/70 border border-emerald-200">
+              <path d="M 60 50 L 180 40 L 300 165" stroke="#cbd5e1" stroke-width="18" fill="none" stroke-linecap="round" />
+              <path d="M 60 50 L 300 165" stroke="#94a3b8" stroke-width="14" fill="none" stroke-dasharray="10,6" />
+              <circle cx="60" cy="50" r="26" fill="#fef3c7" stroke="#f59e0b" stroke-width="3" />
               <text x="60" y="57" font-size="24" text-anchor="middle">🏠</text>
               <text x="60" y="90" font-size="13" font-weight="bold" fill="#1e293b" text-anchor="middle">البيت</text>
-              <circle cx="180" cy="40" r="8" fill="#60a5fa"/>
-              <circle cx="300" cy="165" r="26" fill="#dcfce7" stroke="#4ade80" stroke-width="3"/>
+              <circle cx="180" cy="40" r="8" fill="#3b82f6" />
+              <circle cx="300" cy="165" r="26" fill="#dcfce7" stroke="#16a34a" stroke-width="3" />
               <text x="300" y="172" font-size="24" text-anchor="middle">🌳</text>
               <text x="300" y="205" font-size="13" font-weight="bold" fill="#1e293b" text-anchor="middle">الأشجار</text>
-
-              <rect x="92" y="14" width="58" height="22" rx="6" fill="white" stroke="#94a3b8"/>
+              <rect x="92" y="14" width="58" height="22" rx="6" fill="white" stroke="#64748b" />
               <text x="121" y="29" font-size="12" font-weight="bold" fill="#0f172a" text-anchor="middle">730 م</text>
-
-              <rect x="232" y="75" width="58" height="22" rx="6" fill="white" stroke="#94a3b8"/>
+              <rect x="232" y="75" width="58" height="22" rx="6" fill="white" stroke="#64748b" />
               <text x="261" y="90" font-size="12" font-weight="bold" fill="#0f172a" text-anchor="middle">470 م</text>
-
-              <rect x="135" y="122" width="62" height="24" rx="6" fill="#fef08a" stroke="#eab308"/>
+              <rect x="135" y="122" width="62" height="24" rx="6" fill="#fef9c3" stroke="#eab308" />
               <text x="166" y="138" font-size="12" font-weight="bold" fill="#854d0e" text-anchor="middle">960 م</text>
             </svg>
           </div>
         </div>
 
-        <!-- سؤال 10 في صف كامل لوحده -->
+        <!-- سؤال 10 في صف مستقل -->
         <div class="magic-card p-6 w-full" id="card-q10">
           <div class="flex justify-between items-center mb-3">
-            <span class="bg-sky-100 text-sky-900 border border-sky-200 font-black px-4 py-1 rounded-2xl text-sm">سؤال (10)</span>
+            <span class="bg-emerald-100 text-emerald-900 border border-emerald-200 font-black px-4 py-1 rounded-2xl text-sm">سؤال (10)</span>
             <span id="badge-q10" class="text-2xl">⬜</span>
           </div>
-          <p class="font-black text-lg text-slate-800 mb-4">المسافة بين البيت والأشجار (عبر الطريق العلوي 730 م + 470 م) بالـ كم و م:</p>
+          <p class="font-black text-lg mb-4">المسافة الكلية بين البيت والأشجار عبر الطريق العلوي (730 م + 470 م) بالـ كم و م:</p>
           <div class="flex flex-wrap items-center justify-center gap-3">
-            <input type="number" id="ans-q10-km" placeholder="؟" class="w-20 py-2 rounded-2xl border-2 border-sky-300 bg-sky-50/40 text-xl">
-            <span class="font-black text-lg">كم و</span>
-            <input type="number" id="ans-q10-m" placeholder="؟" class="w-24 py-2 rounded-2xl border-2 border-sky-300 bg-sky-50/40 text-xl">
-            <span class="font-black text-lg">م</span>
-            <button onclick="checkQ10()" class="squishy-btn bg-sky-200 hover:bg-sky-300 text-sky-950 border-2 border-sky-300 font-black px-6 py-2 rounded-2xl">تحقق 🎯</button>
+            <input type="number" id="ans-q10-km" placeholder="؟" class="w-20 py-2 rounded-2xl border-2 border-emerald-300 bg-emerald-50/40 text-xl">
+            <span class="font-black text-slate-700">كم و</span>
+            <input type="number" id="ans-q10-m" placeholder="؟" class="w-24 py-2 rounded-2xl border-2 border-emerald-300 bg-emerald-50/40 text-xl">
+            <span class="font-black text-slate-700">م</span>
+            <button onclick="checkQ10()" class="squishy-btn bg-emerald-200 hover:bg-emerald-300 text-emerald-950 border-2 border-emerald-300 font-black px-6 py-2 rounded-2xl">تحقق 🎯</button>
           </div>
           <div id="fb-q10" class="mt-3 text-sm font-black text-center hidden"></div>
         </div>
 
-        <!-- سؤال 11 في صف كامل لوحده -->
+        <!-- سؤال 11 في صف مستقل -->
         <div class="magic-card p-6 w-full" id="card-q11">
           <div class="flex justify-between items-center mb-3">
-            <span class="bg-sky-100 text-sky-900 border border-sky-200 font-black px-4 py-1 rounded-2xl text-sm">سؤال (11)</span>
+            <span class="bg-emerald-100 text-emerald-900 border border-emerald-200 font-black px-4 py-1 rounded-2xl text-sm">سؤال (11)</span>
             <span id="badge-q11" class="text-2xl">⬜</span>
           </div>
-          <p class="font-black text-lg text-slate-800 mb-4">ما الفرق بين المسافة الكلية (1,200 م) وأقصر مسافة بين البيت والأشجار (960 م)؟</p>
+          <p class="font-black text-lg mb-4">ما الفرق بين المسافة الكلية (1,200 م) وأقصر مسافة بين البيت والأشجار (960 م)؟</p>
           <div class="flex flex-wrap items-center justify-center gap-3">
-            <input type="number" id="ans-q11" placeholder="؟" class="w-28 py-2 rounded-2xl border-2 border-sky-300 bg-sky-50/40 text-xl">
-            <span class="font-black text-lg">م</span>
-            <button onclick="checkSingle('q11', 240, 'ممتاز! 1200 - 960 = 240 متر.')" class="squishy-btn bg-sky-200 hover:bg-sky-300 text-sky-950 border-2 border-sky-300 font-black px-6 py-2 rounded-2xl">تحقق 🎯</button>
+            <input type="number" id="ans-q11" placeholder="؟" class="w-28 py-2 rounded-2xl border-2 border-emerald-300 bg-emerald-50/40 text-xl">
+            <span class="font-black text-slate-700">م</span>
+            <button onclick="checkSingle('q11', 240, 'ممتاز! 1200 - 960 = 240 متر.')" class="squishy-btn bg-emerald-200 hover:bg-emerald-300 text-emerald-950 border-2 border-emerald-300 font-black px-6 py-2 rounded-2xl">تحقق 🎯</button>
           </div>
           <div id="fb-q11" class="mt-3 text-sm font-black text-center hidden"></div>
         </div>
       </section>
 
-      <!-- ==================== العالم 2: غابة الرسوم والجداول (12 - 30) ==================== -->
-      <section id="sec2" class="hidden space-y-6 animate-pop-in">
-        <div class="bg-purple-100/80 border-3 border-purple-200 rounded-3xl p-5 flex items-center gap-4 shadow-xs">
-          <span class="text-4xl bg-white p-2.5 rounded-2xl">📊</span>
+      <!-- ==================== القسم 2: الرسوم البيانية والجداول (12 - 30) ==================== -->
+      <section id="sec2" class="hidden space-y-5 animate-pop-in">
+        <div class="bg-purple-100/80 border-2 border-purple-200 rounded-3xl p-4 flex items-center gap-3.5">
+          <span class="text-3xl bg-white p-2.5 rounded-2xl border border-purple-200">📊</span>
           <div>
-            <h2 class="text-xl font-black text-purple-950">2. غابة الرسوم البيانية والجداول (الأسئلة 12 إلى 30)</h2>
-            <p class="text-xs md:text-sm font-bold text-purple-800 mt-0.5">تذكر: كل حزمة علامات تكرار مكونة من 4 خطوط رأسية وخط مائل تساوي (5)!</p>
+            <h2 class="text-lg md:text-xl font-black text-purple-950">ثانياً: علامات التكرار والتمثيل البياني بالأعمدة (12 - 30)</h2>
+            <p class="text-xs md:text-sm font-bold text-purple-800">تذكر: كل حزمة علامات تكرار مكونة من 4 خطوط رأسية وخط مائل تساوي (5)!</p>
           </div>
         </div>
 
-        <!-- سؤال 12 في صف كامل لوحده -->
+        <!-- سؤال 12 و 13 -->
         <div class="magic-card p-6 w-full" id="card-q12">
-          <div class="flex justify-between items-center mb-4">
-            <span class="bg-purple-100 text-purple-900 border border-purple-200 font-black px-4 py-1 rounded-2xl text-sm">سؤال (12)</span>
+          <div class="flex justify-between items-center mb-3">
+            <span class="bg-purple-100 text-purple-900 border border-purple-200 font-black px-4 py-1 rounded-2xl text-sm">سؤال (12) و (13)</span>
             <span id="badge-q12" class="text-2xl">⬜</span>
           </div>
-          <p class="font-black text-lg mb-4">عدّ العلامات في الجدول واكتب العدد المناسب من (أ) إلى (هـ):</p>
-          <div class="overflow-x-auto mb-4">
+          <p class="font-black text-lg mb-4">12) عدّ العلامات في الجدول واكتب العدد المناسب من (أ) إلى (هـ):</p>
+          <div class="overflow-x-auto">
             <table class="w-full text-center border-collapse rounded-2xl overflow-hidden border-2 border-purple-200">
               <thead class="bg-purple-100 text-purple-950 font-black">
                 <tr>
@@ -408,73 +384,62 @@
                 <tr>
                   <td class="p-3 border border-purple-100">سيارة خاصة 🚗</td>
                   <td class="p-3 border border-purple-100 text-xl tracking-widest text-purple-800"><s>||||</s> &nbsp; <s>||||</s> &nbsp; ||||</td>
-                  <td class="p-3 border border-purple-100">(أ) <input type="number" id="q12-a" class="w-24 py-1.5 border-2 border-purple-200 rounded-xl bg-purple-50/30"></td>
+                  <td class="p-3 border border-purple-100">(أ) <input type="number" id="q12-a" class="w-20 py-1 border-2 border-purple-300 rounded-xl bg-purple-50/40"></td>
                 </tr>
                 <tr class="bg-purple-50/40">
                   <td class="p-3 border border-purple-100">دراجة بخارية 🏍️</td>
                   <td class="p-3 border border-purple-100 text-xl tracking-widest text-purple-800"><s>||||</s> &nbsp; ||</td>
-                  <td class="p-3 border border-purple-100">(ب) <input type="number" id="q12-b" class="w-24 py-1.5 border-2 border-purple-200 rounded-xl bg-white"></td>
+                  <td class="p-3 border border-purple-100">(ب) <input type="number" id="q12-b" class="w-20 py-1 border-2 border-purple-300 rounded-xl bg-purple-50/40"></td>
                 </tr>
                 <tr>
                   <td class="p-3 border border-purple-100">حافلة 🚌</td>
                   <td class="p-3 border border-purple-100 text-xl tracking-widest text-purple-800"><s>||||</s></td>
-                  <td class="p-3 border border-purple-100">(ج) <input type="number" id="q12-c" class="w-24 py-1.5 border-2 border-purple-200 rounded-xl bg-purple-50/30"></td>
+                  <td class="p-3 border border-purple-100">(ج) <input type="number" id="q12-c" class="w-20 py-1 border-2 border-purple-300 rounded-xl bg-purple-50/40"></td>
                 </tr>
                 <tr class="bg-purple-50/40">
                   <td class="p-3 border border-purple-100">شاحنة 🚚</td>
                   <td class="p-3 border border-purple-100 text-xl tracking-widest text-purple-800">||</td>
-                  <td class="p-3 border border-purple-100">(د) <input type="number" id="q12-d" class="w-24 py-1.5 border-2 border-purple-200 rounded-xl bg-white"></td>
+                  <td class="p-3 border border-purple-100">(د) <input type="number" id="q12-d" class="w-20 py-1 border-2 border-purple-300 rounded-xl bg-purple-50/40"></td>
                 </tr>
-                <tr class="bg-amber-50 font-black">
-                  <td class="p-3 border border-purple-100" colspan="2">المجموع الكلي للمركبات</td>
-                  <td class="p-3 border border-purple-100">(هـ) <input type="number" id="q12-e" class="w-24 py-1.5 border-2 border-amber-300 rounded-xl bg-white"></td>
+                <tr class="bg-amber-50/80 font-black">
+                  <td class="p-3 border border-purple-200" colspan="2">المجموع الكلي للمركبات</td>
+                  <td class="p-3 border border-purple-200">(هـ) <input type="number" id="q12-e" class="w-20 py-1 border-2 border-amber-300 rounded-xl bg-white"></td>
                 </tr>
               </tbody>
             </table>
           </div>
-          <div class="text-center">
-            <button onclick="checkQ12()" class="squishy-btn bg-purple-200 hover:bg-purple-300 text-purple-950 border-2 border-purple-300 font-black px-8 py-2.5 rounded-2xl">تحقق من الجدول 🎯</button>
+          <div class="mt-4 flex flex-wrap items-center justify-between gap-4 bg-purple-50/70 p-4 rounded-2xl border border-purple-200">
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="font-black">13) ما المركبة الأكثر مروراً خلال الـ 5 دقائق؟</span>
+              <select id="q13-ans" class="py-1.5 px-4 rounded-2xl border-2 border-purple-300 font-black bg-white">
+                <option value="">اختر المركبة...</option>
+                <option value="سيارة خاصة">سيارة خاصة</option>
+                <option value="دراجة بخارية">دراجة بخارية</option>
+                <option value="حافلة">حافلة</option>
+                <option value="شاحنة">شاحنة</option>
+              </select>
+            </div>
+            <button onclick="checkQ12_13()" class="squishy-btn bg-purple-200 hover:bg-purple-300 text-purple-950 border-2 border-purple-300 font-black px-6 py-2 rounded-2xl">تحقق 🎯</button>
           </div>
           <div id="fb-q12" class="mt-3 text-sm font-black text-center hidden"></div>
         </div>
 
-        <!-- سؤال 13 في صف كامل لوحده -->
-        <div class="magic-card p-6 w-full" id="card-q13">
-          <div class="flex justify-between items-center mb-3">
-            <span class="bg-purple-100 text-purple-900 border border-purple-200 font-black px-4 py-1 rounded-2xl text-sm">سؤال (13)</span>
-            <span id="badge-q13" class="text-2xl">⬜</span>
-          </div>
-          <p class="font-black text-lg mb-4">ما المركبة الأكثر مروراً خلال الـ 5 دقائق؟</p>
-          <div class="flex flex-wrap items-center justify-center gap-3">
-            <select id="q13-ans" class="py-2.5 px-5 rounded-2xl border-2 border-purple-300 font-black bg-purple-50/40 text-base">
-              <option value="">اختر المركبة...</option>
-              <option value="سيارة خاصة">سيارة خاصة 🚗</option>
-              <option value="دراجة بخارية">دراجة بخارية 🏍️</option>
-              <option value="حافلة">حافلة 🚌</option>
-              <option value="شاحنة">شاحنة 🚚</option>
-            </select>
-            <button onclick="checkQ13()" class="squishy-btn bg-purple-200 hover:bg-purple-300 text-purple-950 border-2 border-purple-300 font-black px-6 py-2.5 rounded-2xl">تحقق 🎯</button>
-          </div>
-          <div id="fb-q13" class="mt-3 text-sm font-black text-center hidden"></div>
-        </div>
-
-        <!-- الرسم البياني للرياضة المفضلة (مرجع للأسئلة 14 - 18) -->
+        <!-- رسم بياني للرياضة المفضلة -->
         <div class="magic-card p-6 w-full">
-          <span class="bg-purple-100 text-purple-900 border border-purple-200 font-black px-4 py-1 rounded-2xl text-sm">مرجع الأسئلة (14) إلى (18)</span>
-          <h3 class="text-lg font-black mt-3 mb-4">الأعمدة البيانية المقابلة تمثل الرياضة المفضلة لدى تلاميذ الصف الثالث:</h3>
-          <div class="bg-slate-50 p-4 rounded-3xl border-2 border-slate-200">
-            <div class="text-center font-black text-purple-900 mb-2">استطلاع الرياضة المفضلة (تلاميذ)</div>
+          <span class="bg-purple-100 text-purple-900 border border-purple-200 font-black px-4 py-1 rounded-2xl text-sm">التمثيل البياني للأسئلة (14 - 18)</span>
+          <h3 class="text-lg font-black mt-2 mb-3">الأعمدة البيانية المقابلة تمثل الرياضة المفضلة لدى تلاميذ الصف الثالث:</h3>
+          <div class="bg-slate-50 p-4 rounded-2xl border-2 border-slate-200">
+            <div class="text-center font-black text-purple-950 mb-2">استطلاع الرياضة المفضلة (عدد التلاميذ)</div>
             <svg viewBox="0 0 320 230" class="w-full max-w-md mx-auto">
               <g id="sport-grid"></g>
-              <rect x="65" y="28" width="36" height="162" fill="#fda4af" stroke="#f43f5e" stroke-width="1.5" rx="6"/>
-              <text x="83" y="23" font-size="12" font-weight="bold" text-anchor="middle" fill="#be123c">9</text>
-              <rect x="125" y="46" width="36" height="144" fill="#7dd3fc" stroke="#0284c7" stroke-width="1.5" rx="6"/>
-              <text x="143" y="41" font-size="12" font-weight="bold" text-anchor="middle" fill="#0369a1">8</text>
-              <rect x="185" y="136" width="36" height="54" fill="#86efac" stroke="#16a34a" stroke-width="1.5" rx="6"/>
-              <text x="203" y="131" font-size="12" font-weight="bold" text-anchor="middle" fill="#15803d">3</text>
-              <rect x="245" y="82" width="36" height="108" fill="#d8b4fe" stroke="#9333ea" stroke-width="1.5" rx="6"/>
-              <text x="263" y="77" font-size="12" font-weight="bold" text-anchor="middle" fill="#7e22ce">6</text>
-
+              <rect x="65" y="28" width="36" height="162" fill="#fda4af" stroke="#f43f5e" stroke-width="2" rx="6" />
+              <text x="83" y="22" font-size="12" font-weight="bold" text-anchor="middle" fill="#be123c">9</text>
+              <rect x="125" y="46" width="36" height="144" fill="#7dd3fc" stroke="#0284c7" stroke-width="2" rx="6" />
+              <text x="143" y="40" font-size="12" font-weight="bold" text-anchor="middle" fill="#0369a1">8</text>
+              <rect x="185" y="136" width="36" height="54" fill="#86efac" stroke="#16a34a" stroke-width="2" rx="6" />
+              <text x="203" y="130" font-size="12" font-weight="bold" text-anchor="middle" fill="#15803d">3</text>
+              <rect x="245" y="82" width="36" height="108" fill="#d8b4fe" stroke="#9333ea" stroke-width="2" rx="6" />
+              <text x="263" y="76" font-size="12" font-weight="bold" text-anchor="middle" fill="#7e22ce">6</text>
               <text x="83" y="208" font-size="11" font-weight="bold" text-anchor="middle">السباحة</text>
               <text x="143" y="208" font-size="11" font-weight="bold" text-anchor="middle">الركض</text>
               <text x="203" y="208" font-size="11" font-weight="bold" text-anchor="middle">تنس الطاولة</text>
@@ -483,19 +448,20 @@
           </div>
         </div>
 
-        <!-- الأسئلة 14 إلى 18 كل سؤال في صف كامل لوحده -->
-        <div id="sport-questions-container" class="space-y-4"></div>
+        <!-- الأسئلة 14 إلى 18 (كل سؤال في صف مستقل) -->
+        <div id="sport-questions-container" class="space-y-5"></div>
 
-        <!-- الأسئلة 19 إلى 23: منشئ الأعمدة البيانية للكتب في صف كامل -->
+        <!-- الأسئلة 19 إلى 23: ارسم الأعمدة البيانية للكتب المستعارة -->
         <div class="magic-card p-6 w-full" id="card-q19">
-          <div class="flex justify-between items-center">
-            <span class="bg-purple-100 text-purple-900 border border-purple-200 font-black px-4 py-1 rounded-2xl text-sm">الأسئلة (19) إلى (23)</span>
+          <div class="flex justify-between items-center mb-3">
+            <span class="bg-sky-100 text-sky-900 border border-sky-200 font-black px-4 py-1 rounded-2xl text-sm">الأسئلة (19) إلى (23)</span>
             <span id="badge-q19" class="text-2xl">⬜</span>
           </div>
-          <h3 class="text-lg font-black mt-3 mb-3">ارسم الأعمدة البيانية التفاعلية من جدول الكتب المستعارة ثم أجب:</h3>
+          <h3 class="text-lg font-black mb-3">ارسم الأعمدة البيانية التفاعلية من جدول الكتب المستعارة ثم أجب:</h3>
+
           <div class="overflow-x-auto mb-5">
-            <table class="w-full max-w-2xl mx-auto text-center border-2 border-sky-200 font-black">
-              <tr class="bg-sky-100 text-sky-950">
+            <table class="w-full max-w-xl mx-auto text-center border-2 border-sky-200 font-bold rounded-2xl overflow-hidden">
+              <tr class="bg-sky-100 text-sky-950 font-black">
                 <th class="p-2.5 border border-sky-200">الكتب</th>
                 <th class="p-2.5 border border-sky-200">المراجع</th>
                 <th class="p-2.5 border border-sky-200">الكتب المصورة</th>
@@ -503,7 +469,7 @@
                 <th class="p-2.5 border border-sky-200">أخرى</th>
               </tr>
               <tr class="bg-white text-lg">
-                <td class="p-2.5 border border-sky-100 bg-sky-50/50">العدد</td>
+                <td class="p-2.5 border border-sky-100 bg-sky-50/60 font-black">العدد</td>
                 <td class="p-2.5 border border-sky-100">6</td>
                 <td class="p-2.5 border border-sky-100">8</td>
                 <td class="p-2.5 border border-sky-100">10</td>
@@ -512,82 +478,83 @@
             </table>
           </div>
 
-          <div class="bg-amber-50/70 p-5 rounded-3xl border-2 border-amber-200 mb-5">
-            <p class="text-sm font-black text-amber-900 text-center mb-3">🎮 السؤال (22): اضغط (+) و (-) لرفع وتلوين الأعمدة حسب الجدول!</p>
-            <div class="flex items-end justify-around max-w-xl mx-auto h-56 bg-white rounded-2xl p-4 border-2 border-amber-200">
-              <div class="flex flex-col items-center gap-1">
-                <span id="bar1-val" class="font-black text-sky-700">0</span>
-                <div class="w-12 h-32 bg-slate-100 rounded-t-xl flex items-end overflow-hidden border">
-                  <div id="bar1-fill" class="w-full bg-sky-300 transition-all duration-300" style="height: 0%"></div>
+          <div class="bg-amber-50/70 p-4 rounded-2xl border-2 border-amber-200 mb-5">
+            <p class="text-xs md:text-sm font-black text-amber-900 text-center mb-3">اضغط على أزرار (+) و (-) لضبط ارتفاع كل عمود حسب الجدول!</p>
+            <div class="flex items-end justify-around h-56 bg-white rounded-2xl p-4 border-2 border-amber-200">
+              <div class="flex flex-col items-center gap-1.5">
+                <span id="bar1-val" class="font-black text-sky-700 text-base">0</span>
+                <div class="w-12 h-32 bg-sky-50 rounded-t-xl flex items-end overflow-hidden border-2 border-sky-200">
+                  <div id="bar1-fill" class="w-full bg-sky-400 transition-all duration-300" style="height: 0%"></div>
                 </div>
-                <div class="flex gap-1">
-                  <button onclick="adjBar(1,1)" class="w-7 h-7 bg-emerald-200 text-emerald-950 rounded-lg font-black">+</button>
-                  <button onclick="adjBar(1,-1)" class="w-7 h-7 bg-rose-200 text-rose-950 rounded-lg font-black">-</button>
+                <div class="flex gap-1.5">
+                  <button onclick="adjBar(1,1)" class="w-7 h-7 bg-emerald-200 hover:bg-emerald-300 text-emerald-950 border border-emerald-300 rounded-lg font-black">+</button>
+                  <button onclick="adjBar(1,-1)" class="w-7 h-7 bg-rose-200 hover:bg-rose-300 text-rose-950 border border-rose-300 rounded-lg font-black">-</button>
                 </div>
                 <span class="text-xs font-black">مراجع</span>
               </div>
 
-              <div class="flex flex-col items-center gap-1">
-                <span id="bar2-val" class="font-black text-purple-700">0</span>
-                <div class="w-12 h-32 bg-slate-100 rounded-t-xl flex items-end overflow-hidden border">
-                  <div id="bar2-fill" class="w-full bg-purple-300 transition-all duration-300" style="height: 0%"></div>
+              <div class="flex flex-col items-center gap-1.5">
+                <span id="bar2-val" class="font-black text-purple-700 text-base">0</span>
+                <div class="w-12 h-32 bg-purple-50 rounded-t-xl flex items-end overflow-hidden border-2 border-purple-200">
+                  <div id="bar2-fill" class="w-full bg-purple-400 transition-all duration-300" style="height: 0%"></div>
                 </div>
-                <div class="flex gap-1">
-                  <button onclick="adjBar(2,1)" class="w-7 h-7 bg-emerald-200 text-emerald-950 rounded-lg font-black">+</button>
-                  <button onclick="adjBar(2,-1)" class="w-7 h-7 bg-rose-200 text-rose-950 rounded-lg font-black">-</button>
+                <div class="flex gap-1.5">
+                  <button onclick="adjBar(2,1)" class="w-7 h-7 bg-emerald-200 hover:bg-emerald-300 text-emerald-950 border border-emerald-300 rounded-lg font-black">+</button>
+                  <button onclick="adjBar(2,-1)" class="w-7 h-7 bg-rose-200 hover:bg-rose-300 text-rose-950 border border-rose-300 rounded-lg font-black">-</button>
                 </div>
                 <span class="text-xs font-black">مصورة</span>
               </div>
 
-              <div class="flex flex-col items-center gap-1">
-                <span id="bar3-val" class="font-black text-emerald-700">0</span>
-                <div class="w-12 h-32 bg-slate-100 rounded-t-xl flex items-end overflow-hidden border">
-                  <div id="bar3-fill" class="w-full bg-emerald-300 transition-all duration-300" style="height: 0%"></div>
+              <div class="flex flex-col items-center gap-1.5">
+                <span id="bar3-val" class="font-black text-emerald-700 text-base">0</span>
+                <div class="w-12 h-32 bg-emerald-50 rounded-t-xl flex items-end overflow-hidden border-2 border-emerald-200">
+                  <div id="bar3-fill" class="w-full bg-emerald-400 transition-all duration-300" style="height: 0%"></div>
                 </div>
-                <div class="flex gap-1">
-                  <button onclick="adjBar(3,1)" class="w-7 h-7 bg-emerald-200 text-emerald-950 rounded-lg font-black">+</button>
-                  <button onclick="adjBar(3,-1)" class="w-7 h-7 bg-rose-200 text-rose-950 rounded-lg font-black">-</button>
+                <div class="flex gap-1.5">
+                  <button onclick="adjBar(3,1)" class="w-7 h-7 bg-emerald-200 hover:bg-emerald-300 text-emerald-950 border border-emerald-300 rounded-lg font-black">+</button>
+                  <button onclick="adjBar(3,-1)" class="w-7 h-7 bg-rose-200 hover:bg-rose-300 text-rose-950 border border-rose-300 rounded-lg font-black">-</button>
                 </div>
                 <span class="text-xs font-black">علمية</span>
               </div>
 
-              <div class="flex flex-col items-center gap-1">
-                <span id="bar4-val" class="font-black text-amber-700">5</span>
-                <div class="w-12 h-32 bg-slate-100 rounded-t-xl flex items-end overflow-hidden border">
-                  <div id="bar4-fill" class="w-full bg-amber-300 transition-all duration-300" style="height: 50%"></div>
+              <div class="flex flex-col items-center gap-1.5">
+                <span id="bar4-val" class="font-black text-amber-700 text-base">5</span>
+                <div class="w-12 h-32 bg-amber-50 rounded-t-xl flex items-end overflow-hidden border-2 border-amber-200">
+                  <div id="bar4-fill" class="w-full bg-amber-400 transition-all duration-300" style="height: 50%"></div>
                 </div>
-                <span class="text-[10px] text-slate-400 font-black py-1.5">(مرسوم)</span>
+                <span class="text-[11px] text-slate-400 font-bold">(مرسوم)</span>
                 <span class="text-xs font-black">أخرى</span>
               </div>
             </div>
           </div>
 
-          <div class="space-y-3 text-sm font-black max-w-2xl mx-auto">
-            <div class="p-3 bg-purple-50/60 rounded-2xl border border-purple-100">19) عنوان الرسم البياني: <input type="text" id="q19-title" value="الكتب المستعارة من المكتبة" class="w-full mt-1.5 py-2 px-3 rounded-xl border-2 border-purple-200 text-right bg-white"></div>
-            <div class="p-3 bg-purple-50/60 rounded-2xl border border-purple-100">20) الوحدة التي يمثلها المقياس: <span class="text-purple-800">كتاب (عدد الكتب)</span></div>
-            <div class="p-3 bg-purple-50/60 rounded-2xl border border-purple-100 flex items-center justify-between">
-              <span>21) قيمة كل علامة على المقياس (من 0 إلى 10):</span>
-              <input type="number" id="q21-step" placeholder="؟" class="w-20 py-1.5 rounded-xl border-2 border-purple-200 bg-white">
+          <div class="space-y-3 text-sm md:text-base font-bold bg-sky-50/50 p-4 rounded-2xl border border-sky-200">
+            <div>19) عنوان مناسب للرسم البياني: <input type="text" id="q19-title" value="الكتب المستعارة من المكتبة" class="w-full mt-1 py-2 px-3 rounded-2xl border-2 border-sky-200 bg-white text-right"></div>
+            <div>20) الوحدة التي يمثلها المقياس: <span class="text-sky-800 font-black">كتاب (عدد الكتب)</span></div>
+            <div class="flex flex-wrap items-center gap-2">
+              <span>21) قيمة كل علامة على المقياس (من 0 إلى 10 بـ 10 مربعات):</span>
+              <input type="number" id="q21-step" placeholder="؟" class="w-20 py-1.5 rounded-2xl border-2 border-sky-300 bg-white">
             </div>
-            <div class="p-3 bg-purple-50/60 rounded-2xl border border-purple-100 flex items-center justify-between">
-              <span>23) إجمالي عدد الكتب المستعارة من المكتبة:</span>
-              <div class="flex items-center gap-2"><input type="number" id="q23-tot" placeholder="؟" class="w-24 py-1.5 rounded-xl border-2 border-purple-200 bg-white"> <span>كتاباً</span></div>
+            <div class="flex flex-wrap items-center gap-2">
+              <span>23) ما إجمالي عدد الكتب المستعارة من المكتبة؟ (6 + 8 + 10 + 5) =</span>
+              <input type="number" id="q23-tot" placeholder="؟" class="w-24 py-1.5 rounded-2xl border-2 border-sky-300 bg-white">
+              <span>كتاباً</span>
             </div>
-            <button onclick="checkBooksChart()" class="squishy-btn w-full bg-purple-200 hover:bg-purple-300 text-purple-950 border-2 border-purple-300 font-black py-3 rounded-2xl mt-2">تحقق من الرسم والأسئلة (19-23) 🎯</button>
+            <button onclick="checkBooksChart()" class="squishy-btn w-full bg-sky-200 hover:bg-sky-300 text-sky-950 border-2 border-sky-300 font-black py-2.5 rounded-2xl mt-2">تحقق من الرسم والأسئلة (19 - 23) 🎯</button>
             <div id="fb-books" class="text-center hidden"></div>
           </div>
         </div>
 
-        <!-- الأسئلة 24 إلى 27: استطلاع الحيوانات في صف كامل -->
+        <!-- الأسئلة 24 إلى 27: استطلاع الحيوانات -->
         <div class="magic-card p-6 w-full" id="card-q24">
-          <div class="flex justify-between items-center">
+          <div class="flex justify-between items-center mb-3">
             <span class="bg-teal-100 text-teal-900 border border-teal-200 font-black px-4 py-1 rounded-2xl text-sm">الأسئلة (24) إلى (27)</span>
             <span id="badge-q24" class="text-2xl">⬜</span>
           </div>
-          <h3 class="text-lg font-black mt-3 mb-3">هيا نستكمل الاستطلاع التالي (الحيوان المفضل) ونرسم أعمدته بمقياس قفز (2):</h3>
-          <div class="overflow-x-auto mb-5">
-            <table class="w-full text-center border-2 border-teal-200 font-black">
-              <thead class="bg-teal-100 text-teal-950">
+          <h3 class="text-lg font-black mb-3">هيا نستكمل الاستطلاع التالي (الحيوان المفضل) ثم نتحقق:</h3>
+          <div class="overflow-x-auto mb-4">
+            <table class="w-full text-center border-2 border-teal-200 font-bold rounded-2xl overflow-hidden">
+              <thead class="bg-teal-100 text-teal-950 font-black">
                 <tr>
                   <th class="p-2.5 border border-teal-200">النوع</th>
                   <th class="p-2.5 border border-teal-200">حصان 🐴</th>
@@ -599,103 +566,44 @@
               </thead>
               <tbody class="bg-white">
                 <tr>
-                  <td class="p-2.5 border border-teal-100 bg-teal-50/50">العلامات</td>
+                  <td class="p-2.5 border border-teal-100 bg-teal-50/60 font-black">العلامات</td>
                   <td class="p-2.5 border border-teal-100 text-teal-800"><s>||||</s> <s>||||</s> <s>||||</s> |||</td>
-                  <td class="p-2.5 border border-teal-100 text-slate-400 text-xs">(17 علامة)</td>
-                  <td class="p-2.5 border border-teal-100 text-slate-400 text-xs">(6 علامات)</td>
+                  <td class="p-2.5 border border-teal-100 text-slate-500 text-xs">(17 علامة)</td>
+                  <td class="p-2.5 border border-teal-100 text-slate-500 text-xs">(6 علامات)</td>
                   <td class="p-2.5 border border-teal-100 text-teal-800"><s>||||</s> <s>||||</s> <s>||||</s></td>
-                  <td class="p-2.5 border border-teal-100 text-slate-400 text-xs">(4 علامات)</td>
+                  <td class="p-2.5 border border-teal-100 text-slate-500 text-xs">(4 علامات)</td>
                 </tr>
                 <tr>
-                  <td class="p-2.5 border border-teal-100 bg-teal-50/50">العدد</td>
-                  <td class="p-2.5 border border-teal-100"><input type="number" id="q24-horse" placeholder="؟" class="w-20 py-1.5 border-2 border-teal-200 rounded-xl bg-teal-50/30"></td>
-                  <td class="p-2.5 border border-teal-100">17</td>
-                  <td class="p-2.5 border border-teal-100">6</td>
-                  <td class="p-2.5 border border-teal-100"><input type="number" id="q24-cat" placeholder="؟" class="w-20 py-1.5 border-2 border-teal-200 rounded-xl bg-teal-50/30"></td>
-                  <td class="p-2.5 border border-teal-100">4</td>
+                  <td class="p-2.5 border border-teal-100 bg-teal-50/60 font-black">العدد</td>
+                  <td class="p-2.5 border border-teal-100"><input type="number" id="q24-horse" placeholder="؟" class="w-20 py-1.5 border-2 border-teal-300 rounded-xl bg-teal-50/40"></td>
+                  <td class="p-2.5 border border-teal-100 font-black">17</td>
+                  <td class="p-2.5 border border-teal-100 font-black">6</td>
+                  <td class="p-2.5 border border-teal-100"><input type="number" id="q24-cat" placeholder="؟" class="w-20 py-1.5 border-2 border-teal-300 rounded-xl bg-teal-50/40"></td>
+                  <td class="p-2.5 border border-teal-100 font-black">4</td>
                 </tr>
               </tbody>
             </table>
           </div>
-
-          <div class="bg-teal-50/70 p-4 rounded-3xl border-2 border-teal-200 mb-4">
-            <p class="text-xs md:text-sm font-black text-teal-900 text-center mb-3">🎮 السؤال (27): اضبط ارتفاع أعمدة الحيوانات (الحصان، الكلب، الدولفين، القطة) من 0 إلى 20:</p>
-            <div class="flex items-end justify-around max-w-xl mx-auto h-52 bg-white rounded-2xl p-3 border border-teal-200">
-              <div class="flex flex-col items-center gap-1">
-                <span id="abar1-val" class="font-black text-amber-700 text-xs">0</span>
-                <div class="w-11 h-28 bg-slate-100 rounded-t-lg flex items-end overflow-hidden border">
-                  <div id="abar1-fill" class="w-full bg-amber-300 transition-all" style="height:0%"></div>
-                </div>
-                <div class="flex gap-1">
-                  <button onclick="adjAnimalBar(1,1)" class="w-6 h-6 bg-emerald-200 text-emerald-950 rounded font-black text-xs">+</button>
-                  <button onclick="adjAnimalBar(1,-1)" class="w-6 h-6 bg-rose-200 text-rose-950 rounded font-black text-xs">-</button>
-                </div>
-                <span class="text-xs font-black">حصان</span>
-              </div>
-              <div class="flex flex-col items-center gap-1">
-                <span id="abar2-val" class="font-black text-sky-700 text-xs">0</span>
-                <div class="w-11 h-28 bg-slate-100 rounded-t-lg flex items-end overflow-hidden border">
-                  <div id="abar2-fill" class="w-full bg-sky-300 transition-all" style="height:0%"></div>
-                </div>
-                <div class="flex gap-1">
-                  <button onclick="adjAnimalBar(2,1)" class="w-6 h-6 bg-emerald-200 text-emerald-950 rounded font-black text-xs">+</button>
-                  <button onclick="adjAnimalBar(2,-1)" class="w-6 h-6 bg-rose-200 text-rose-950 rounded font-black text-xs">-</button>
-                </div>
-                <span class="text-xs font-black">كلب</span>
-              </div>
-              <div class="flex flex-col items-center gap-1">
-                <span id="abar3-val" class="font-black text-cyan-700 text-xs">0</span>
-                <div class="w-11 h-28 bg-slate-100 rounded-t-lg flex items-end overflow-hidden border">
-                  <div id="abar3-fill" class="w-full bg-cyan-300 transition-all" style="height:0%"></div>
-                </div>
-                <div class="flex gap-1">
-                  <button onclick="adjAnimalBar(3,1)" class="w-6 h-6 bg-emerald-200 text-emerald-950 rounded font-black text-xs">+</button>
-                  <button onclick="adjAnimalBar(3,-1)" class="w-6 h-6 bg-rose-200 text-rose-950 rounded font-black text-xs">-</button>
-                </div>
-                <span class="text-xs font-black">دولفين</span>
-              </div>
-              <div class="flex flex-col items-center gap-1">
-                <span id="abar4-val" class="font-black text-pink-700 text-xs">0</span>
-                <div class="w-11 h-28 bg-slate-100 rounded-t-lg flex items-end overflow-hidden border">
-                  <div id="abar4-fill" class="w-full bg-pink-300 transition-all" style="height:0%"></div>
-                </div>
-                <div class="flex gap-1">
-                  <button onclick="adjAnimalBar(4,1)" class="w-6 h-6 bg-emerald-200 text-emerald-950 rounded font-black text-xs">+</button>
-                  <button onclick="adjAnimalBar(4,-1)" class="w-6 h-6 bg-rose-200 text-rose-950 rounded font-black text-xs">-</button>
-                </div>
-                <span class="text-xs font-black">قطة</span>
-              </div>
-              <div class="flex flex-col items-center gap-1">
-                <span class="font-black text-slate-600 text-xs">4</span>
-                <div class="w-11 h-28 bg-slate-100 rounded-t-lg flex items-end overflow-hidden border">
-                  <div class="w-full bg-slate-300" style="height:20%"></div>
-                </div>
-                <span class="text-[10px] text-slate-400 py-1">(مرسوم)</span>
-                <span class="text-xs font-black">أخرى</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="flex flex-wrap items-center justify-between gap-3 bg-teal-50 p-4 rounded-2xl border border-teal-200">
-            <span class="font-black text-sm">26) المقياس الرأسي يصل إلى 20 على 10 مربعات، إذن قيمة كل علامة = <input type="number" id="q26-scale" placeholder="؟" class="w-16 py-1 border-2 border-teal-300 rounded-xl bg-white"></span>
-            <button onclick="checkAnimals()" class="squishy-btn bg-teal-200 hover:bg-teal-300 text-teal-950 border-2 border-teal-300 font-black px-6 py-2 rounded-2xl">تحقق من الاستطلاع والرسم 🎯</button>
+          <div class="flex flex-wrap items-center justify-between gap-3 bg-teal-50/80 p-4 rounded-2xl border border-teal-200">
+            <span class="font-black text-sm md:text-base">26) المقياس الرأسي يصل إلى 20 على 10 مربعات، إذن قيمة كل علامة = <input type="number" id="q26-scale" placeholder="؟" class="w-16 py-1.5 border-2 border-teal-300 rounded-xl bg-white"></span>
+            <button onclick="checkAnimals()" class="squishy-btn bg-teal-200 hover:bg-teal-300 text-teal-950 border-2 border-teal-300 font-black px-6 py-2 rounded-2xl">تحقق 🎯</button>
           </div>
           <div id="fb-animals" class="mt-3 text-sm font-black text-center hidden"></div>
         </div>
 
-        <!-- الأسئلة 28 إلى 30: استطلاع الفاكهة المفضلة في صف كامل -->
+        <!-- الأسئلة 28 إلى 30: استطلاع الفاكهة المفضلة -->
         <div class="magic-card p-6 w-full" id="card-q28">
-          <div class="flex justify-between items-center">
+          <div class="flex justify-between items-center mb-3">
             <span class="bg-amber-100 text-amber-900 border border-amber-200 font-black px-4 py-1 rounded-2xl text-sm">الأسئلة (28) إلى (30)</span>
             <span id="badge-q28" class="text-2xl">⬜</span>
           </div>
-          <h3 class="text-lg font-black mt-3 mb-4">الجدول التالي يظهر استطلاع الفاكهة المفضلة لمجموعة من التلاميذ:</h3>
-          <div class="overflow-x-auto mb-5">
-            <table class="w-full max-w-2xl mx-auto text-center border-2 border-amber-200 font-black">
-              <thead class="bg-amber-100 text-amber-950">
+          <h3 class="text-lg font-black mb-3">الجدول التالي يظهر استطلاع الفاكهة المفضلة لمجموعة من التلاميذ:</h3>
+          <div class="overflow-x-auto mb-4">
+            <table class="w-full max-w-2xl mx-auto text-center border-2 border-amber-200 font-bold rounded-2xl overflow-hidden">
+              <thead class="bg-amber-100 text-amber-950 font-black">
                 <tr>
                   <th class="p-2.5 border border-amber-200">الفاكهة / الصف</th>
-                  <th class="p-2.5 border border-amber-200">الأولى ابتدائي</th>
+                  <th class="p-2.5 border border-amber-200">الأول الابتدائي</th>
                   <th class="p-2.5 border border-amber-200">الثاني الابتدائي</th>
                   <th class="p-2.5 border border-amber-200">الثالث الابتدائي</th>
                   <th class="p-2.5 border border-amber-200">المجموع</th>
@@ -703,228 +611,186 @@
               </thead>
               <tbody class="bg-white">
                 <tr>
-                  <td class="p-2.5 border border-amber-100 bg-yellow-50/70">موز 🍌</td>
+                  <td class="p-2.5 border border-amber-100 bg-yellow-50/70 font-black">موز 🍌</td>
                   <td class="p-2.5 border border-amber-100">12</td>
                   <td class="p-2.5 border border-amber-100">23</td>
                   <td class="p-2.5 border border-amber-100">10</td>
-                  <td class="p-2.5 border border-amber-100">45</td>
+                  <td class="p-2.5 border border-amber-100 font-black">45</td>
                 </tr>
                 <tr>
-                  <td class="p-2.5 border border-amber-100 bg-orange-50/70">برتقال 🍊</td>
+                  <td class="p-2.5 border border-amber-100 bg-orange-50/70 font-black">برتقال 🍊</td>
                   <td class="p-2.5 border border-amber-100">10</td>
                   <td class="p-2.5 border border-amber-100">8</td>
                   <td class="p-2.5 border border-amber-100">18</td>
-                  <td class="p-2.5 border border-amber-100"><input type="number" id="q29-ans" placeholder="؟" class="w-20 py-1 border-2 border-amber-300 rounded-xl bg-amber-50/30"></td>
+                  <td class="p-2.5 border border-amber-100"><input type="number" id="q29-ans" placeholder="؟" class="w-20 py-1.5 border-2 border-amber-300 rounded-xl bg-amber-50/40"></td>
                 </tr>
-                <tr class="bg-slate-50">
-                  <td class="p-2.5 border border-amber-100">المجموع</td>
-                  <td class="p-2.5 border border-amber-100"><input type="number" id="q28-ans" placeholder="؟" class="w-20 py-1 border-2 border-amber-300 rounded-xl bg-amber-50/30"></td>
-                  <td class="p-2.5 border border-amber-100">31</td>
-                  <td class="p-2.5 border border-amber-100">28</td>
-                  <td class="p-2.5 border border-amber-100">81</td>
+                <tr class="bg-slate-50 font-black">
+                  <td class="p-2.5 border border-amber-200">المجموع</td>
+                  <td class="p-2.5 border border-amber-200"><input type="number" id="q28-ans" placeholder="؟" class="w-20 py-1.5 border-2 border-amber-300 rounded-xl bg-white"></td>
+                  <td class="p-2.5 border border-amber-200">31</td>
+                  <td class="p-2.5 border border-amber-200">28</td>
+                  <td class="p-2.5 border border-amber-200">81</td>
                 </tr>
               </tbody>
             </table>
           </div>
-          <div class="space-y-3 text-sm font-black max-w-2xl mx-auto">
-            <div class="bg-amber-50/70 p-3.5 rounded-2xl border border-amber-200">28) ما إجمالي عدد تلاميذ الصف الأول الابتدائي؟ ← <span class="text-amber-800">(اكتب الإجابة في خانة المجموع بالجدول)</span></div>
-            <div class="bg-amber-50/70 p-3.5 rounded-2xl border border-amber-200">29) ما إجمالي عدد التلاميذ التي تعتبر البرتقال فاكهة مفضلة؟ ← <span class="text-amber-800">(اكتب الإجابة في خانة المجموع بالجدول)</span></div>
-            <div class="bg-amber-50/70 p-3.5 rounded-2xl border border-amber-200 flex items-center justify-between">
+          <div class="space-y-3 text-sm md:text-base font-bold bg-amber-50/60 p-4 rounded-2xl border border-amber-200">
+            <div>28) ما إجمالي عدد تلاميذ الصف الأول الابتدائي؟ <span class="text-amber-800 font-black">(اكتب الناتج في خانة المجموع أسفل الأول الابتدائي بالجدول)</span></div>
+            <div>29) ما إجمالي عدد التلاميذ التي تعتبر البرتقال فاكهة مفضلة؟ <span class="text-amber-800 font-black">(اكتب الناتج في خانة المجموع أمام البرتقال بالجدول)</span></div>
+            <div class="flex flex-wrap items-center gap-2">
               <span>30) ما الفرق بين عدد تلاميذ الصف الثالث (28) والثاني الابتدائي (31)؟</span>
               <input type="number" id="q30-ans" placeholder="؟" class="w-20 py-1.5 border-2 border-amber-300 rounded-xl bg-white">
             </div>
-            <button onclick="checkFruit()" class="squishy-btn w-full mt-2 bg-amber-200 hover:bg-amber-300 text-amber-950 border-2 border-amber-300 font-black py-3 rounded-2xl">تحقق من الأسئلة (28 - 30) 🎯</button>
           </div>
+          <button onclick="checkFruit()" class="squishy-btn w-full mt-4 bg-amber-200 hover:bg-amber-300 text-amber-950 border-2 border-amber-300 font-black py-2.5 rounded-2xl">تحقق من الأسئلة (28 - 30) 🎯</button>
           <div id="fb-fruit" class="mt-3 text-sm font-black text-center hidden"></div>
         </div>
       </section>
 
-      <!-- ==================== العالم 3: قلعة الحساب الذهني والقسمة (31 - 45) ==================== -->
-      <section id="sec3" class="hidden space-y-6 animate-pop-in">
-        <div class="bg-emerald-100/80 border-3 border-emerald-200 rounded-3xl p-5 flex items-center gap-4 shadow-xs">
-          <span class="text-4xl bg-white p-2.5 rounded-2xl">🏰</span>
+      <!-- ==================== القسم 3: الحساب الذهني والقسمة والباقي (31 - 45) ==================== -->
+      <section id="sec3" class="hidden space-y-5 animate-pop-in">
+        <div class="bg-emerald-100/80 border-2 border-emerald-200 rounded-3xl p-4 flex items-center gap-3.5">
+          <span class="text-3xl bg-white p-2.5 rounded-2xl border border-emerald-200">🧠</span>
           <div>
-            <h2 class="text-xl font-black text-emerald-950">3. قلعة الحساب الذهني والقسمة (الأسئلة 31 إلى 45)</h2>
-            <p class="text-xs md:text-sm font-bold text-emerald-800 mt-0.5">قاعدة ذهبية: المقسوم = (المقسوم عليه × خارج القسمة) + الباقي</p>
+            <h2 class="text-lg md:text-xl font-black text-emerald-950">ثالثاً: الحساب الذهني والقسمة مع باقٍ (31 - 45)</h2>
+            <p class="text-xs md:text-sm font-bold text-emerald-800">تذكر: المقسوم = (المقسوم عليه × خارج القسمة) + الباقي</p>
           </div>
         </div>
 
-        <div class="bg-emerald-50/90 border-2 border-emerald-200 rounded-2xl px-4 py-2.5 font-black text-emerald-950">
-          ⚡ أوجد باستخدام الحساب الذهني (الأسئلة 31 إلى 36):
-        </div>
-        <div class="space-y-4" id="mental-math-container"></div>
-
-        <div class="bg-teal-50/90 border-2 border-teal-200 rounded-2xl px-4 py-2.5 font-black text-teal-950 mt-6">
-          ➗ احسب خارج القسمة والباقي (الأسئلة 35 إلى 39):
-        </div>
-        <div class="space-y-4" id="division-rem-container"></div>
-
-        <div class="bg-indigo-50/90 border-2 border-indigo-200 rounded-2xl px-4 py-2.5 font-black text-indigo-950 mt-6">
-          🕵️‍♂️ ألغاز القسمة والباقي (الأسئلة 40 إلى 45):
-        </div>
-        <div class="space-y-4" id="division-puzzles-container"></div>
+        <div id="mental-math-container" class="space-y-5"></div>
+        <div id="division-rem-container" class="space-y-5"></div>
+        <div id="division-puzzles-container" class="space-y-5"></div>
       </section>
 
-      <!-- ==================== العالم 4: مغامرة المسائل الكلامية (46 - 60) ==================== -->
-      <section id="sec4" class="hidden space-y-6 animate-pop-in">
-        <div class="bg-pink-100/80 border-3 border-pink-200 rounded-3xl p-5 flex items-center gap-4 shadow-xs">
-          <span class="text-4xl bg-white p-2.5 rounded-2xl">🚀</span>
+      <!-- ==================== القسم 4: المسائل الكلامية (46 - 60) ==================== -->
+      <section id="sec4" class="hidden space-y-5 animate-pop-in">
+        <div class="bg-pink-100/80 border-2 border-pink-200 rounded-3xl p-4 flex items-center gap-3.5">
+          <span class="text-3xl bg-white p-2.5 rounded-2xl border border-pink-200">📝</span>
           <div>
-            <h2 class="text-xl font-black text-pink-950">4. مغامرة المسائل الكلامية (الأسئلة 46 إلى 60)</h2>
-            <p class="text-xs md:text-sm font-bold text-pink-800 mt-0.5">انتبه يا بطل! عندما نضع الكرات في صناديق، نضيف صندوقاً إضافياً للباقي حتى لا تبقى كرة خارج الصندوق!</p>
+            <h2 class="text-lg md:text-xl font-black text-pink-950">رابعاً: المسائل الكلامية على القسمة والباقي (46 - 60)</h2>
+            <p class="text-xs md:text-sm font-bold text-pink-800">اقرأ كل مسألة بتركيز واكتب العملية الحسابية والإجابة الصحيحة في الخانات المخصصة.</p>
           </div>
         </div>
 
-        <div class="space-y-5" id="word-problems-container"></div>
+        <div id="word-problems-container" class="space-y-5"></div>
+      </section>
+
+      <!-- ==================== القسم 5: الأسئلة الإضافية ==================== -->
+      <section id="sec5" class="hidden space-y-5 animate-pop-in">
+        <div class="bg-amber-100/80 border-2 border-amber-200 rounded-3xl p-4 flex items-center gap-3.5">
+          <span class="text-3xl bg-white p-2.5 rounded-2xl border border-amber-200">🌟</span>
+          <div>
+            <h2 class="text-lg md:text-xl font-black text-amber-950">خامساً: الأسئلة الإضافية (المجموعات والأداء المنزلي والتقييم)</h2>
+            <p class="text-xs md:text-sm font-bold text-amber-800">تحدٍ إضافي رائع في الأطوال والخرائط والقسمة والباقي وجداول الفصول!</p>
+          </div>
+        </div>
+
+        <div id="extra-questions-container" class="space-y-5"></div>
       </section>
 
     </main>
   </div>
 
   <!-- نافذة الأوسمة التفاعلية -->
-  <div id="badgesModal" class="hidden fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-md w-full p-6 border-4 border-amber-200 shadow-2xl animate-pop-in text-center">
-      <div class="text-5xl mb-2">🏆</div>
-      <h3 class="text-2xl font-black text-slate-800 mb-1">خزانة أوسمة الأبطال</h3>
-      <p class="text-xs font-bold text-slate-500 mb-4">أكمل كل عالم من العوالم الأربعة لفتح وسامه الذهبي!</p>
+  <div id="badgesModal" class="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs hidden flex items-center justify-center p-4">
+    <div class="magic-card max-w-md w-full p-6 text-center animate-pop-in bg-white">
+      <div class="text-4xl mb-2">🏆</div>
+      <h3 class="text-xl font-black text-sky-950 mb-1">خزانة أوسمة البطل</h3>
+      <p class="text-xs font-bold text-slate-500 mb-4">أكمل جميع أسئلة أي قسم لفتح وسامه السحري!</p>
       <div id="badgesList" class="grid grid-cols-2 gap-3 mb-5"></div>
-      <button onclick="closeBadgesModal()" class="squishy-btn w-full bg-amber-200 hover:bg-amber-300 text-amber-950 border-2 border-amber-300 font-black py-2.5 rounded-2xl">متابعة المغامرة 🚀</button>
+      <button onclick="closeBadgesModal()" class="squishy-btn w-full bg-sky-200 hover:bg-sky-300 text-sky-950 border-2 border-sky-300 font-black py-2.5 rounded-2xl">متابعة المغامرة 🚀</button>
     </div>
   </div>
 
   <script>
-    function checkQ12() {
-      const a = Number(document.getElementById('q12-a').value);
-      const b = Number(document.getElementById('q12-b').value);
-      const c = Number(document.getElementById('q12-c').value);
-      const d = Number(document.getElementById('q12-d').value);
-      const e = Number(document.getElementById('q12-e').value);
-      if (a === 14 && b === 7 && c === 5 && d === 2 && e === 28) {
-        showSuccessFb('fb-q12', 'ممتاز! (أ)=14، (ب)=7، (ج)=5، (د)=2، والمجموع الكلي (هـ)=28.');
-        markSolved(['q12']);
-      } else {
-        markWrong('card-q12', 'fb-q12', 'عدّ الحزم (كل حزمة = 5): السيارة 14، الدراجة 7، الحافلة 5، الشاحنة 2، المجموع 28.');
-      }
-    }
+    // ==================== نظام الصوت والنجوم ====================
+    let soundEnabled = true;
+    const solvedSet = new Set();
+    const TOTAL_QUESTIONS = 95;
 
-    function checkQ13() {
-      const q13 = document.getElementById('q13-ans').value;
-      if (q13 === 'سيارة خاصة') {
-        showSuccessFb('fb-q13', 'رائع! السيارة الخاصة هي الأكثر مروراً (14 سيارة).');
-        markSolved(['q13']);
-      } else {
-        markWrong('card-q13', 'fb-q13', 'انظر إلى أكبر عدد في الجدول السابق (14) لتعرف المركبة الأكثر مروراً!');
-      }
-    }
+    const worldGroups = {
+      sec1: ['q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7', 'q8', 'q9', 'q10', 'q11'],
+      sec2: ['q12', 'q13', 'q14', 'q15', 'q16', 'q17', 'q18', 'q19', 'q20', 'q21', 'q22', 'q23', 'q24', 'q25', 'q26', 'q27', 'q28', 'q29', 'q30'],
+      sec3: ['q31', 'q32', 'q33', 'q34', 'q35m', 'q36m', 'q35d', 'q36d', 'q37d', 'q38d', 'q39d', 'q40', 'q41', 'q42', 'q43', 'q44', 'q45'],
+      sec4: ['q46', 'q47', 'q48', 'q49', 'q50', 'q51', 'q52', 'q53', 'q54', 'q55', 'q56', 'q57', 'q58', 'q59', 'q60'],
+      sec5: ['ex_a3', 'ex_a4', 'ex_a5', 'ex_a6', 'ex_b1', 'ex_b2', 'ex_b3', 'ex_b4', 'ex_b5', 'ex_b6', 'ex_c1', 'ex_c2', 'ex_c3', 'ex_c4', 'ex_c5', 'ex_c6', 'ex_hw1', 'ex_hw2', 'ex_hw3', 'ex_hw4', 'ex_hw5', 'ex_ev_f1', 'ex_ev_f2', 'ex_ev_f3', 'ex_ev_f4', 'ex_ev_f5', 'ex_ev_g1', 'ex_ev_g2', 'ex_ev_g3', 'ex_ev_g4', 'ex_ev_g5', 'ex_ev_h1', 'ex_ev_h2', 'ex_ev_i1', 'ex_ev_i2', 'ex_ev_j3', 'ex_ev_j4', 'ex_ev_j5']
+    };
 
-    const conversionsTopData = [
-      { id: 'q2', label: '2) 3 كم =', unit: 'م', ans: 3000, hint: '3 × 1000 = 3000 م' },
-      { id: 'q3', label: '3) 2 كم و 400 م =', unit: 'م', ans: 2400, hint: '2000 + 400 = 2400 م' },
-      { id: 'q4', label: '4) 640 م =', unit: 'م', ans: 640, hint: '640 م' },
-      { id: 'q5', label: '5) 5,000 م =', unit: 'كم', ans: 5, hint: '5000 ÷ 1000 = 5 كم' }
-    ];
-
-    const conversionsBottomData = [
-      { id: 'q7', label: '7) 1,010 م = 1 كم و', unit: 'م', ans: 10, hint: '1010 م = 1000 م (1 كم) و 10 م' },
-      { id: 'q8', label: '8) قيست المسافة بين السبورة وآخر الفصل وكانت 6', unit: 'م (اكتب 6)', ans: 6, hint: 'تُقاس بالمتر = 6 م' },
-      { id: 'q9', label: '9) 4 كم و 780 م =', unit: 'م', ans: 4780, hint: '4000 + 780 = 4780 م' }
-    ];
-
-    function renderConversionCard(item) {
-      return `
-        <div class="magic-card p-5 w-full flex flex-wrap items-center justify-between gap-3" id="card-${item.id}">
-          <div class="flex items-center gap-3">
-            <span class="bg-sky-100 text-sky-900 border border-sky-200 font-black px-3 py-1 rounded-xl text-xs">سؤال (${item.id.replace('q','')})</span>
-            <span class="font-black text-base md:text-lg text-slate-800">${item.label}</span>
-          </div>
-          <div class="flex items-center gap-2.5">
-            <input type="number" id="ans-${item.id}" placeholder="؟" class="w-28 py-2 rounded-2xl border-2 border-sky-300 bg-sky-50/40 text-lg">
-            <span class="font-black text-sm text-slate-600">${item.unit}</span>
-            <button onclick="checkSingle('${item.id}', ${item.ans}, 'صحيح! ${item.hint}')" class="squishy-btn bg-sky-200 hover:bg-sky-300 text-sky-950 border-2 border-sky-300 font-black px-5 py-2 rounded-2xl text-sm">تحقق 🎯</button>
-            <span id="badge-${item.id}" class="text-xl">⬜</span>
-          </div>
-          <div id="fb-${item.id}" class="w-full text-xs font-black text-center hidden"></div>
-        </div>
-      `;
-    }
-
-    function renderConversions() {
-      document.getElementById('conversions-top-container').innerHTML = conversionsTopData.map(renderConversionCard).join('');
-      document.getElementById('conversions-bottom-container').innerHTML = conversionsBottomData.map(renderConversionCard).join('');
+    function toggleSound() {
+      soundEnabled = !soundEnabled;
+      document.getElementById('soundBtn').textContent = soundEnabled ? '🔊' : '🔇';
     }
 
     function playTone(type) {
       if (!soundEnabled) return;
       try {
-        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        const ctx = new AudioCtx();
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
         osc.connect(gain);
         gain.connect(ctx.destination);
+
         if (type === 'win') {
           osc.type = 'triangle';
           osc.frequency.setValueAtTime(523.25, ctx.currentTime);
-          osc.frequency.setValueAtTime(659.25, ctx.currentTime + 0.09);
-          osc.frequency.setValueAtTime(783.99, ctx.currentTime + 0.18);
-          osc.frequency.setValueAtTime(1046.5, ctx.currentTime + 0.27);
-          gain.gain.setValueAtTime(0.22, ctx.currentTime);
-          gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.5);
+          osc.frequency.setValueAtTime(659.25, ctx.currentTime + 0.1);
+          osc.frequency.setValueAtTime(783.99, ctx.currentTime + 0.2);
+          gain.gain.setValueAtTime(0.18, ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.42);
           osc.start();
-          osc.stop(ctx.currentTime + 0.5);
+          osc.stop(ctx.currentTime + 0.42);
         } else {
           osc.type = 'sawtooth';
-          osc.frequency.setValueAtTime(195, ctx.currentTime);
-          osc.frequency.linearRampToValueAtTime(130, ctx.currentTime + 0.28);
-          gain.gain.setValueAtTime(0.15, ctx.currentTime);
-          gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.28);
+          osc.frequency.setValueAtTime(210, ctx.currentTime);
+          osc.frequency.linearRampToValueAtTime(145, ctx.currentTime + 0.22);
+          gain.gain.setValueAtTime(0.12, ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.22);
           osc.start();
-          osc.stop(ctx.currentTime + 0.28);
+          osc.stop(ctx.currentTime + 0.22);
         }
-      } catch (e) {}
+      } catch (e) {
+        // تجاهل خطأ الصوت إن لم يكن مدعوماً
+      }
     }
 
     const cheers = [
-      "عبقري يا بطل! إجابة رائعة ومذهلة 🌟",
-      "ممتاز! كابتن ماث فخور جداً بذكائك 🦁🚀",
-      "رائع! نجمة جديدة تضاف إلى رصيدك الذهبي ⭐",
-      "برافو عليك! إجابة صحيحة 100% 🎉"
-    ];
-    const encourages = [
-      "حاول مرة أخرى يا بطل! اضغط على (طريقة الحل 💡) لتساعدك 💪",
-      "قريب جداً! راجع الأرقام وجرب ثانية 🔍",
-      "لا بأس، الأبطال يتعلمون بالمحاولة! هيا جرب مرة أخرى ✨"
+      "أحسنت يا عبقري! إجابة صحيحة وممتازة 🌟",
+      "ممتاز جداً! خطوة رائعة نحو القمة 🚀",
+      "برافو عليك! تفكير ذكي وسريع 🎉",
+      "رائع! واصل جمع النجوم والأوسمة 🏆"
     ];
 
-    const worldGroups = {
-      sec1: ['q1','q2','q3','q4','q5','q6','q7','q8','q9','q10','q11'],
-      sec2: ['q12','q13','q14','q15','q16','q17','q18','q19','q20','q21','q22','q23','q24','q25','q26','q27','q28','q29','q30'],
-      sec3: ['q31','q32','q33','q34','q35m','q36m','q35d','q36d','q37d','q38d','q39d','q40','q41','q42','q43','q44','q45'],
-      sec4: ['q46','q47','q48','q49','q50','q51','q52','q53','q54','q55','q56','q57','q58','q59','q60']
-    };
+    const encourages = [
+      "حاول مرة أخرى يا بطل! ركز في الأرقام وستنجح 💪",
+      "قريب جداً! راجع العملية الحسابية وجرب ثانية 🔍",
+      "لا تقلق، كل محاولة تقربك من الإجابة الصحيحة ✨"
+    ];
 
     function updateCounters() {
-      // تطبيع الإجمالي إلى 60 سؤالاً
-      const rawCount = solvedSet.size;
-      const displayScore = Math.min(60, rawCount);
+      const displayScore = Math.min(TOTAL_QUESTIONS, solvedSet.size);
       document.getElementById('scoreDisplay').textContent = displayScore;
+      document.getElementById('totalQuestionsDisplay').textContent = TOTAL_QUESTIONS;
       document.getElementById('progressBar').style.width = `${Math.min(100, (displayScore / TOTAL_QUESTIONS) * 100)}%`;
 
-      // تحديث تقدم كل عالم
       const s1 = worldGroups.sec1.filter(id => solvedSet.has(id)).length;
       const s2 = worldGroups.sec2.filter(id => solvedSet.has(id)).length;
       const s3 = Math.min(15, worldGroups.sec3.filter(id => solvedSet.has(id)).length);
       const s4 = worldGroups.sec4.filter(id => solvedSet.has(id)).length;
+      const s5 = Math.min(35, worldGroups.sec5.filter(id => solvedSet.has(id)).length);
 
       document.getElementById('prog-sec1').textContent = `${s1} / 11`;
       document.getElementById('prog-sec2').textContent = `${s2} / 19`;
       document.getElementById('prog-sec3').textContent = `${s3} / 15`;
       document.getElementById('prog-sec4').textContent = `${s4} / 15`;
+      document.getElementById('prog-sec5').textContent = `${s5} / 35`;
 
       let unlocked = 0;
       if (s1 === 11) unlocked++;
       if (s2 === 19) unlocked++;
       if (s3 === 15) unlocked++;
       if (s4 === 15) unlocked++;
+      if (s5 === 35) unlocked++;
       document.getElementById('badgeCount').textContent = unlocked;
     }
 
@@ -936,16 +802,16 @@
           newlyAdded = true;
         }
         const badge = document.getElementById(`badge-${id}`);
-        if (badge) badge.textContent = '⭐';
-        const card = document.getElementById(`card-${id}`);
-        if (card) card.classList.add('solved-card');
+        if (badge) badge.textContent = '✅';
       });
+
       updateCounters();
       playTone('win');
       document.getElementById('mascotAvatar').textContent = '🥳';
       document.getElementById('mascotMsg').textContent = cheers[Math.floor(Math.random() * cheers.length)];
-      if (newlyAdded) {
-        confetti({ particleCount: 55, spread: 70, origin: { y: 0.7 } });
+
+      if (newlyAdded && typeof confetti === 'function') {
+        confetti({ particleCount: 40, spread: 55, origin: { y: 0.72 } });
       }
     }
 
@@ -953,14 +819,14 @@
       playTone('lose');
       const card = document.getElementById(cardId);
       if (card) {
-        card.classList.remove('shake-card');
+        card.classList.remove('animate-shake');
         void card.offsetWidth;
-        card.classList.add('shake-card');
+        card.classList.add('animate-shake');
       }
       const fb = document.getElementById(fbId);
       if (fb) {
         fb.classList.remove('hidden', 'text-emerald-800', 'bg-emerald-100');
-        fb.classList.add('text-rose-800', 'bg-rose-100', 'p-2.5', 'rounded-2xl', 'border', 'border-rose-300');
+        fb.classList.add('text-rose-800', 'bg-rose-100', 'p-2.5', 'rounded-2xl', 'border', 'border-rose-200');
         fb.textContent = msg;
       }
       document.getElementById('mascotAvatar').textContent = '🤔';
@@ -970,15 +836,30 @@
     function showSuccessFb(fbId, msg) {
       const fb = document.getElementById(fbId);
       if (fb) {
-        fb.classList.remove('hidden', 'text-rose-800', 'bg-rose-100', 'border-rose-300');
-        fb.classList.add('text-emerald-900', 'bg-emerald-100', 'p-2.5', 'rounded-2xl', 'border', 'border-emerald-300');
+        fb.classList.remove('hidden', 'text-rose-800', 'bg-rose-100', 'border-rose-200');
+        fb.classList.add('text-emerald-900', 'bg-emerald-100', 'p-2.5', 'rounded-2xl', 'border', 'border-emerald-200');
         fb.textContent = msg;
       }
     }
 
-    function toggleHint(id) {
-      const el = document.getElementById(id);
-      if (el) el.classList.toggle('hidden');
+    // ==================== التنقل والأوسمة ====================
+    function switchSection(secId) {
+      ['sec1', 'sec2', 'sec3', 'sec4', 'sec5'].forEach(id => {
+        const sec = document.getElementById(id);
+        const tab = document.getElementById(`tab-${id}`);
+        if (sec) sec.classList.add('hidden');
+        if (tab) {
+          tab.classList.remove('world-active');
+          tab.classList.add('opacity-90');
+        }
+      });
+      const targetSec = document.getElementById(secId);
+      const targetTab = document.getElementById(`tab-${secId}`);
+      if (targetSec) targetSec.classList.remove('hidden');
+      if (targetTab) {
+        targetTab.classList.add('world-active');
+        targetTab.classList.remove('opacity-90');
+      }
     }
 
     function openBadgesModal() {
@@ -986,20 +867,24 @@
       const s2 = worldGroups.sec2.filter(id => solvedSet.has(id)).length === 19;
       const s3 = worldGroups.sec3.filter(id => solvedSet.has(id)).length >= 15;
       const s4 = worldGroups.sec4.filter(id => solvedSet.has(id)).length === 15;
+      const s5 = worldGroups.sec5.filter(id => solvedSet.has(id)).length >= 35;
 
       const list = [
-        { name: 'بطل القياس والخريطة', icon: '🏝️', done: s1 },
+        { name: 'بطل القياس والخريطة', icon: '📏', done: s1 },
         { name: 'خبير الرسوم والجداول', icon: '📊', done: s2 },
-        { name: 'فارس الحساب والقسمة', icon: '🏰', done: s3 },
-        { name: 'عبقري المسائل الكلامية', icon: '🚀', done: s4 }
+        { name: 'فارس الحساب والقسمة', icon: '🧠', done: s3 },
+        { name: 'عبقري المسائل الكلامية', icon: '📝', done: s4 },
+        { name: 'نجم الأسئلة الإضافية', icon: '🌟', done: s5 }
       ];
+
       document.getElementById('badgesList').innerHTML = list.map(b => `
-        <div class="p-3 rounded-2xl border-2 ${b.done ? 'bg-amber-50 border-amber-400 text-amber-950' : 'bg-slate-100 border-slate-200 text-slate-400 grayscale'}">
+        <div class="p-3 rounded-2xl border-2 ${b.done ? 'bg-amber-50 border-amber-300 text-amber-950' : 'bg-slate-50 border-slate-200 text-slate-400 grayscale'}">
           <div class="text-3xl mb-1">${b.icon}</div>
           <div class="text-xs font-black">${b.name}</div>
           <div class="text-[10px] font-bold mt-1">${b.done ? 'مفتوح ✅' : 'مقفل 🔒'}</div>
         </div>
       `).join('');
+
       document.getElementById('badgesModal').classList.remove('hidden');
     }
 
@@ -1007,94 +892,103 @@
       document.getElementById('badgesModal').classList.add('hidden');
     }
 
-    // ==================== التنقل بين العوالم ====================
-    function switchSection(secId) {
-      ['sec1', 'sec2', 'sec3', 'sec4'].forEach(id => {
-        document.getElementById(id).classList.add('hidden');
-        const tab = document.getElementById(`tab-${id}`);
-        tab.classList.remove('world-active');
-        tab.classList.add('opacity-85');
-      });
-      document.getElementById(secId).classList.remove('hidden');
-      const activeTab = document.getElementById(`tab-${secId}`);
-      activeTab.classList.add('world-active');
-      activeTab.classList.remove('opacity-85');
-    }
-
     // ==================== رسم المساطر والشبكات ====================
     function buildRulers() {
       const g1 = document.getElementById('ruler1-ticks');
-      for (let i = 0; i <= 40; i++) {
-        const x = 22 + i * 7.4;
-        const val = 80 + i;
-        const isTen = val % 10 === 0;
-        const isFive = val % 5 === 0;
-        const h = isTen ? 22 : (isFive ? 15 : 9);
-        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-        line.setAttribute('x1', x); line.setAttribute('y1', 30);
-        line.setAttribute('x2', x); line.setAttribute('y2', 30 + h);
-        line.setAttribute('stroke-width', isTen ? '2' : '1');
-        g1.appendChild(line);
-        if (isTen) {
-          const txt = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-          txt.setAttribute('x', x); txt.setAttribute('y', 72);
-          txt.setAttribute('font-size', '12'); txt.setAttribute('font-weight', 'bold');
-          txt.setAttribute('text-anchor', 'middle');
-          txt.textContent = val === 100 ? '100 مم' : val;
-          g1.appendChild(txt);
+      if (g1) {
+        g1.innerHTML = '';
+        for (let i = 0; i <= 40; i++) {
+          const x = 22 + i * 7.4;
+          const val = 80 + i;
+          const isTen = val % 10 === 0;
+          const isFive = val % 5 === 0;
+          const h = isTen ? 22 : (isFive ? 15 : 9);
+          const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+          line.setAttribute('x1', x);
+          line.setAttribute('y1', 30);
+          line.setAttribute('x2', x);
+          line.setAttribute('y2', 30 + h);
+          line.setAttribute('stroke-width', isTen ? '2' : '1');
+          g1.appendChild(line);
+
+          if (isTen) {
+            const txt = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            txt.setAttribute('x', x);
+            txt.setAttribute('y', 72);
+            txt.setAttribute('font-size', '12');
+            txt.setAttribute('font-weight', 'bold');
+            txt.setAttribute('text-anchor', 'middle');
+            txt.textContent = val === 100 ? '100 مم' : val;
+            g1.appendChild(txt);
+          }
         }
       }
 
       const g2 = document.getElementById('ruler2-ticks');
-      for (let i = 0; i <= 30; i++) {
-        const x = 22 + i * 9.5;
-        const isTen = i % 10 === 0;
-        const isFive = i % 5 === 0;
-        const h = isTen ? 22 : (isFive ? 15 : 9);
-        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-        line.setAttribute('x1', x); line.setAttribute('y1', 30);
-        line.setAttribute('x2', x); line.setAttribute('y2', 30 + h);
-        line.setAttribute('stroke-width', isTen ? '2' : '1');
-        g2.appendChild(line);
-        if (isTen) {
-          const txt = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-          txt.setAttribute('x', x); txt.setAttribute('y', 72);
-          txt.setAttribute('font-size', '12'); txt.setAttribute('font-weight', 'bold');
-          txt.setAttribute('text-anchor', 'middle');
-          txt.textContent = i === 0 ? '0 مم' : i;
-          g2.appendChild(txt);
+      if (g2) {
+        g2.innerHTML = '';
+        for (let i = 0; i <= 30; i++) {
+          const x = 22 + i * 9.5;
+          const isTen = i % 10 === 0;
+          const isFive = i % 5 === 0;
+          const h = isTen ? 22 : (isFive ? 15 : 9);
+          const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+          line.setAttribute('x1', x);
+          line.setAttribute('y1', 30);
+          line.setAttribute('x2', x);
+          line.setAttribute('y2', 30 + h);
+          line.setAttribute('stroke-width', isTen ? '2' : '1');
+          g2.appendChild(line);
+
+          if (isTen) {
+            const txt = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            txt.setAttribute('x', x);
+            txt.setAttribute('y', 72);
+            txt.setAttribute('font-size', '12');
+            txt.setAttribute('font-weight', 'bold');
+            txt.setAttribute('text-anchor', 'middle');
+            txt.textContent = i === 0 ? '0 مم' : i;
+            g2.appendChild(txt);
+          }
         }
       }
 
       const sg = document.getElementById('sport-grid');
-      for (let i = 0; i <= 10; i++) {
-        const y = 190 - i * 18;
-        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-        line.setAttribute('x1', 45); line.setAttribute('y1', y);
-        line.setAttribute('x2', 300); line.setAttribute('y2', y);
-        line.setAttribute('stroke', i === 0 ? '#334155' : '#cbd5e1');
-        line.setAttribute('stroke-width', i === 0 ? '2' : '1');
-        sg.appendChild(line);
-        if (i % 2 === 0 || i === 5 || i === 10) {
-          const t = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-          t.setAttribute('x', 35); t.setAttribute('y', y + 4);
-          t.setAttribute('font-size', '11'); t.setAttribute('font-weight', 'bold');
-          t.setAttribute('text-anchor', 'end');
-          t.textContent = i;
-          sg.appendChild(t);
+      if (sg) {
+        sg.innerHTML = '';
+        for (let i = 0; i <= 10; i++) {
+          const y = 190 - i * 18;
+          const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+          line.setAttribute('x1', 45);
+          line.setAttribute('y1', y);
+          line.setAttribute('x2', 300);
+          line.setAttribute('y2', y);
+          line.setAttribute('stroke', i === 0 ? '#334155' : '#cbd5e1');
+          line.setAttribute('stroke-width', i === 0 ? '2' : '1');
+          sg.appendChild(line);
+
+          if (i % 2 === 0 || i === 5 || i === 10) {
+            const t = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            t.setAttribute('x', 35);
+            t.setAttribute('y', y + 4);
+            t.setAttribute('font-size', '11');
+            t.setAttribute('font-weight', 'bold');
+            t.setAttribute('text-anchor', 'end');
+            t.textContent = i;
+            sg.appendChild(t);
+          }
         }
       }
     }
 
-    // ==================== تحققات العالم 1 ====================
+    // ==================== دوال التحقق العامة ====================
     function checkSingle(qId, expected, hint) {
       const raw = document.getElementById(`ans-${qId}`).value;
       if (raw === '') {
-        markWrong(`card-${qId}`, `fb-${qId}`, 'اكتب إجابتك في المربع أولاً يا بطل!');
+        markWrong(`card-${qId}`, `fb-${qId}`, 'اكتب إجابتك أولاً يا بطل!');
         return;
       }
-      const val = Number(raw);
-      if (val === expected) {
+      if (Number(raw) === expected) {
         showSuccessFb(`fb-${qId}`, hint);
         markSolved([qId]);
       } else {
@@ -1102,59 +996,94 @@
       }
     }
 
-    function checkQ6() {
-      const cm = Number(document.getElementById('ans-q6-cm').value);
-      const mm = Number(document.getElementById('ans-q6-mm').value);
-      const tot = Number(document.getElementById('ans-q6-tot').value);
-      if (cm === 1 && mm === 6 && tot === 16) {
-        showSuccessFb('fb-q6', 'ممتاز! 1 سم و 6 مم = 16 مم.');
-        markSolved(['q6']);
+    function checkTwo(id, id1, exp1, id2, exp2, hint) {
+      const r1 = document.getElementById(id1).value;
+      const r2 = document.getElementById(id2).value;
+      if (r1 === '' || r2 === '') {
+        markWrong(`card-${id}`, `fb-${id}`, 'املأ الخانتين أولاً يا بطل!');
+        return;
+      }
+      if (Number(r1) === exp1 && Number(r2) === exp2) {
+        showSuccessFb(`fb-${id}`, hint);
+        markSolved([id]);
       } else {
-        markWrong('card-q6', 'fb-q6', 'عدّ الشرطات بعد 10 مم (1 سم): 6 شرطات أي 1 سم و 6 مم = 16 مم.');
+        markWrong(`card-${id}`, `fb-${id}`, `تلميح: ${hint}`);
       }
     }
 
-    const conversionsData = [
+    // ==================== القسم 1 ====================
+    function checkQ6() {
+      const cm = document.getElementById('ans-q6-cm').value;
+      const mm = document.getElementById('ans-q6-mm').value;
+      const tot = document.getElementById('ans-q6-tot').value;
+      if (cm === '' || mm === '' || tot === '') {
+        markWrong('card-q6', 'fb-q6', 'املأ جميع الخانات الثلاث أولاً!');
+        return;
+      }
+      if (Number(cm) === 1 && Number(mm) === 6 && Number(tot) === 16) {
+        showSuccessFb('fb-q6', 'ممتاز! 1 سم و 6 مم = 16 مم.');
+        markSolved(['q6']);
+      } else {
+        markWrong('card-q6', 'fb-q6', 'عدّ الشرطات بعد الـ 10 مم (1 سم): ستجدها 6 شرطات أي 1 سم و 6 مم = 16 مم.');
+      }
+    }
+
+    const topConversions = [
       { id: 'q2', label: '2) 3 كم =', unit: 'م', ans: 3000, hint: '3 × 1000 = 3000 م' },
       { id: 'q3', label: '3) 2 كم و 400 م =', unit: 'م', ans: 2400, hint: '2000 + 400 = 2400 م' },
       { id: 'q4', label: '4) 640 م =', unit: 'م', ans: 640, hint: '640 م' },
-      { id: 'q5', label: '5) 5,000 م =', unit: 'كم', ans: 5, hint: '5000 ÷ 1000 = 5 كم' },
-      { id: 'q7', label: '7) 1,010 م = 1 كم و', unit: 'م', ans: 10, hint: '1010 م = 1000 م (1 كم) و 10 م' },
+      { id: 'q5', label: '5) 5000 م =', unit: 'كم', ans: 5, hint: '5000 ÷ 1000 = 5 كم' }
+    ];
+
+    const bottomConversions = [
+      { id: 'q7', label: '7) 1010 م = 1 كم و', unit: 'م', ans: 10, hint: '1010 م = 1 كم و 10 م' },
       { id: 'q8', label: '8) قيست المسافة بين السبورة وآخر الفصل وكانت 6', unit: 'م (اكتب 6)', ans: 6, hint: 'تُقاس بالمتر = 6 م' },
       { id: 'q9', label: '9) 4 كم و 780 م =', unit: 'م', ans: 4780, hint: '4000 + 780 = 4780 م' }
     ];
 
-    function renderConversions() {
-      const topEl = document.getElementById('conversions-top-container');
-      const bottomEl = document.getElementById('conversions-bottom-container');
-      if (topEl) topEl.innerHTML = conversionsTopData.map(renderConversionCard).join('');
-      if (bottomEl) bottomEl.innerHTML = conversionsBottomData.map(renderConversionCard).join('');
+    function renderConversionList(targetId, items) {
+      const container = document.getElementById(targetId);
+      if (!container) return;
+      container.innerHTML = items.map(item => `
+        <div class="magic-card p-5 w-full" id="card-${item.id}">
+          <div class="flex justify-between items-center mb-3">
+            <span class="bg-sky-100 text-sky-900 border border-sky-200 font-black px-4 py-1 rounded-2xl text-sm">سؤال (${item.id.replace('q', '')})</span>
+            <span id="badge-${item.id}" class="text-2xl">⬜</span>
+          </div>
+          <div class="flex flex-wrap items-center justify-center gap-3 text-lg font-black">
+            <span>${item.label}</span>
+            <input type="number" id="ans-${item.id}" placeholder="؟" class="w-28 py-2 rounded-2xl border-2 border-sky-300 bg-sky-50/40 text-xl">
+            <span class="text-base text-slate-700">${item.unit}</span>
+            <button onclick="checkSingle('${item.id}', ${item.ans}, 'صحيح! ${item.hint}')" class="squishy-btn bg-sky-200 hover:bg-sky-300 text-sky-950 border-2 border-sky-300 font-black px-5 py-2 rounded-2xl text-sm">تحقق 🎯</button>
+          </div>
+          <div id="fb-${item.id}" class="mt-3 text-sm font-black text-center hidden"></div>
+        </div>
+      `).join('');
     }
 
     function checkQ10() {
-      const km = Number(document.getElementById('ans-q10-km').value);
-      const m = Number(document.getElementById('ans-q10-m').value);
-      if (km === 1 && m === 200) {
-        showSuccessFb('fb-q10', 'رائع! 730 + 470 = 1200 م = 1 كم و 200 م.');
-        markSolved(['q10']);
-      } else {
-        markWrong('card-q10', 'fb-q10', 'اجمع 730 + 470 = 1200 م، وتذكر أن 1000 م = 1 كم والباقي 200 م.');
-      }
+      checkTwo('q10', 'ans-q10-km', 1, 'ans-q10-m', 200, 'رائع! 730 + 470 = 1200 م = 1 كم و 200 م.');
     }
 
-    // ==================== تحققات العالم 2 ====================
+    // ==================== القسم 2 ====================
     function checkQ12_13() {
-      const a = Number(document.getElementById('q12-a').value);
-      const b = Number(document.getElementById('q12-b').value);
-      const c = Number(document.getElementById('q12-c').value);
-      const d = Number(document.getElementById('q12-d').value);
-      const e = Number(document.getElementById('q12-e').value);
+      const a = document.getElementById('q12-a').value;
+      const b = document.getElementById('q12-b').value;
+      const c = document.getElementById('q12-c').value;
+      const d = document.getElementById('q12-d').value;
+      const e = document.getElementById('q12-e').value;
       const q13 = document.getElementById('q13-ans').value;
-      if (a === 14 && b === 7 && c === 5 && d === 2 && e === 28 && q13 === 'سيارة خاصة') {
+
+      if (a === '' || b === '' || c === '' || d === '' || e === '' || q13 === '') {
+        markWrong('card-q12', 'fb-q12', 'أكمل جميع خانات الجدول واختر المركبة الأكثر مروراً!');
+        return;
+      }
+
+      if (Number(a) === 14 && Number(b) === 7 && Number(c) === 5 && Number(d) === 2 && Number(e) === 28 && q13 === 'سيارة خاصة') {
         showSuccessFb('fb-q12', 'ممتاز! (أ)=14، (ب)=7، (ج)=5، (د)=2، المجموع (هـ)=28، والأكثر مروراً السيارة الخاصة.');
         markSolved(['q12', 'q13']);
       } else {
-        markWrong('card-q12', 'fb-q12', 'عدّ الحزم (كل حزمة = 5): السيارة 14، الدراجة 7، الحافلة 5، الشاحنة 2، المجموع 28.');
+        markWrong('card-q12', 'fb-q12', 'تأكد من عدّ الحزم (كل حزمة = 5): السيارة 14، الدراجة 7، الحافلة 5، الشاحنة 2، المجموع 28.');
       }
     }
 
@@ -1162,23 +1091,27 @@
       { id: 'q14', text: '14) كم تلميذ يفضل السباحة؟', ans: 9, hint: 'عمود السباحة يصل إلى 9 تلاميذ.' },
       { id: 'q15', text: '15) كم تلميذ يفضل السباحة والسلة معاً؟', ans: 15, hint: '9 + 6 = 15 تلميذاً.' },
       { id: 'q16', text: '16) كم تلميذ اشتركوا في الاستطلاع؟', ans: 26, hint: '9 + 8 + 3 + 6 = 26 تلميذاً.' },
-      { id: 'q17', text: '17) ما الفرق بين السباحة والركض؟', ans: 1, hint: '9 - 8 = 1 تلميذ.' },
-      { id: 'q18', text: '18) بكم يزيد السلة أكثر من تنس الطاولة؟', ans: 3, hint: '6 - 3 = 3 تلاميذ.' }
+      { id: 'q17', text: '17) ما الفرق بين عدد من يفضلون السباحة وعدد من يفضلون الركض؟', ans: 1, hint: '9 - 8 = 1 تلميذ.' },
+      { id: 'q18', text: '18) بكم يزيد عدد الذين يفضلون السلة أكثر من تنس الطاولة؟', ans: 3, hint: '6 - 3 = 3 تلاميذ.' }
     ];
 
     function renderSportQuestions() {
-      document.getElementById('sport-questions-container').innerHTML = sportQuestions.map(q => `
-        <div class="magic-card p-5 w-full flex flex-wrap items-center justify-between gap-3" id="card-${q.id}">
-          <div class="flex items-center gap-3">
-            <span class="bg-purple-100 text-purple-900 border border-purple-200 font-black px-3 py-1 rounded-xl text-xs">سؤال (${q.id.replace('q','')})</span>
-            <span class="font-black text-base md:text-lg text-slate-800">${q.text}</span>
+      const container = document.getElementById('sport-questions-container');
+      if (!container) return;
+      container.innerHTML = sportQuestions.map(q => `
+        <div class="magic-card p-5 w-full" id="card-${q.id}">
+          <div class="flex justify-between items-center mb-3">
+            <span class="bg-purple-100 text-purple-900 border border-purple-200 font-black px-4 py-1 rounded-2xl text-sm">سؤال (${q.id.replace('q', '')})</span>
+            <span id="badge-${q.id}" class="text-2xl">⬜</span>
           </div>
-          <div class="flex items-center gap-2.5">
-            <input type="number" id="ans-${q.id}" placeholder="؟" class="w-24 py-2 rounded-2xl border-2 border-purple-300 bg-purple-50/40 text-lg">
-            <button onclick="checkSingle('${q.id}', ${q.ans}, 'صحيح! ${q.hint}')" class="squishy-btn bg-purple-200 hover:bg-purple-300 text-purple-950 border-2 border-purple-300 font-black px-5 py-2 rounded-2xl text-sm">تحقق 🎯</button>
-            <span id="badge-${q.id}" class="text-xl">⬜</span>
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <span class="font-black text-base md:text-lg">${q.text}</span>
+            <div class="flex items-center gap-2.5">
+              <input type="number" id="ans-${q.id}" placeholder="؟" class="w-20 py-2 rounded-2xl border-2 border-purple-300 bg-purple-50/40 text-xl">
+              <button onclick="checkSingle('${q.id}', ${q.ans}, 'صحيح! ${q.hint}')" class="squishy-btn bg-purple-200 hover:bg-purple-300 text-purple-950 border-2 border-purple-300 font-black px-5 py-2 rounded-2xl text-sm">تحقق 🎯</button>
+            </div>
           </div>
-          <div id="fb-${q.id}" class="w-full text-xs font-black text-center hidden"></div>
+          <div id="fb-${q.id}" class="mt-3 text-sm font-black text-center hidden"></div>
         </div>
       `).join('');
     }
@@ -1191,9 +1124,9 @@
     }
 
     function checkBooksChart() {
-      const step = Number(document.getElementById('q21-step').value);
-      const tot = Number(document.getElementById('q23-tot').value);
-      if (barVals[1] === 6 && barVals[2] === 8 && barVals[3] === 10 && step === 1 && tot === 29) {
+      const step = document.getElementById('q21-step').value;
+      const tot = document.getElementById('q23-tot').value;
+      if (barVals[1] === 6 && barVals[2] === 8 && barVals[3] === 10 && Number(step) === 1 && Number(tot) === 29) {
         showSuccessFb('fb-books', 'رائع! الأعمدة (6، 8، 10، 5) صحيحة، ومقدار القفزة = 1، والمجموع = 29 كتاباً.');
         markSolved(['q19', 'q20', 'q21', 'q22', 'q23']);
       } else {
@@ -1201,31 +1134,31 @@
       }
     }
 
-    const animalBarVals = { 1: 0, 2: 0, 3: 0, 4: 0 };
-    function adjAnimalBar(idx, delta) {
-      animalBarVals[idx] = Math.max(0, Math.min(20, animalBarVals[idx] + delta));
-      document.getElementById(`abar${idx}-val`).textContent = animalBarVals[idx];
-      document.getElementById(`abar${idx}-fill`).style.height = `${animalBarVals[idx] * 5}%`;
-    }
-
     function checkAnimals() {
-      const h = Number(document.getElementById('q24-horse').value);
-      const c = Number(document.getElementById('q24-cat').value);
-      const s = Number(document.getElementById('q26-scale').value);
-      const barsOk = animalBarVals[1] === 18 && animalBarVals[2] === 17 && animalBarVals[3] === 6 && animalBarVals[4] === 15;
-      if (h === 18 && c === 15 && s === 2 && barsOk) {
-        showSuccessFb('fb-animals', 'عبقري! الحصان=18، القطة=15، المقياس=2، وجميع الأعمدة البيانية مرسومة بدقة!');
+      const h = document.getElementById('q24-horse').value;
+      const c = document.getElementById('q24-cat').value;
+      const s = document.getElementById('q26-scale').value;
+      if (h === '' || c === '' || s === '') {
+        markWrong('card-q24', 'fb-animals', 'املأ أعداد الحصان والقطة وقيمة العلامة على المقياس أولاً!');
+        return;
+      }
+      if (Number(h) === 18 && Number(c) === 15 && Number(s) === 2) {
+        showSuccessFb('fb-animals', 'أحسنت! الحصان = 18، القطة = 15، وكل علامة على المقياس = 2.');
         markSolved(['q24', 'q25', 'q26', 'q27']);
       } else {
-        markWrong('card-q24', 'fb-animals', 'تأكد: الحصان=18، القطة=15، المقياس=2، واضبط ارتفاع الأعمدة: حصان 18، كلب 17، دولفين 6، قطة 15.');
+        markWrong('card-q24', 'fb-animals', 'عدّ علامات الحصان (5+5+5+3 = 18) والقطة (5+5+5 = 15)، وقيمة كل علامة = 2.');
       }
     }
 
     function checkFruit() {
-      const q28 = Number(document.getElementById('q28-ans').value);
-      const q29 = Number(document.getElementById('q29-ans').value);
-      const q30 = Number(document.getElementById('q30-ans').value);
-      if (q28 === 22 && q29 === 36 && q30 === 3) {
+      const q28 = document.getElementById('q28-ans').value;
+      const q29 = document.getElementById('q29-ans').value;
+      const q30 = document.getElementById('q30-ans').value;
+      if (q28 === '' || q29 === '' || q30 === '') {
+        markWrong('card-q28', 'fb-fruit', 'املأ الخانات الثلاث للأسئلة (28، 29، 30) أولاً!');
+        return;
+      }
+      if (Number(q28) === 22 && Number(q29) === 36 && Number(q30) === 3) {
         showSuccessFb('fb-fruit', 'ممتاز! الصف الأول = 22، إجمالي البرتقال = 36، والفرق = 31 - 28 = 3.');
         markSolved(['q28', 'q29', 'q30']);
       } else {
@@ -1233,65 +1166,75 @@
       }
     }
 
-    // ==================== تحققات العالم 3 ====================
+    // ==================== القسم 3 ====================
     const mentalData = [
-      { id: 'q31', expr: '31) 49 + 37 =', ans: 86, hint: '49 + 37 = 86' },
-      { id: 'q32', expr: '32) 20 + 19 =', ans: 39, hint: '20 + 19 = 39' },
-      { id: 'q33', expr: '33) 33 + 47 =', ans: 80, hint: '33 + 47 = 80' },
-      { id: 'q34', expr: '34) 49 - 23 =', ans: 26, hint: '49 - 23 = 26' },
-      { id: 'q35m', expr: '35) 20 - 8 =', ans: 12, hint: '20 - 8 = 12' },
-      { id: 'q36m', expr: '36) 67 - 49 =', ans: 18, hint: '67 - 49 = 18' }
+      { id: 'q31', num: '31', expr: '49 + 37 =', ans: 86, hint: '49 + 37 = 86' },
+      { id: 'q32', num: '32', expr: '20 + 19 =', ans: 39, hint: '20 + 19 = 39' },
+      { id: 'q33', num: '33', expr: '33 + 47 =', ans: 80, hint: '33 + 47 = 80' },
+      { id: 'q34', num: '34', expr: '49 - 23 =', ans: 26, hint: '49 - 23 = 26' },
+      { id: 'q35m', num: '35', expr: '20 - 8 =', ans: 12, hint: '20 - 8 = 12' },
+      { id: 'q36m', num: '36', expr: '67 - 49 =', ans: 18, hint: '67 - 49 = 18' }
     ];
 
     function renderMentalMath() {
-      document.getElementById('mental-math-container').innerHTML = mentalData.map(m => `
-        <div class="magic-card p-5 w-full flex flex-wrap items-center justify-between gap-3" id="card-${m.id}">
-          <div class="flex items-center gap-3">
-            <span class="bg-emerald-100 text-emerald-900 border border-emerald-200 font-black px-3 py-1 rounded-xl text-xs">حساب ذهني</span>
-            <span class="font-black text-lg md:text-xl text-emerald-950" dir="ltr">${m.expr}</span>
+      const container = document.getElementById('mental-math-container');
+      if (!container) return;
+      container.innerHTML = mentalData.map(m => `
+        <div class="magic-card p-5 w-full" id="card-${m.id}">
+          <div class="flex justify-between items-center mb-3">
+            <span class="bg-emerald-100 text-emerald-900 border border-emerald-200 font-black px-4 py-1 rounded-2xl text-sm">حساب ذهني - سؤال (${m.num})</span>
+            <span id="badge-${m.id}" class="text-2xl">⬜</span>
           </div>
-          <div class="flex items-center gap-2.5">
-            <input type="number" id="ans-${m.id}" placeholder="؟" class="w-28 py-2 rounded-2xl border-2 border-emerald-300 bg-emerald-50/40 text-lg">
+          <div class="flex flex-wrap items-center justify-center gap-3">
+            <span class="font-black text-xl text-emerald-950" dir="ltr">${m.expr}</span>
+            <input type="number" id="ans-${m.id}" placeholder="؟" class="w-24 py-2 rounded-2xl border-2 border-emerald-300 bg-emerald-50/40 text-xl">
             <button onclick="checkSingle('${m.id}', ${m.ans}, 'رائع! ${m.hint}')" class="squishy-btn bg-emerald-200 hover:bg-emerald-300 text-emerald-950 border-2 border-emerald-300 font-black px-5 py-2 rounded-2xl text-sm">تحقق 🎯</button>
-            <span id="badge-${m.id}" class="text-xl">⬜</span>
           </div>
-          <div id="fb-${m.id}" class="w-full text-xs font-black text-center hidden"></div>
+          <div id="fb-${m.id}" class="mt-3 text-sm font-black text-center hidden"></div>
         </div>
       `).join('');
     }
 
     const divRemData = [
-      { id: 'q35d', label: '35) 13 ÷ 4 =', q: 3, r: 1, hint: '3 × 4 = 12 والباقي 1' },
-      { id: 'q36d', label: '36) 62 ÷ 9 =', q: 6, r: 8, hint: '6 × 9 = 54 والباقي 8' },
-      { id: 'q37d', label: '37) 50 ÷ 6 =', q: 8, r: 2, hint: '8 × 6 = 48 والباقي 2' },
-      { id: 'q38d', label: '38) 15 ÷ 7 =', q: 2, r: 1, hint: '2 × 7 = 14 والباقي 1' },
-      { id: 'q39d', label: '39) 28 ÷ 8 =', q: 3, r: 4, hint: '3 × 8 = 24 والباقي 4' }
+      { id: 'q35d', num: '35', label: 'احسب خارج القسمة والباقي: 13 ÷ 4 =', q: 3, r: 1, hint: '3 × 4 = 12 والباقي 1' },
+      { id: 'q36d', num: '36', label: 'احسب خارج القسمة والباقي: 62 ÷ 9 =', q: 6, r: 8, hint: '6 × 9 = 54 والباقي 8' },
+      { id: 'q37d', num: '37', label: 'احسب خارج القسمة والباقي: 50 ÷ 6 =', q: 8, r: 2, hint: '8 × 6 = 48 والباقي 2' },
+      { id: 'q38d', num: '38', label: 'احسب خارج القسمة والباقي: 15 ÷ 7 =', q: 2, r: 1, hint: '2 × 7 = 14 والباقي 1' },
+      { id: 'q39d', num: '39', label: 'احسب خارج القسمة والباقي: 28 ÷ 8 =', q: 3, r: 4, hint: '3 × 8 = 24 والباقي 4' }
     ];
 
     function renderDivRem() {
-      document.getElementById('division-rem-container').innerHTML = divRemData.map(d => `
-        <div class="magic-card p-5 w-full flex flex-wrap items-center justify-between gap-3" id="card-${d.id}">
-          <div class="flex items-center gap-3">
-            <span class="bg-teal-100 text-teal-900 border border-teal-200 font-black px-3 py-1 rounded-xl text-xs">قسمة وباقي</span>
-            <span class="font-black text-lg text-teal-950">${d.label}</span>
+      const container = document.getElementById('division-rem-container');
+      if (!container) return;
+      container.innerHTML = divRemData.map(d => `
+        <div class="magic-card p-5 w-full" id="card-${d.id}">
+          <div class="flex justify-between items-center mb-3">
+            <span class="bg-teal-100 text-teal-900 border border-teal-200 font-black px-4 py-1 rounded-2xl text-sm">سؤال (${d.num})</span>
+            <span id="badge-${d.id}" class="text-2xl">⬜</span>
           </div>
-          <div class="flex flex-wrap items-center gap-2 text-sm font-black">
-            <span>الناتج:</span>
-            <input type="number" id="ans-${d.id}-q" placeholder="؟" class="w-20 py-1.5 rounded-2xl border-2 border-teal-300 bg-teal-50/40 text-lg">
-            <span>والباقي:</span>
-            <input type="number" id="ans-${d.id}-r" placeholder="؟" class="w-20 py-1.5 rounded-2xl border-2 border-teal-300 bg-teal-50/40 text-lg">
-            <button onclick="checkDivRem('${d.id}', ${d.q}, ${d.r}, '${d.hint}')" class="squishy-btn bg-teal-200 hover:bg-teal-300 text-teal-950 border-2 border-teal-300 font-black px-5 py-2 rounded-2xl text-sm">تحقق 🎯</button>
-            <span id="badge-${d.id}" class="text-xl">⬜</span>
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <span class="font-black text-base md:text-lg text-teal-950">${d.label}</span>
+            <div class="flex flex-wrap items-center gap-2 text-sm font-black">
+              <span>الناتج:</span>
+              <input type="number" id="ans-${d.id}-q" placeholder="؟" class="w-16 py-1.5 rounded-2xl border-2 border-teal-300 bg-teal-50/40 text-lg">
+              <span>والباقي:</span>
+              <input type="number" id="ans-${d.id}-r" placeholder="؟" class="w-16 py-1.5 rounded-2xl border-2 border-teal-300 bg-teal-50/40 text-lg">
+              <button onclick="checkDivRem('${d.id}', ${d.q}, ${d.r}, '${d.hint}')" class="squishy-btn bg-teal-200 hover:bg-teal-300 text-teal-950 border-2 border-teal-300 font-black px-5 py-2 rounded-2xl text-sm">تحقق 🎯</button>
+            </div>
           </div>
-          <div id="fb-${d.id}" class="w-full text-xs font-black text-center hidden"></div>
+          <div id="fb-${d.id}" class="mt-3 text-sm font-black text-center hidden"></div>
         </div>
       `).join('');
     }
 
     function checkDivRem(id, expQ, expR, hint) {
-      const q = Number(document.getElementById(`ans-${id}-q`).value);
-      const r = Number(document.getElementById(`ans-${id}-r`).value);
-      if (q === expQ && r === expR) {
+      const rq = document.getElementById(`ans-${id}-q`).value;
+      const rr = document.getElementById(`ans-${id}-r`).value;
+      if (rq === '' || rr === '') {
+        markWrong(`card-${id}`, `fb-${id}`, 'اكتب خارج القسمة والباقي معاً!');
+        return;
+      }
+      if (Number(rq) === expQ && Number(rr) === expR) {
         showSuccessFb(`fb-${id}`, `ممتاز! ${hint}`);
         markSolved([id]);
       } else {
@@ -1300,75 +1243,74 @@
     }
 
     const puzzlesData = [
-      { id: 'q40', text: '40) إذا كان 5 × 7 + 4 = 39 فما قيمة 39 ÷ 5 ؟ (اكتب خارج القسمة، والباقي 4)', ans: 7, hint: 'خارج القسمة = 7 والباقي 4.' },
-      { id: 'q41', text: '41) إذا كان 50 ÷ 6 = 8 والباقي 2 فما قيمة 6 × 8 + 2 ؟', ans: 50, hint: '6 × 8 + 2 = 48 + 2 = 50 (المقسوم).' },
-      { id: 'q42', text: '42) ما العدد الذي إذا قُسم على 7 كان الناتج 5 والباقي 2 ؟', ans: 37, hint: '7 × 5 + 2 = 35 + 2 = 37.' },
-      { id: 'q43', text: '43) ما باقي قسمة عدد فردي ÷ 2 ؟', ans: 1, hint: 'أي عدد فردي عند قسمته على 2 يكون الباقي 1 (والزوجي 0).' },
-      { id: 'q44', text: '44) كم يكون الباقي إذا قسمت 22 على 3 ؟', ans: 1, hint: '22 ÷ 3 = 7 (لأن 3×7=21) والباقي 1.' },
-      { id: 'q45', text: '45) عندما يكون المقسوم عليه 1 فكم يكون الباقي دائماً؟', ans: 0, hint: 'الباقي = 0 لأن أي عدد يقبل القسمة على 1 بدون باقٍ.' }
+      { id: 'q40', num: '40', text: 'إذا كان 5 × 7 + 4 = 39 فما قيمة 39 ÷ 5 ؟ (اكتب خارج القسمة)', ans: 7, hint: 'خارج القسمة = 7 والباقي 4.' },
+      { id: 'q41', num: '41', text: 'إذا كان 50 ÷ 6 = 8 والباقي 2 فما قيمة 6 × 8 + 2 ؟', ans: 50, hint: '6 × 8 + 2 = 48 + 2 = 50.' },
+      { id: 'q42', num: '42', text: 'ما العدد الذي إذا قُسم على 7 كان الناتج 5 والباقي 2 ؟', ans: 37, hint: '7 × 5 + 2 = 35 + 2 = 37.' },
+      { id: 'q43', num: '43', text: 'ما باقي قسمة عدد فردي ÷ 2 ؟', ans: 1, hint: 'أي عدد فردي عند قسمته على 2 يكون الباقي 1.' },
+      { id: 'q44', num: '44', text: 'كم يكون الباقي إذا قسمت 22 على 3 ؟', ans: 1, hint: '22 ÷ 3 = 7 والباقي 1 (لأن 3 × 7 = 21).' },
+      { id: 'q45', num: '45', text: 'عندما يكون المقسوم عليه 1 فكم يكون الباقي؟', ans: 0, hint: 'الباقي = 0 لأن أي عدد يقبل القسمة على 1 بدون باقٍ.' }
     ];
 
     function renderPuzzles() {
-      document.getElementById('division-puzzles-container').innerHTML = puzzlesData.map(p => `
-        <div class="magic-card p-5 w-full flex flex-wrap items-center justify-between gap-3" id="card-${p.id}">
-          <div class="flex-1 min-w-[240px]">
+      const container = document.getElementById('division-puzzles-container');
+      if (!container) return;
+      container.innerHTML = puzzlesData.map(p => `
+        <div class="magic-card p-5 w-full" id="card-${p.id}">
+          <div class="flex justify-between items-center mb-3">
+            <span class="bg-indigo-100 text-indigo-900 border border-indigo-200 font-black px-4 py-1 rounded-2xl text-sm">سؤال (${p.num})</span>
+            <span id="badge-${p.id}" class="text-2xl">⬜</span>
+          </div>
+          <div class="flex flex-wrap items-center justify-between gap-3">
             <span class="font-black text-base md:text-lg text-indigo-950">${p.text}</span>
+            <div class="flex items-center gap-2.5">
+              <input type="number" id="ans-${p.id}" placeholder="؟" class="w-24 py-2 rounded-2xl border-2 border-indigo-300 bg-indigo-50/40 text-xl">
+              <button onclick="checkSingle('${p.id}', ${p.ans}, 'عبقري! ${p.hint}')" class="squishy-btn bg-indigo-200 hover:bg-indigo-300 text-indigo-950 border-2 border-indigo-300 font-black px-5 py-2 rounded-2xl text-sm">تحقق 🎯</button>
+            </div>
           </div>
-          <div class="flex items-center gap-2.5">
-            <input type="number" id="ans-${p.id}" placeholder="؟" class="w-28 py-2 rounded-2xl border-2 border-indigo-300 bg-indigo-50/40 text-lg">
-            <button onclick="checkSingle('${p.id}', ${p.ans}, 'عبقري! ${p.hint}')" class="squishy-btn bg-indigo-200 hover:bg-indigo-300 text-indigo-950 border-2 border-indigo-300 font-black px-5 py-2 rounded-2xl text-sm">تحقق 🎯</button>
-            <span id="badge-${p.id}" class="text-xl">⬜</span>
-          </div>
-          <div id="fb-${p.id}" class="w-full text-xs font-black text-center hidden"></div>
+          <div id="fb-${p.id}" class="mt-3 text-sm font-black text-center hidden"></div>
         </div>
       `).join('');
     }
 
-    // ==================== تحققات العالم 4: المسائل الكلامية (46 - 60) ====================
+    // ==================== القسم 4: المسائل الكلامية (46 - 60) ====================
     const wordProblems = [
-      { id: 'q46', num: 46, icon: '🌻', text: 'معك 45 شتلة زهور لزراعة الحدائق العامة. إذا وضعت في كل حديقة 6 شتلات، فكم حديقة يمكنك تزيينها، وكم شتلة تبقى؟', op: '45 ÷ 6 = 7 والباقي 3', label1: 'عدد الحدائق', ans1: 7, label2: 'الشتلات المتبقية', ans2: 3, hint: '45 ÷ 6 = 7 حدائق والباقي 3 شتلات (6×7=42).' },
-      { id: 'q47', num: 47, icon: '📚', text: 'يريد أمين المكتبة وضع 37 كتاباً، وكل رف يتسع لـ 9 كتب. كم رف يوزع عليها كامل الكتب؟', op: '37 ÷ 9 = 4 والباقي 1', label1: 'الأرفف الممتلئة', ans1: 4, label2: 'الكتب المتبقية', ans2: 1, hint: '37 ÷ 9 = 4 أرفف ممتلئة والباقي 1 كتاب (نحتاج 5 أرفف لكامل الكتب).' },
-      { id: 'q48', num: 48, icon: '🕯️', text: 'قمت بتصنيع 23 شمعة معطرة من صنع يدك. إذا وضعت كل 5 شمعات في عبوة، فكم عبوة تستطيع إكمالها، وكم شمعة تتبقى لديك؟', op: '23 ÷ 5 = 4 والباقي 3', label1: 'العبوات المكتملة', ans1: 4, label2: 'الشموع المتبقية', ans2: 3, hint: '23 ÷ 5 = 4 عبوات والباقي 3 شمعات.' },
-      { id: 'q49', num: 49, icon: '⚽', text: 'تضع 43 كرة في صناديق، بواقع 4 كرات في كل صندوق. كم صندوقاً تحتاج لوضع كل الكرات في صناديق؟', op: '43 ÷ 4 = 10 والباقي 3 ← 11 صندوقاً', label1: 'إجمالي الصناديق', ans1: 11, label2: 'الكرات في الصندوق الأخير', ans2: 3, hint: '43 ÷ 4 = 10 صناديق والباقي 3 كرات، إذن نحتاج (11 صندوقاً) لوضع كل الكرات!' },
-      { id: 'q50', num: 50, icon: '📦', text: 'رف ارتفاعه 38 سم. إذا رصصت صناديق ارتفاع كل منها 5 سم فوق بعض، فكم صندوقاً يمكنك رصّه؟', op: '38 ÷ 5 = 7 والباقي 3 سم', label1: 'عدد الصناديق', ans1: 7, label2: 'الارتفاع المتبقي (سم)', ans2: 3, hint: '38 ÷ 5 = 7 صناديق (35 سم) ويتبقى 3 سم لا تكفي لصندوق ثامن.' },
-      { id: 'q51', num: 51, icon: '🌷', text: 'معك 62 شتلة زهور لزراعة الحدائق العامة. إذا وضعت في كل حديقة 6 شتلات، فكم حديقة يمكنك تزيينها، وكم شتلة تبقى؟', op: '62 ÷ 6 = 10 والباقي 2', label1: 'عدد الحدائق', ans1: 10, label2: 'الشتلات المتبقية', ans2: 2, hint: '62 ÷ 6 = 10 حدائق والباقي 2 شتلة.' },
-      { id: 'q52', num: 52, icon: '📖', text: 'يريد أمين المكتبة وضع 57 كتاباً، وكل رف يتسع لـ 9 كتب. كم رف يوزع عليها كامل الكتب؟', op: '57 ÷ 9 = 6 والباقي 3', label1: 'الأرفف الممتلئة', ans1: 6, label2: 'الكتب المتبقية', ans2: 3, hint: '57 ÷ 9 = 6 أرفف والباقي 3 كتب (أي 7 أرفف لوضع كامل الكتب).' },
-      { id: 'q53', num: 53, icon: '🕯️', text: 'قمت بتصنيع 34 شمعة معطرة من صنع يدك. إذا وضعت كل 5 شمعات في عبوة، فكم عبوة تستطيع إكمالها، وكم شمعة تتبقى لديك؟', op: '34 ÷ 5 = 6 والباقي 4', label1: 'العبوات المكتملة', ans1: 6, label2: 'الشموع المتبقية', ans2: 4, hint: '34 ÷ 5 = 6 عبوات والباقي 4 شمعات.' },
-      { id: 'q54', num: 54, icon: '🏀', text: 'تضع 63 كرة في صناديق، بواقع 8 كرات في كل صندوق. كم صندوقاً تحتاج لوضع كل الكرات في صناديق؟', op: '63 ÷ 8 = 7 والباقي 7 ← 8 صناديق', label1: 'إجمالي الصناديق', ans1: 8, label2: 'الكرات في الصندوق الأخير', ans2: 7, hint: '63 ÷ 8 = 7 صناديق والباقي 7 كرات، فنحتاج (8 صناديق) لوضع كل الكرات!' },
-      { id: 'q55', num: 55, icon: '📚', text: 'رف ارتفاعه 18 سم. إذا رصصت صناديق ارتفاع كل منها 7 سم فوق بعض، فكم صندوقاً يمكنك رصّه؟', op: '18 ÷ 7 = 2 والباقي 4 سم', label1: 'عدد الصناديق', ans1: 2, label2: 'الارتفاع المتبقي (سم)', ans2: 4, hint: '18 ÷ 7 = 2 صندوق (14 سم) ويتبقى 4 سم.' },
-      { id: 'q56', num: 56, icon: '🌺', text: 'معك 55 شتلة زهور لزراعة الحدائق العامة. إذا وضعت في كل حديقة 7 شتلات، فكم حديقة يمكنك تزيينها، وكم شتلة تبقى؟', op: '55 ÷ 7 = 7 والباقي 6', label1: 'عدد الحدائق', ans1: 7, label2: 'الشتلات المتبقية', ans2: 6, hint: '55 ÷ 7 = 7 حدائق (49 شتلة) والباقي 6 شتلات.' },
-      { id: 'q57', num: 57, icon: '📕', text: 'يريد أمين المكتبة وضع 76 كتاباً، وكل رف يتسع لـ 7 كتب. كم رف يوزع عليها كامل الكتب؟', op: '76 ÷ 7 = 10 والباقي 6', label1: 'الأرفف الممتلئة', ans1: 10, label2: 'الكتب المتبقية', ans2: 6, hint: '76 ÷ 7 = 10 أرفف والباقي 6 كتب (نحتاج 11 رفاً لكامل الكتب).' },
-      { id: 'q58', num: 58, icon: '🕯️', text: 'قمت بتصنيع 82 شمعة معطرة من صنع يدك. إذا وضعت كل 7 شمعات في عبوة، فكم عبوة تستطيع إكمالها، وكم شمعة تتبقى لديك؟', op: '82 ÷ 7 = 11 والباقي 5', label1: 'العبوات المكتملة', ans1: 11, label2: 'الشموع المتبقية', ans2: 5, hint: '82 ÷ 7 = 11 عبوة (77 شمعة) والباقي 5 شمعات.' },
-      { id: 'q59', num: 59, icon: '🎾', text: 'تضع 43 كرة في صناديق، بواقع 9 كرات في كل صندوق. كم صندوقاً تحتاج لوضع كل الكرات في صناديق؟', op: '43 ÷ 9 = 4 والباقي 7 ← 5 صناديق', label1: 'إجمالي الصناديق', ans1: 5, label2: 'الكرات في الصندوق الأخير', ans2: 7, hint: '43 ÷ 9 = 4 صناديق والباقي 7 كرات، إذن نحتاج (5 صناديق) لوضع الكل!' },
-      { id: 'q60', num: 60, icon: '📦', text: 'رف ارتفاعه 53 سم. إذا رصصت صناديق ارتفاع كل منها 5 سم فوق بعض، فكم صندوقاً يمكنك رصّه؟', op: '53 ÷ 5 = 10 والباقي 3 سم', label1: 'عدد الصناديق', ans1: 10, label2: 'الارتفاع المتبقي (سم)', ans2: 3, hint: '53 ÷ 5 = 10 صناديق (50 سم) ويتبقى 3 سم.' }
+      { id: 'q46', num: 46, icon: '🌻', text: 'معك 45 شتلة زهور لزراعة الحدائق العامة. إذا وضعت في كل حديقة 6 شتلات، فكم حديقة يمكنك تزيينها، وكم شتلة تبقى؟', label1: 'عدد الحدائق', ans1: 7, label2: 'الشتلات المتبقية', ans2: 3, hint: '45 ÷ 6 = 7 حدائق والباقي 3 شتلات.' },
+      { id: 'q47', num: 47, icon: '📚', text: 'يريد أمين المكتبة وضع 37 كتاباً، وكل رف يتسع لـ 9 كتب. كم رف يوزع عليها كامل الكتب؟', label1: 'الأرفف الممتلئة', ans1: 4, label2: 'الكتب المتبقية', ans2: 1, hint: '37 ÷ 9 = 4 أرفف والباقي 1 كتاب.' },
+      { id: 'q48', num: 48, icon: '🕯️', text: 'قمت بتصنيع 23 شمعة معطرة من صنع يدك. إذا وضعت كل 5 شمعات في عبوة، فكم عبوة تستطيع إكمالها، وكم شمعة تتبقى لديك؟', label1: 'العبوات المكتملة', ans1: 4, label2: 'الشموع المتبقية', ans2: 3, hint: '23 ÷ 5 = 4 عبوات والباقي 3 شمعات.' },
+      { id: 'q49', num: 49, icon: '⚽', text: 'تضع 43 كرة في صناديق، بواقع 4 كرات في كل صندوق. كم صندوقاً تحتاج لوضع كل الكرات في صناديق؟', label1: 'إجمالي الصناديق', ans1: 11, label2: 'الكرات في الصندوق الأخير', ans2: 3, hint: '43 ÷ 4 = 10 صناديق والباقي 3 كرات، إذن نحتاج 11 صندوقاً لوضع كل الكرات.' },
+      { id: 'q50', num: 50, icon: '📦', text: 'رف ارتفاعه 38 سم. إذا رصصت صناديق ارتفاع كل منها 5 سم فوق بعض، فكم صندوقاً يمكنك رصّه؟', label1: 'عدد الصناديق', ans1: 7, label2: 'الارتفاع المتبقي (سم)', ans2: 3, hint: '38 ÷ 5 = 7 صناديق ويتبقى 3 سم.' },
+      { id: 'q51', num: 51, icon: '🌷', text: 'معك 62 شتلة زهور لزراعة الحدائق العامة. إذا وضعت في كل حديقة 6 شتلات، فكم حديقة يمكنك تزيينها، وكم شتلة تبقى؟', label1: 'عدد الحدائق', ans1: 10, label2: 'الشتلات المتبقية', ans2: 2, hint: '62 ÷ 6 = 10 حدائق والباقي 2 شتلة.' },
+      { id: 'q52', num: 52, icon: '📖', text: 'يريد أمين المكتبة وضع 57 كتاباً، وكل رف يتسع لـ 9 كتب. كم رف يوزع عليها كامل الكتب؟', label1: 'الأرفف الممتلئة', ans1: 6, label2: 'الكتب المتبقية', ans2: 3, hint: '57 ÷ 9 = 6 أرفف والباقي 3 كتب.' },
+      { id: 'q53', num: 53, icon: '🕯️', text: 'قمت بتصنيع 34 شمعة معطرة من صنع يدك. إذا وضعت كل 5 شمعات في عبوة، فكم عبوة تستطيع إكمالها، وكم شمعة تتبقى لديك؟', label1: 'العبوات المكتملة', ans1: 6, label2: 'الشموع المتبقية', ans2: 4, hint: '34 ÷ 5 = 6 عبوات والباقي 4 شمعات.' },
+      { id: 'q54', num: 54, icon: '🏀', text: 'تضع 63 كرة في صناديق، بواقع 8 كرات في كل صندوق. كم صندوقاً تحتاج لوضع كل الكرات في صناديق؟', label1: 'إجمالي الصناديق', ans1: 8, label2: 'الكرات في الصندوق الأخير', ans2: 7, hint: '63 ÷ 8 = 7 صناديق والباقي 7 كرات، فنحتاج 8 صناديق لوضع كل الكرات.' },
+      { id: 'q55', num: 55, icon: '📚', text: 'رف ارتفاعه 18 سم. إذا رصصت صناديق ارتفاع كل منها 7 سم فوق بعض، فكم صندوقاً يمكنك رصّه؟', label1: 'عدد الصناديق', ans1: 2, label2: 'الارتفاع المتبقي (سم)', ans2: 4, hint: '18 ÷ 7 = 2 صندوق ويتبقى 4 سم.' },
+      { id: 'q56', num: 56, icon: '🌺', text: 'معك 55 شتلة زهور لزراعة الحدائق العامة. إذا وضعت في كل حديقة 7 شتلات، فكم حديقة يمكنك تزيينها، وكم شتلة تبقى؟', label1: 'عدد الحدائق', ans1: 7, label2: 'الشتلات المتبقية', ans2: 6, hint: '55 ÷ 7 = 7 حدائق والباقي 6 شتلات.' },
+      { id: 'q57', num: 57, icon: '📕', text: 'يريد أمين المكتبة وضع 76 كتاباً، وكل رف يتسع لـ 7 كتب. كم رف يوزع عليها كامل الكتب؟', label1: 'الأرفف الممتلئة', ans1: 10, label2: 'الكتب المتبقية', ans2: 6, hint: '76 ÷ 7 = 10 أرفف والباقي 6 كتب.' },
+      { id: 'q58', num: 58, icon: '🕯️', text: 'قمت بتصنيع 82 شمعة معطرة من صنع يدك. إذا وضعت كل 7 شمعات في عبوة، فكم عبوة تستطيع إكمالها، وكم شمعة تتبقى لديك؟', label1: 'العبوات المكتملة', ans1: 11, label2: 'الشموع المتبقية', ans2: 5, hint: '82 ÷ 7 = 11 عبوة والباقي 5 شمعات.' },
+      { id: 'q59', num: 59, icon: '🎾', text: 'تضع 43 كرة في صناديق، بواقع 9 كرات في كل صندوق. كم صندوقاً تحتاج لوضع كل الكرات في صناديق؟', label1: 'إجمالي الصناديق', ans1: 5, label2: 'الكرات في الصندوق الأخير', ans2: 7, hint: '43 ÷ 9 = 4 صناديق والباقي 7 كرات، فنحتاج 5 صناديق لوضع الكل.' },
+      { id: 'q60', num: 60, icon: '📦', text: 'رف ارتفاعه 53 سم. إذا رصصت صناديق ارتفاع كل منها 5 سم فوق بعض، فكم صندوقاً يمكنك رصّه؟', label1: 'عدد الصناديق', ans1: 10, label2: 'الارتفاع المتبقي (سم)', ans2: 3, hint: '53 ÷ 5 = 10 صناديق ويتبقى 3 سم.' }
     ];
 
     function renderWordProblems() {
-      document.getElementById('word-problems-container').innerHTML = wordProblems.map(wp => `
+      const container = document.getElementById('word-problems-container');
+      if (!container) return;
+      container.innerHTML = wordProblems.map(wp => `
         <div class="magic-card p-6 w-full" id="card-${wp.id}">
           <div class="flex justify-between items-center mb-3">
             <span class="bg-pink-100 text-pink-900 border border-pink-200 font-black px-4 py-1 rounded-2xl text-sm">${wp.icon} مسألة (${wp.num})</span>
             <span id="badge-${wp.id}" class="text-2xl">⬜</span>
           </div>
           <p class="font-black text-base md:text-lg text-slate-800 leading-relaxed mb-4">${wp.text}</p>
-          <div class="flex flex-wrap items-center justify-between gap-4 bg-pink-50/60 p-4 rounded-2xl border-2 border-pink-100">
-            <div class="flex flex-wrap items-center gap-4 text-sm font-black">
-              <div class="flex items-center gap-2">
-                <span class="text-pink-950">${wp.label1}:</span>
-                <input type="number" id="ans-${wp.id}-1" placeholder="؟" class="w-24 py-1.5 rounded-2xl border-2 border-pink-300 bg-white text-lg">
-              </div>
-              <div class="flex items-center gap-2">
-                <span class="text-pink-950">${wp.label2}:</span>
-                <input type="number" id="ans-${wp.id}-2" placeholder="؟" class="w-24 py-1.5 rounded-2xl border-2 border-pink-300 bg-white text-lg">
-              </div>
+          <div class="flex flex-wrap items-center justify-center gap-4 bg-pink-50/60 p-4 rounded-2xl border border-pink-200">
+            <div class="text-center">
+              <div class="text-xs font-black text-pink-950 mb-1">${wp.label1}</div>
+              <input type="number" id="ans-${wp.id}-1" placeholder="؟" class="w-24 py-2 rounded-2xl border-2 border-pink-300 bg-white text-lg">
             </div>
-            <div class="flex items-center gap-3">
-              <button onclick="toggleHint('hint-${wp.id}')" class="text-xs font-black text-pink-800 hover:underline">💡 العملية الحسابية</button>
-              <button onclick="checkWP('${wp.id}', ${wp.ans1}, ${wp.ans2}, '${wp.hint}')" class="squishy-btn bg-pink-200 hover:bg-pink-300 text-pink-950 border-2 border-pink-300 font-black px-6 py-2 rounded-2xl text-sm">تحقق من الحل 🎯</button>
+            <div class="text-center">
+              <div class="text-xs font-black text-pink-950 mb-1">${wp.label2}</div>
+              <input type="number" id="ans-${wp.id}-2" placeholder="؟" class="w-24 py-2 rounded-2xl border-2 border-pink-300 bg-white text-lg">
             </div>
-          </div>
-          <div id="hint-${wp.id}" class="hidden mt-3 p-2.5 bg-sky-50 rounded-2xl border border-sky-200 text-xs font-black text-sky-900 text-center" dir="ltr">
-            ${wp.op}
+            <button onclick="checkWP('${wp.id}', ${wp.ans1}, ${wp.ans2}, '${wp.hint}')" class="squishy-btn bg-pink-200 hover:bg-pink-300 text-pink-950 border-2 border-pink-300 font-black px-6 py-2.5 rounded-2xl text-sm self-end">تحقق 🎯</button>
           </div>
           <div id="fb-${wp.id}" class="mt-3 text-sm font-black text-center hidden"></div>
         </div>
@@ -1376,30 +1318,544 @@
     }
 
     function checkWP(id, exp1, exp2, hint) {
-      const r1 = document.getElementById(`ans-${id}-1`).value;
-      const r2 = document.getElementById(`ans-${id}-2`).value;
-      if (r1 === '' || r2 === '') {
-        markWrong(`card-${id}`, `fb-${id}`, 'املأ الخانتين أولاً يا بطل!');
-        return;
-      }
-      const v1 = Number(r1);
-      const v2 = Number(r2);
-      if (v1 === exp1 && v2 === exp2) {
-        showSuccessFb(`fb-${id}`, `ممتاز! ${hint}`);
-        markSolved([id]);
-      } else {
-        markWrong(`card-${id}`, `fb-${id}`, `تلميح: ${hint}`);
-      }
+      checkTwo(id, `ans-${id}-1`, exp1, `ans-${id}-2`, exp2, `ممتاز! ${hint}`);
     }
 
+    // ==================== القسم 5: الأسئلة الإضافية ====================
+    function buildExtraMapSvg(options) {
+      const {
+        startLabel = 'البيت',
+        startEmoji = '🏠',
+        endLabel = 'الأشجار',
+        endEmoji = '🌳',
+        topLeft = '730 م',
+        topRight = '470 م',
+        bottomDist = '960 م',
+        highlightColor = '#fef9c3',
+        borderColor = '#eab308',
+        textColor = '#854d0e'
+      } = options;
+
+      return `
+        <div class="bg-emerald-50/70 p-4 rounded-2xl border-2 border-emerald-200 mb-4 overflow-x-auto">
+          <svg viewBox="0 0 360 220" class="w-full max-w-md mx-auto rounded-xl bg-emerald-100/70 border border-emerald-200">
+            <path d="M 60 50 L 180 40 L 300 165" stroke="#cbd5e1" stroke-width="18" fill="none" stroke-linecap="round" />
+            <path d="M 60 50 L 300 165" stroke="#94a3b8" stroke-width="14" fill="none" stroke-dasharray="10,6" />
+            <circle cx="60" cy="50" r="26" fill="#fef3c7" stroke="#f59e0b" stroke-width="3" />
+            <text x="60" y="57" font-size="24" text-anchor="middle">${startEmoji}</text>
+            <text x="60" y="90" font-size="13" font-weight="bold" fill="#1e293b" text-anchor="middle">${startLabel}</text>
+            <circle cx="180" cy="40" r="8" fill="#3b82f6" />
+            <circle cx="300" cy="165" r="26" fill="#dcfce7" stroke="#16a34a" stroke-width="3" />
+            <text x="300" y="172" font-size="24" text-anchor="middle">${endEmoji}</text>
+            <text x="300" y="205" font-size="13" font-weight="bold" fill="#1e293b" text-anchor="middle">${endLabel}</text>
+            <rect x="92" y="14" width="58" height="22" rx="6" fill="white" stroke="#64748b" />
+            <text x="121" y="29" font-size="12" font-weight="bold" fill="#0f172a" text-anchor="middle">${topLeft}</text>
+            <rect x="232" y="75" width="58" height="22" rx="6" fill="white" stroke="#64748b" />
+            <text x="261" y="90" font-size="12" font-weight="bold" fill="#0f172a" text-anchor="middle">${topRight}</text>
+            <rect x="135" y="122" width="62" height="24" rx="6" fill="${highlightColor}" stroke="${borderColor}" />
+            <text x="166" y="138" font-size="12" font-weight="bold" fill="${textColor}" text-anchor="middle">${bottomDist}</text>
+          </svg>
+        </div>
+      `;
+    }
+
+    function renderExtraQuestions() {
+      const container = document.getElementById('extra-questions-container');
+      if (!container) return;
+      const rows = [];
+
+      rows.push(`
+        <div class="bg-sky-50 border-2 border-sky-200 rounded-2xl px-4 py-2.5 font-black text-sky-950">
+          📌 أولاً: المجموعات (أ)، (ب)، (ج) — القياس والخرائط
+        </div>
+      `);
+
+      rows.push(`
+        <div class="magic-card p-6 w-full" id="card-ex_a3">
+          <div class="flex justify-between items-center mb-3">
+            <span class="bg-sky-100 text-sky-900 border border-sky-200 font-black px-4 py-1 rounded-2xl text-sm">المجموعة (أ) - سؤال (3)</span>
+            <span id="badge-ex_a3" class="text-2xl">⬜</span>
+          </div>
+          <p class="font-black text-lg mb-4">قيست المسافة بين السبورة وآخر الفصل وكانت 6 <span class="text-sky-700">______</span></p>
+          <div class="flex flex-wrap items-center justify-center gap-3">
+            <select id="ans-ex_a3" class="py-2 px-4 rounded-2xl border-2 border-sky-300 font-black bg-sky-50/40">
+              <option value="">اختر الوحدة...</option>
+              <option value="1">م (متر)</option>
+              <option value="2">سم (سنتيمتر)</option>
+              <option value="3">كم (كيلومتر)</option>
+            </select>
+            <button onclick="checkSingle('ex_a3', 1, 'رائع! المسافة داخل الفصل تُقاس بالمتر (م).')" class="squishy-btn bg-sky-200 hover:bg-sky-300 text-sky-950 border-2 border-sky-300 font-black px-6 py-2 rounded-2xl">تحقق 🎯</button>
+          </div>
+          <div id="fb-ex_a3" class="mt-3 text-sm font-black text-center hidden"></div>
+        </div>
+      `);
+
+      rows.push(`
+        <div class="magic-card p-6 w-full" id="card-ex_a4">
+          <div class="flex justify-between items-center mb-3">
+            <span class="bg-sky-100 text-sky-900 border border-sky-200 font-black px-4 py-1 rounded-2xl text-sm">المجموعة (أ) - سؤال (4)</span>
+            <span id="badge-ex_a4" class="text-2xl">⬜</span>
+          </div>
+          <div class="flex flex-wrap items-center justify-center gap-3 text-lg font-black">
+            <span>4 كم و 780 م =</span>
+            <input type="number" id="ans-ex_a4" placeholder="؟" class="w-28 py-2 rounded-2xl border-2 border-sky-300 bg-sky-50/40 text-xl">
+            <span>م</span>
+            <button onclick="checkSingle('ex_a4', 4780, 'ممتاز! 4000 + 780 = 4780 م.')" class="squishy-btn bg-sky-200 hover:bg-sky-300 text-sky-950 border-2 border-sky-300 font-black px-6 py-2 rounded-2xl text-sm">تحقق 🎯</button>
+          </div>
+          <div id="fb-ex_a4" class="mt-3 text-sm font-black text-center hidden"></div>
+        </div>
+      `);
+
+      rows.push(`
+        <div class="magic-card p-6 w-full" id="card-ex_a5">
+          <div class="flex justify-between items-center mb-3">
+            <span class="bg-sky-100 text-sky-900 border border-sky-200 font-black px-4 py-1 rounded-2xl text-sm">المجموعة (أ) - سؤال (5)</span>
+            <span id="badge-ex_a5" class="text-2xl">⬜</span>
+          </div>
+          <p class="font-black text-lg mb-3">باستخدام الخريطة: المسافة بين البيت والأشجار بالـ كم و م:</p>
+          ${buildExtraMapSvg({
+            startLabel: 'البيت',
+            startEmoji: '🏠',
+            endLabel: 'الأشجار',
+            endEmoji: '🌳',
+            topLeft: '730 م',
+            topRight: '470 م',
+            bottomDist: '910 م',
+            highlightColor: '#e0f2fe',
+            borderColor: '#0284c7',
+            textColor: '#0369a1'
+          })}
+          <div class="flex flex-wrap items-center justify-center gap-3">
+            <input type="number" id="ans-ex_a5-km" placeholder="؟" class="w-20 py-2 rounded-2xl border-2 border-sky-300 bg-sky-50/40 text-xl">
+            <span class="font-black">كم و</span>
+            <input type="number" id="ans-ex_a5-m" placeholder="؟" class="w-24 py-2 rounded-2xl border-2 border-sky-300 bg-sky-50/40 text-xl">
+            <span class="font-black">م</span>
+            <button onclick="checkTwo('ex_a5', 'ans-ex_a5-km', 1, 'ans-ex_a5-m', 200, 'رائع! 730 + 470 = 1200 م = 1 كم و 200 م.')" class="squishy-btn bg-sky-200 hover:bg-sky-300 text-sky-950 border-2 border-sky-300 font-black px-6 py-2 rounded-2xl">تحقق 🎯</button>
+          </div>
+          <div id="fb-ex_a5" class="mt-3 text-sm font-black text-center hidden"></div>
+        </div>
+      `);
+
+      rows.push(`
+        <div class="magic-card p-6 w-full" id="card-ex_a6">
+          <div class="flex justify-between items-center mb-3">
+            <span class="bg-sky-100 text-sky-900 border border-sky-200 font-black px-4 py-1 rounded-2xl text-sm">المجموعة (أ) - سؤال (6)</span>
+            <span id="badge-ex_a6" class="text-2xl">⬜</span>
+          </div>
+          <p class="font-black text-lg mb-4">ما الفرق بين المسافة الكلية (1,200 م) وأقصر مسافة بين البيت والأشجار (910 م) في المجموعة (أ)؟</p>
+          <div class="flex flex-wrap items-center justify-center gap-3">
+            <input type="number" id="ans-ex_a6" placeholder="؟" class="w-28 py-2 rounded-2xl border-2 border-sky-300 bg-sky-50/40 text-xl">
+            <span class="font-black">م</span>
+            <button onclick="checkSingle('ex_a6', 290, 'ممتاز! 1200 - 910 = 290 متر.')" class="squishy-btn bg-sky-200 hover:bg-sky-300 text-sky-950 border-2 border-sky-300 font-black px-6 py-2 rounded-2xl">تحقق 🎯</button>
+          </div>
+          <div id="fb-ex_a6" class="mt-3 text-sm font-black text-center hidden"></div>
+        </div>
+      `);
+
+      rows.push(`
+        <div class="magic-card p-6 w-full" id="card-ex_b1">
+          <div class="flex justify-between items-center mb-3">
+            <span class="bg-purple-100 text-purple-900 border border-purple-200 font-black px-4 py-1 rounded-2xl text-sm">المجموعة (ب) - سؤال (1)</span>
+            <span id="badge-ex_b1" class="text-2xl">⬜</span>
+          </div>
+          <p class="font-black text-lg mb-3">الطول الذي يشير إليه السهم على المسطرة يمثل (م و سم):</p>
+          <div class="bg-amber-50/70 p-4 rounded-2xl border-2 border-amber-200 mb-4 overflow-x-auto">
+            <svg viewBox="0 0 340 90" class="w-full max-w-md mx-auto">
+              <polygon points="154,24 146,8 162,8" fill="#f43f5e" />
+              <rect x="10" y="28" width="320" height="50" rx="8" fill="#fef9c3" stroke="#eab308" stroke-width="2" />
+              <line x1="30" y1="28" x2="30" y2="52" stroke="#1e293b" stroke-width="2" />
+              <text x="30" y="68" font-size="11" font-weight="bold" text-anchor="middle">0 م</text>
+              <line x1="120" y1="28" x2="120" y2="52" stroke="#1e293b" stroke-width="2" />
+              <text x="120" y="68" font-size="11" font-weight="bold" text-anchor="middle">10</text>
+              <line x1="210" y1="28" x2="210" y2="52" stroke="#1e293b" stroke-width="2" />
+              <text x="210" y="68" font-size="11" font-weight="bold" text-anchor="middle">20</text>
+              <line x1="300" y1="28" x2="300" y2="52" stroke="#1e293b" stroke-width="2" />
+              <text x="300" y="68" font-size="11" font-weight="bold" text-anchor="middle">30</text>
+              <line x1="154" y1="28" x2="154" y2="44" stroke="#ef4444" stroke-width="2" />
+            </svg>
+          </div>
+          <div class="flex flex-wrap items-center justify-center gap-3">
+            <input type="number" id="ans-ex_b1-m" placeholder="؟" class="w-20 py-2 rounded-2xl border-2 border-purple-300 bg-purple-50/40 text-xl">
+            <span class="font-black">م و</span>
+            <input type="number" id="ans-ex_b1-cm" placeholder="؟" class="w-24 py-2 rounded-2xl border-2 border-purple-300 bg-purple-50/40 text-xl">
+            <span class="font-black">سم</span>
+            <button onclick="checkTwo('ex_b1', 'ans-ex_b1-m', 0, 'ans-ex_b1-cm', 14, 'ممتاز! السهم يشير إلى 0 م و 14 سم.')" class="squishy-btn bg-purple-200 hover:bg-purple-300 text-purple-950 border-2 border-purple-300 font-black px-6 py-2 rounded-2xl">تحقق 🎯</button>
+          </div>
+          <div id="fb-ex_b1" class="mt-3 text-sm font-black text-center hidden"></div>
+        </div>
+      `);
+
+      rows.push(`
+        <div class="magic-card p-6 w-full" id="card-ex_b2">
+          <div class="flex justify-between items-center mb-3">
+            <span class="bg-purple-100 text-purple-900 border border-purple-200 font-black px-4 py-1 rounded-2xl text-sm">المجموعة (ب) - سؤال (2)</span>
+            <span id="badge-ex_b2" class="text-2xl">⬜</span>
+          </div>
+          <div class="flex flex-wrap items-center justify-center gap-2 text-lg font-black">
+            <span>3,030 م =</span>
+            <input type="number" id="ans-ex_b2-km" placeholder="؟" class="w-20 py-1.5 rounded-2xl border-2 border-purple-300 bg-purple-50/40 text-xl">
+            <span>كم و</span>
+            <input type="number" id="ans-ex_b2-m" placeholder="؟" class="w-24 py-1.5 rounded-2xl border-2 border-purple-300 bg-purple-50/40 text-xl">
+            <span>م</span>
+            <button onclick="checkTwo('ex_b2', 'ans-ex_b2-km', 3, 'ans-ex_b2-m', 30, 'رائع! 3030 م = 3 كم و 30 م.')" class="squishy-btn bg-purple-200 hover:bg-purple-300 text-purple-950 border-2 border-purple-300 font-black px-6 py-2 rounded-2xl text-sm">تحقق 🎯</button>
+          </div>
+          <div id="fb-ex_b2" class="mt-3 text-sm font-black text-center hidden"></div>
+        </div>
+      `);
+
+      rows.push(`
+        <div class="magic-card p-6 w-full" id="card-ex_b3">
+          <div class="flex justify-between items-center mb-3">
+            <span class="bg-purple-100 text-purple-900 border border-purple-200 font-black px-4 py-1 rounded-2xl text-sm">المجموعة (ب) - سؤال (3)</span>
+            <span id="badge-ex_b3" class="text-2xl">⬜</span>
+          </div>
+          <p class="font-black text-lg mb-4">تم قياس طول زميلك في الفصل ووجد أنه 102 <span class="text-purple-700">______</span></p>
+          <div class="flex flex-wrap items-center justify-center gap-3">
+            <select id="ans-ex_b3" class="py-2 px-4 rounded-2xl border-2 border-purple-300 font-black bg-purple-50/40">
+              <option value="">اختر الوحدة...</option>
+              <option value="1">سم (سنتيمتر)</option>
+              <option value="2">م (متر)</option>
+              <option value="3">مم (مليمتر)</option>
+            </select>
+            <button onclick="checkSingle('ex_b3', 1, 'ممتاز! طول التلميذ يُقاس بالسنتيمتر (102 سم).')" class="squishy-btn bg-purple-200 hover:bg-purple-300 text-purple-950 border-2 border-purple-300 font-black px-6 py-2 rounded-2xl">تحقق 🎯</button>
+          </div>
+          <div id="fb-ex_b3" class="mt-3 text-sm font-black text-center hidden"></div>
+        </div>
+      `);
+
+      rows.push(`
+        <div class="magic-card p-6 w-full" id="card-ex_b4">
+          <div class="flex justify-between items-center mb-3">
+            <span class="bg-purple-100 text-purple-900 border border-purple-200 font-black px-4 py-1 rounded-2xl text-sm">المجموعة (ب) - سؤال (4)</span>
+            <span id="badge-ex_b4" class="text-2xl">⬜</span>
+          </div>
+          <div class="flex flex-wrap items-center justify-center gap-3 text-lg font-black">
+            <span>3 كم و 580 م =</span>
+            <input type="number" id="ans-ex_b4" placeholder="؟" class="w-28 py-2 rounded-2xl border-2 border-purple-300 bg-purple-50/40 text-xl">
+            <span>م</span>
+            <button onclick="checkSingle('ex_b4', 3580, 'رائع! 3000 + 580 = 3580 م.')" class="squishy-btn bg-purple-200 hover:bg-purple-300 text-purple-950 border-2 border-purple-300 font-black px-6 py-2 rounded-2xl text-sm">تحقق 🎯</button>
+          </div>
+          <div id="fb-ex_b4" class="mt-3 text-sm font-black text-center hidden"></div>
+        </div>
+      `);
+
+      rows.push(`
+        <div class="magic-card p-6 w-full" id="card-ex_b5">
+          <div class="flex justify-between items-center mb-3">
+            <span class="bg-purple-100 text-purple-900 border border-purple-200 font-black px-4 py-1 rounded-2xl text-sm">المجموعة (ب) - سؤال (5)</span>
+            <span id="badge-ex_b5" class="text-2xl">⬜</span>
+          </div>
+          <p class="font-black text-lg mb-3">باستخدام الخريطة: المسافة بين البيت والأشجار بالـ كم و م:</p>
+          ${buildExtraMapSvg({
+            startLabel: 'البيت',
+            startEmoji: '🏠',
+            endLabel: 'الأشجار',
+            endEmoji: '🌳',
+            topLeft: '730 م',
+            topRight: '470 م',
+            bottomDist: '960 م',
+            highlightColor: '#f3e8ff',
+            borderColor: '#9333ea',
+            textColor: '#6b21a8'
+          })}
+          <div class="flex flex-wrap items-center justify-center gap-3">
+            <input type="number" id="ans-ex_b5-km" placeholder="؟" class="w-20 py-2 rounded-2xl border-2 border-purple-300 bg-purple-50/40 text-xl">
+            <span class="font-black">كم و</span>
+            <input type="number" id="ans-ex_b5-m" placeholder="؟" class="w-24 py-2 rounded-2xl border-2 border-purple-300 bg-purple-50/40 text-xl">
+            <span class="font-black">م</span>
+            <button onclick="checkTwo('ex_b5', 'ans-ex_b5-km', 1, 'ans-ex_b5-m', 200, 'ممتاز! 730 + 470 = 1200 م = 1 كم و 200 م.')" class="squishy-btn bg-purple-200 hover:bg-purple-300 text-purple-950 border-2 border-purple-300 font-black px-6 py-2 rounded-2xl">تحقق 🎯</button>
+          </div>
+          <div id="fb-ex_b5" class="mt-3 text-sm font-black text-center hidden"></div>
+        </div>
+      `);
+
+      rows.push(`
+        <div class="magic-card p-6 w-full" id="card-ex_b6">
+          <div class="flex justify-between items-center mb-3">
+            <span class="bg-purple-100 text-purple-900 border border-purple-200 font-black px-4 py-1 rounded-2xl text-sm">المجموعة (ب) - سؤال (6)</span>
+            <span id="badge-ex_b6" class="text-2xl">⬜</span>
+          </div>
+          <p class="font-black text-lg mb-4">ما الفرق بين المسافة الكلية (1,200 م) وأقصر مسافة بين البيت والأشجار (960 م) في المجموعة (ب)؟</p>
+          <div class="flex flex-wrap items-center justify-center gap-3">
+            <input type="number" id="ans-ex_b6" placeholder="؟" class="w-28 py-2 rounded-2xl border-2 border-purple-300 bg-purple-50/40 text-xl">
+            <span class="font-black">م</span>
+            <button onclick="checkSingle('ex_b6', 240, 'رائع! 1200 - 960 = 240 متر.')" class="squishy-btn bg-purple-200 hover:bg-purple-300 text-purple-950 border-2 border-purple-300 font-black px-6 py-2 rounded-2xl">تحقق 🎯</button>
+          </div>
+          <div id="fb-ex_b6" class="mt-3 text-sm font-black text-center hidden"></div>
+        </div>
+      `);
+
+      rows.push(`
+        <div class="magic-card p-6 w-full" id="card-ex_c1">
+          <div class="flex justify-between items-center mb-3">
+            <span class="bg-teal-100 text-teal-900 border border-teal-200 font-black px-4 py-1 rounded-2xl text-sm">المجموعة (ج) - سؤال (1)</span>
+            <span id="badge-ex_c1" class="text-2xl">⬜</span>
+          </div>
+          <p class="font-black text-lg mb-4">الطول الذي يشير إليه السهم على المسطرة يمثل (م و سم):</p>
+          <div class="flex flex-wrap items-center justify-center gap-3">
+            <input type="number" id="ans-ex_c1-m" placeholder="؟" class="w-20 py-2 rounded-2xl border-2 border-teal-300 bg-teal-50/40 text-xl">
+            <span class="font-black">م و</span>
+            <input type="number" id="ans-ex_c1-cm" placeholder="؟" class="w-24 py-2 rounded-2xl border-2 border-teal-300 bg-teal-50/40 text-xl">
+            <span class="font-black">سم</span>
+            <button onclick="checkTwo('ex_c1', 'ans-ex_c1-m', 0, 'ans-ex_c1-cm', 14, 'ممتاز! 0 م و 14 سم.')" class="squishy-btn bg-teal-200 hover:bg-teal-300 text-teal-950 border-2 border-teal-300 font-black px-6 py-2 rounded-2xl">تحقق 🎯</button>
+          </div>
+          <div id="fb-ex_c1" class="mt-3 text-sm font-black text-center hidden"></div>
+        </div>
+      `);
+
+      rows.push(`
+        <div class="magic-card p-6 w-full" id="card-ex_c2">
+          <div class="flex justify-between items-center mb-3">
+            <span class="bg-teal-100 text-teal-900 border border-teal-200 font-black px-4 py-1 rounded-2xl text-sm">المجموعة (ج) - سؤال (2)</span>
+            <span id="badge-ex_c2" class="text-2xl">⬜</span>
+          </div>
+          <div class="flex flex-wrap items-center justify-center gap-2 text-lg font-black">
+            <span>2,050 م =</span>
+            <input type="number" id="ans-ex_c2-km" placeholder="؟" class="w-20 py-1.5 rounded-2xl border-2 border-teal-300 bg-teal-50/40 text-xl">
+            <span>كم و</span>
+            <input type="number" id="ans-ex_c2-m" placeholder="؟" class="w-24 py-1.5 rounded-2xl border-2 border-teal-300 bg-teal-50/40 text-xl">
+            <span>م</span>
+            <button onclick="checkTwo('ex_c2', 'ans-ex_c2-km', 2, 'ans-ex_c2-m', 50, 'رائع! 2050 م = 2 كم و 50 م.')" class="squishy-btn bg-teal-200 hover:bg-teal-300 text-teal-950 border-2 border-teal-300 font-black px-6 py-2 rounded-2xl text-sm">تحقق 🎯</button>
+          </div>
+          <div id="fb-ex_c2" class="mt-3 text-sm font-black text-center hidden"></div>
+        </div>
+      `);
+
+      rows.push(`
+        <div class="magic-card p-6 w-full" id="card-ex_c3">
+          <div class="flex justify-between items-center mb-3">
+            <span class="bg-teal-100 text-teal-900 border border-teal-200 font-black px-4 py-1 rounded-2xl text-sm">المجموعة (ج) - سؤال (3)</span>
+            <span id="badge-ex_c3" class="text-2xl">⬜</span>
+          </div>
+          <p class="font-black text-lg mb-4">تم قياس طول الباب في الفصل وكان الطول هو 2 <span class="text-teal-700">______</span></p>
+          <div class="flex flex-wrap items-center justify-center gap-3">
+            <select id="ans-ex_c3" class="py-2 px-4 rounded-2xl border-2 border-teal-300 font-black bg-teal-50/40">
+              <option value="">اختر الوحدة...</option>
+              <option value="1">م (متر)</option>
+              <option value="2">سم (سنتيمتر)</option>
+              <option value="3">كم (كيلومتر)</option>
+            </select>
+            <button onclick="checkSingle('ex_c3', 1, 'ممتاز! طول الباب يُقاس بالمتر (2 م).')" class="squishy-btn bg-teal-200 hover:bg-teal-300 text-teal-950 border-2 border-teal-300 font-black px-6 py-2 rounded-2xl">تحقق 🎯</button>
+          </div>
+          <div id="fb-ex_c3" class="mt-3 text-sm font-black text-center hidden"></div>
+        </div>
+      `);
+
+      rows.push(`
+        <div class="magic-card p-6 w-full" id="card-ex_c4">
+          <div class="flex justify-between items-center mb-3">
+            <span class="bg-teal-100 text-teal-900 border border-teal-200 font-black px-4 py-1 rounded-2xl text-sm">المجموعة (ج) - سؤال (4)</span>
+            <span id="badge-ex_c4" class="text-2xl">⬜</span>
+          </div>
+          <div class="flex flex-wrap items-center justify-center gap-3 text-lg font-black">
+            <span>2 كم و 980 م =</span>
+            <input type="number" id="ans-ex_c4" placeholder="؟" class="w-28 py-2 rounded-2xl border-2 border-teal-300 bg-teal-50/40 text-xl">
+            <span>م</span>
+            <button onclick="checkSingle('ex_c4', 2980, 'رائع! 2000 + 980 = 2980 م.')" class="squishy-btn bg-teal-200 hover:bg-teal-300 text-teal-950 border-2 border-teal-300 font-black px-6 py-2 rounded-2xl text-sm">تحقق 🎯</button>
+          </div>
+          <div id="fb-ex_c4" class="mt-3 text-sm font-black text-center hidden"></div>
+        </div>
+      `);
+
+      rows.push(`
+        <div class="magic-card p-6 w-full" id="card-ex_c5">
+          <div class="flex justify-between items-center mb-3">
+            <span class="bg-teal-100 text-teal-900 border border-teal-200 font-black px-4 py-1 rounded-2xl text-sm">المجموعة (ج) - سؤال (5)</span>
+            <span id="badge-ex_c5" class="text-2xl">⬜</span>
+          </div>
+          <p class="font-black text-lg mb-3">خريطة بيت ريم والحديقة: المسافة بالـ كم و م:</p>
+          ${buildExtraMapSvg({
+            startLabel: 'بيت ريم',
+            startEmoji: '🏡',
+            endLabel: 'الحديقة',
+            endEmoji: '🌳',
+            topLeft: '730 م',
+            topRight: '470 م',
+            bottomDist: '870 م',
+            highlightColor: '#ccfbf1',
+            borderColor: '#0d9488',
+            textColor: '#115e59'
+          })}
+          <div class="flex flex-wrap items-center justify-center gap-3">
+            <input type="number" id="ans-ex_c5-km" placeholder="؟" class="w-20 py-2 rounded-2xl border-2 border-teal-300 bg-teal-50/40 text-xl">
+            <span class="font-black">كم و</span>
+            <input type="number" id="ans-ex_c5-m" placeholder="؟" class="w-24 py-2 rounded-2xl border-2 border-teal-300 bg-teal-50/40 text-xl">
+            <span class="font-black">م</span>
+            <button onclick="checkTwo('ex_c5', 'ans-ex_c5-km', 1, 'ans-ex_c5-m', 200, 'ممتاز! 730 + 470 = 1200 م = 1 كم و 200 م.')" class="squishy-btn bg-teal-200 hover:bg-teal-300 text-teal-950 border-2 border-teal-300 font-black px-6 py-2 rounded-2xl">تحقق 🎯</button>
+          </div>
+          <div id="fb-ex_c5" class="mt-3 text-sm font-black text-center hidden"></div>
+        </div>
+      `);
+
+      rows.push(`
+        <div class="magic-card p-6 w-full" id="card-ex_c6">
+          <div class="flex justify-between items-center mb-3">
+            <span class="bg-teal-100 text-teal-900 border border-teal-200 font-black px-4 py-1 rounded-2xl text-sm">المجموعة (ج) - سؤال (6)</span>
+            <span id="badge-ex_c6" class="text-2xl">⬜</span>
+          </div>
+          <p class="font-black text-lg mb-4">ما الفرق بين المسافة الكلية (1,200 م) وأقصر مسافة بين بيت ريم والحديقة (870 م)؟</p>
+          <div class="flex flex-wrap items-center justify-center gap-3">
+            <input type="number" id="ans-ex_c6" placeholder="؟" class="w-28 py-2 rounded-2xl border-2 border-teal-300 bg-teal-50/40 text-xl">
+            <span class="font-black">م</span>
+            <button onclick="checkSingle('ex_c6', 330, 'رائع! 1200 - 870 = 330 متر.')" class="squishy-btn bg-teal-200 hover:bg-teal-300 text-teal-950 border-2 border-teal-300 font-black px-6 py-2 rounded-2xl">تحقق 🎯</button>
+          </div>
+          <div id="fb-ex_c6" class="mt-3 text-sm font-black text-center hidden"></div>
+        </div>
+      `);
+
+      rows.push(`
+        <div class="bg-indigo-50 border-2 border-indigo-200 rounded-2xl px-4 py-2.5 font-black text-indigo-950">
+          🏠 ثانياً: الأداء المنزلي (القسمة والباقي)
+        </div>
+      `);
+
+      const hwItems = [
+        { id: 'ex_hw1', title: 'الأداء المنزلي (1)', text: 'إذا كان 7 × 6 + 4 = 46 فما قيمة 46 ÷ 6 ؟ (اكتب خارج القسمة)', ans: 7, hint: 'خارج القسمة = 7 والباقي 4.' },
+        { id: 'ex_hw2', title: 'الأداء المنزلي (2)', text: 'إذا كان 49 ÷ 6 = 8 والباقي 1 فما قيمة 6 × 8 + 1 ؟', ans: 49, hint: '6 × 8 + 1 = 48 + 1 = 49.' },
+        { id: 'ex_hw3', title: 'الأداء المنزلي (3)', text: 'ما العدد الذي إذا قُسم على 7 كان الناتج 3 والباقي 2 ؟', ans: 23, hint: '7 × 3 + 2 = 21 + 2 = 23.' },
+        { id: 'ex_hw4', title: 'الأداء المنزلي (4)', text: 'ما باقي قسمة 14 ÷ 2 ؟', ans: 0, hint: '14 عدد زوجي يقبل القسمة على 2، إذن الباقي = 0.' },
+        { id: 'ex_hw5', title: 'الأداء المنزلي (5)', text: 'كم يكون الباقي إذا قسمت 22 على 3 ؟', ans: 1, hint: '22 ÷ 3 = 7 والباقي 1 (لأن 3 × 7 = 21).' }
+      ];
+
+      hwItems.forEach(item => {
+        rows.push(`
+          <div class="magic-card p-6 w-full" id="card-${item.id}">
+            <div class="flex justify-between items-center mb-3">
+              <span class="bg-indigo-100 text-indigo-900 border border-indigo-200 font-black px-4 py-1 rounded-2xl text-sm">${item.title}</span>
+              <span id="badge-${item.id}" class="text-2xl">⬜</span>
+            </div>
+            <div class="flex flex-wrap items-center justify-between gap-3">
+              <span class="font-black text-base md:text-lg text-slate-800">${item.text}</span>
+              <div class="flex items-center gap-2.5">
+                <input type="number" id="ans-${item.id}" placeholder="؟" class="w-24 py-2 rounded-2xl border-2 border-indigo-300 bg-indigo-50/40 text-xl">
+                <button onclick="checkSingle('${item.id}', ${item.ans}, 'ممتاز! ${item.hint}')" class="squishy-btn bg-indigo-200 hover:bg-indigo-300 text-indigo-950 border-2 border-indigo-300 font-black px-5 py-2 rounded-2xl text-sm">تحقق 🎯</button>
+              </div>
+            </div>
+            <div id="fb-${item.id}" class="mt-3 text-sm font-black text-center hidden"></div>
+          </div>
+        `);
+      });
+
+      rows.push(`
+        <div class="bg-emerald-50 border-2 border-emerald-200 rounded-2xl px-4 py-2.5 font-black text-emerald-950">
+          📝 ثالثاً: التقييم الأسبوعي — المجموعات (أ)، (ب)، (ج)
+        </div>
+      `);
+
+      const evalDivItems = [
+        { id: 'ex_ev_f1', grp: 'المجموعة (أ) - 1', label: 'أوجد ناتج: 13 ÷ 4', q: 3, r: 1, hint: '3 × 4 = 12 والباقي 1' },
+        { id: 'ex_ev_f2', grp: 'المجموعة (أ) - 2', label: 'أوجد ناتج: 62 ÷ 9', q: 6, r: 8, hint: '6 × 9 = 54 والباقي 8' },
+        { id: 'ex_ev_f3', grp: 'المجموعة (أ) - 3', label: 'إذا كان 7 × 5 + 4 = 39 فما خارج وباقي قسمة 39 ÷ 5؟', q: 7, r: 4, hint: 'خارج القسمة = 7 والباقي 4' },
+        { id: 'ex_ev_f4', grp: 'المجموعة (أ) - 4', label: 'ما ناتج وباقي قسمة 20 ÷ 5؟', q: 4, r: 0, hint: '20 ÷ 5 = 4 والباقي 0' },
+        { id: 'ex_ev_f5', grp: 'المجموعة (أ) - 5', label: 'العدد الذي إذا قُسم على 7 كان الناتج 6 والباقي 2 (اكتب العدد والباقي 2):', q: 44, r: 2, hint: '7 × 6 + 2 = 44 والباقي 2' },
+        { id: 'ex_ev_g1', grp: 'المجموعة (ب) - 1', label: 'أوجد ناتج: 50 ÷ 6', q: 8, r: 2, hint: '8 × 6 = 48 والباقي 2' },
+        { id: 'ex_ev_g2', grp: 'المجموعة (ب) - 2', label: 'أوجد ناتج: 33 ÷ 5', q: 6, r: 3, hint: '6 × 5 = 30 والباقي 3' },
+        { id: 'ex_ev_g3', grp: 'المجموعة (ب) - 3', label: 'إذا كان 50 ÷ 6 = 8 والباقي 2، ما قيمة 6 × 8 + 2؟ (اكتب 50 والباقي 0)', q: 50, r: 0, hint: '6 × 8 + 2 = 50' },
+        { id: 'ex_ev_g4', grp: 'المجموعة (ب) - 4', label: 'ما خارج وباقي قسمة 13 ÷ 2؟', q: 6, r: 1, hint: '6 × 2 = 12 والباقي 1' },
+        { id: 'ex_ev_g5', grp: 'المجموعة (ب) - 5', label: 'العدد الذي إذا قُسم على 8 كان الناتج 5 والباقي 2 (اكتب العدد والباقي 2):', q: 42, r: 2, hint: '8 × 5 + 2 = 42 والباقي 2' },
+        { id: 'ex_ev_h1', grp: 'المجموعة (ج) - 1', label: 'أوجد ناتج: 15 ÷ 7', q: 2, r: 1, hint: '2 × 7 = 14 والباقي 1' },
+        { id: 'ex_ev_h2', grp: 'المجموعة (ج) - 2', label: 'أوجد ناتج: 28 ÷ 8', q: 3, r: 4, hint: '3 × 8 = 24 والباقي 4' }
+      ];
+
+      evalDivItems.forEach(d => {
+        rows.push(`
+          <div class="magic-card p-5 w-full" id="card-${d.id}">
+            <div class="flex justify-between items-center mb-3">
+              <span class="bg-emerald-100 text-emerald-900 border border-emerald-200 font-black px-4 py-1 rounded-2xl text-sm">${d.grp}</span>
+              <span id="badge-${d.id}" class="text-2xl">⬜</span>
+            </div>
+            <div class="flex flex-wrap items-center justify-between gap-3">
+              <span class="font-black text-base md:text-lg text-slate-800">${d.label}</span>
+              <div class="flex flex-wrap items-center gap-2 text-sm font-black">
+                <span>الناتج:</span>
+                <input type="number" id="ans-${d.id}-q" placeholder="؟" class="w-20 py-1.5 rounded-2xl border-2 border-emerald-300 bg-emerald-50/40 text-lg">
+                <span>والباقي:</span>
+                <input type="number" id="ans-${d.id}-r" placeholder="؟" class="w-20 py-1.5 rounded-2xl border-2 border-emerald-300 bg-emerald-50/40 text-lg">
+                <button onclick="checkDivRem('${d.id}', ${d.q}, ${d.r}, '${d.hint}')" class="squishy-btn bg-emerald-200 hover:bg-emerald-300 text-emerald-950 border-2 border-emerald-300 font-black px-5 py-2 rounded-2xl text-sm">تحقق 🎯</button>
+              </div>
+            </div>
+            <div id="fb-${d.id}" class="mt-3 text-sm font-black text-center hidden"></div>
+          </div>
+        `);
+      });
+
+      rows.push(`
+        <div class="magic-card p-6 w-full">
+          <span class="bg-amber-100 text-amber-900 border border-amber-200 font-black px-4 py-1 rounded-2xl text-sm">جدول البنات والبنين في ثلاثة فصول</span>
+          <div class="overflow-x-auto mt-4">
+            <table class="w-full max-w-2xl mx-auto text-center border-2 border-amber-200 font-black rounded-2xl overflow-hidden">
+              <thead class="bg-amber-100 text-amber-950">
+                <tr>
+                  <th class="p-2.5 border border-amber-200">النوع / الفصل</th>
+                  <th class="p-2.5 border border-amber-200">فصل 1</th>
+                  <th class="p-2.5 border border-amber-200">فصل 2</th>
+                  <th class="p-2.5 border border-amber-200">فصل 3</th>
+                  <th class="p-2.5 border border-amber-200">المجموع</th>
+                </tr>
+              </thead>
+              <tbody class="bg-white">
+                <tr>
+                  <td class="p-2.5 border border-amber-100 bg-sky-50/70">بنين 👦</td>
+                  <td class="p-2.5 border border-amber-100">34</td>
+                  <td class="p-2.5 border border-amber-100">26</td>
+                  <td class="p-2.5 border border-amber-100">40</td>
+                  <td class="p-2.5 border border-amber-100 text-sky-800">100</td>
+                </tr>
+                <tr>
+                  <td class="p-2.5 border border-amber-100 bg-pink-50/70">بنات 👧</td>
+                  <td class="p-2.5 border border-amber-100">27</td>
+                  <td class="p-2.5 border border-amber-100">45</td>
+                  <td class="p-2.5 border border-amber-100">19</td>
+                  <td class="p-2.5 border border-amber-100 text-pink-800">91</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      `);
+
+      const classTableQs = [
+        { id: 'ex_ev_i1', grp: 'المجموعة (أ) - 1', label: 'باستخدام الحساب الذهني: إجمالي عدد التلاميذ في الفصل 1 (34 + 27)؟', ans: 61, hint: '34 + 27 = 61 تلميذاً.' },
+        { id: 'ex_ev_i2', grp: 'المجموعة (أ) - 2', label: 'إجمالي عدد البنين في الفصل 1 والفصل 2 (34 + 26)؟', ans: 60, hint: '34 + 26 = 60 ولداً.' },
+        { id: 'ex_ev_j3', grp: 'المجموعة (ب) - 3', label: 'إجمالي عدد البنين في الفصول الثلاثة (34 + 26 + 40)؟', ans: 100, hint: '34 + 26 + 40 = 100 ولد.' },
+        { id: 'ex_ev_j4', grp: 'المجموعة (ب) - 4', label: 'الفرق بين عدد البنين (40) والبنات (19) في الفصل 3؟', ans: 21, hint: '40 - 19 = 21.' },
+        { id: 'ex_ev_j5', grp: 'المجموعة (ب) - 5', label: 'الفرق بين إجمالي عدد البنين (100) وإجمالي عدد البنات (91)؟', ans: 9, hint: '100 - 91 = 9.' }
+      ];
+
+      classTableQs.forEach(q => {
+        rows.push(`
+          <div class="magic-card p-5 w-full" id="card-${q.id}">
+            <div class="flex justify-between items-center mb-3">
+              <span class="bg-amber-100 text-amber-900 border border-amber-200 font-black px-4 py-1 rounded-2xl text-sm">${q.grp}</span>
+              <span id="badge-${q.id}" class="text-2xl">⬜</span>
+            </div>
+            <div class="flex flex-wrap items-center justify-between gap-3">
+              <span class="font-black text-base md:text-lg text-slate-800">${q.label}</span>
+              <div class="flex items-center gap-2.5">
+                <input type="number" id="ans-${q.id}" placeholder="؟" class="w-24 py-2 rounded-2xl border-2 border-amber-300 bg-amber-50/40 text-xl">
+                <button onclick="checkSingle('${q.id}', ${q.ans}, 'رائع! ${q.hint}')" class="squishy-btn bg-amber-200 hover:bg-amber-300 text-amber-950 border-2 border-amber-300 font-black px-5 py-2 rounded-2xl text-sm">تحقق 🎯</button>
+              </div>
+            </div>
+            <div id="fb-${q.id}" class="mt-3 text-sm font-black text-center hidden"></div>
+          </div>
+        `);
+      });
+
+      container.innerHTML = rows.join('');
+    }
+
+    // ==================== تهيئة الموقع عند التحميل ====================
     window.addEventListener('DOMContentLoaded', () => {
       buildRulers();
-      renderConversions();
+      renderConversionList('conversions-top-container', topConversions);
+      renderConversionList('conversions-bottom-container', bottomConversions);
       renderSportQuestions();
       renderMentalMath();
       renderDivRem();
       renderPuzzles();
       renderWordProblems();
+      renderExtraQuestions();
+      updateCounters();
     });
   </script>
 </body>

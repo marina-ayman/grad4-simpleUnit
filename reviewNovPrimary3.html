@@ -247,16 +247,18 @@
           <p class="font-black text-lg mb-3">الطول الذي يشير إليه السهم على المسطرة يساوي:</p>
           <div class="bg-amber-50/80 p-4 rounded-2xl border-2 border-amber-200 mb-4 overflow-x-auto">
             <svg viewBox="0 0 340 95" class="w-full max-w-md mx-auto">
-              <polygon points="62,25 54,10 70,10" fill="#ef4444" />
-              <rect x="59" y="2" width="6" height="10" fill="#ef4444" />
+              <polygon points="59,25 51,10 67,10" fill="#ef4444" />
+              <rect x="56" y="2" width="6" height="10" fill="#ef4444" />
               <rect x="10" y="30" width="320" height="55" rx="8" fill="#fef9c3" stroke="#eab308" stroke-width="2.5" />
               <g id="ruler1-ticks" stroke="#1e293b"></g>
             </svg>
           </div>
           <div class="flex flex-wrap items-center justify-center gap-3">
-            <input type="number" id="ans-q1" placeholder="؟" class="w-24 py-2 px-3 rounded-2xl border-2 border-sky-300 bg-sky-50/40 text-xl focus:outline-none focus:border-sky-600">
-            <span class="font-black text-lg text-slate-700">مم</span>
-            <button onclick="checkSingle('q1', 85, 'رائع! السهم يقع في المنتصف تماماً بين 80 مم و 90 مم أي 85 مم.')" class="squishy-btn bg-sky-200 hover:bg-sky-300 text-sky-950 border-2 border-sky-300 font-black px-6 py-2 rounded-2xl">تحقق 🎯</button>
+            <input type="number" id="ans-q1-m" placeholder="؟" class="w-24 py-2 px-3 rounded-2xl border-2 border-sky-300 bg-sky-50/40 text-xl focus:outline-none focus:border-sky-600">
+            <span class="font-black text-lg text-slate-700">م و</span>
+            <input type="number" id="ans-q1-cm" placeholder="؟" class="w-24 py-2 px-3 rounded-2xl border-2 border-sky-300 bg-sky-50/40 text-xl focus:outline-none focus:border-sky-600">
+            <span class="font-black text-lg text-slate-700">سم</span>
+            <button onclick="checkTwo('q1', 'ans-q1-m', 8, 'ans-q1-cm', 5, 'رائع! السهم يقع عند 8 م و 5 سم.')" class="squishy-btn bg-sky-200 hover:bg-sky-300 text-sky-950 border-2 border-sky-300 font-black px-6 py-2 rounded-2xl">تحقق 🎯</button>
           </div>
           <div id="fb-q1" class="mt-3 text-sm font-black text-center hidden"></div>
         </div>
@@ -280,12 +282,10 @@
             </svg>
           </div>
           <div class="flex flex-wrap items-center justify-center gap-2.5">
+            <input type="number" id="ans-q6-m" placeholder="؟" class="w-20 py-2 rounded-2xl border-2 border-sky-300 bg-sky-50/40 text-xl">
+            <span class="font-black text-slate-700">م و</span>
             <input type="number" id="ans-q6-cm" placeholder="؟" class="w-20 py-2 rounded-2xl border-2 border-sky-300 bg-sky-50/40 text-xl">
-            <span class="font-black text-slate-700">سم و</span>
-            <input type="number" id="ans-q6-mm" placeholder="؟" class="w-20 py-2 rounded-2xl border-2 border-sky-300 bg-sky-50/40 text-xl">
-            <span class="font-black text-slate-700">مم =</span>
-            <input type="number" id="ans-q6-tot" placeholder="؟" class="w-24 py-2 rounded-2xl border-2 border-sky-300 bg-sky-50/40 text-xl">
-            <span class="font-black text-slate-700">مم</span>
+            <span class="font-black text-slate-700">سم</span>
             <button onclick="checkQ6()" class="squishy-btn bg-sky-200 hover:bg-sky-300 text-sky-950 border-2 border-sky-300 font-black px-5 py-2 rounded-2xl">تحقق 🎯</button>
           </div>
           <div id="fb-q6" class="mt-3 text-sm font-black text-center hidden"></div>
@@ -894,14 +894,50 @@
 
     // ==================== رسم المساطر والشبكات ====================
     function buildRulers() {
+      ['ex-b1-ruler-ticks', 'ex-c1-ruler-ticks'].forEach(groupId => {
+        const group = document.getElementById(groupId);
+        if (!group) return;
+        group.innerHTML = '';
+        for (let cm = 0; cm <= 30; cm++) {
+          const x = 20 + cm * 10;
+          const isTen = cm % 10 === 0;
+          const isFive = cm % 5 === 0;
+          const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+          line.setAttribute('x1', x);
+          line.setAttribute('y1', 28);
+          line.setAttribute('x2', x);
+          line.setAttribute('y2', isTen ? 52 : (isFive ? 49 : 43));
+          line.setAttribute('stroke-width', isTen ? '2.2' : '1');
+          group.appendChild(line);
+          if (isTen) {
+            const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            label.setAttribute('x', x);
+            label.setAttribute('y', 69);
+            label.setAttribute('font-size', '12');
+            label.setAttribute('font-weight', '900');
+            label.setAttribute('text-anchor', 'middle');
+            label.textContent = `${cm} سم`;
+            group.appendChild(label);
+          }
+        }
+        const arrowX = 20 + 14 * 10;
+        const arrowLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        arrowLine.setAttribute('x1', arrowX);
+        arrowLine.setAttribute('y1', 28);
+        arrowLine.setAttribute('x2', arrowX);
+        arrowLine.setAttribute('y2', 44);
+        arrowLine.setAttribute('stroke', '#ef4444');
+        arrowLine.setAttribute('stroke-width', '2.5');
+        group.appendChild(arrowLine);
+      });
+
       const g1 = document.getElementById('ruler1-ticks');
       if (g1) {
         g1.innerHTML = '';
         for (let i = 0; i <= 40; i++) {
           const x = 22 + i * 7.4;
-          const val = 80 + i;
-          const isTen = val % 10 === 0;
-          const isFive = val % 5 === 0;
+          const isTen = i % 10 === 0;
+          const isFive = i % 5 === 0;
           const h = isTen ? 22 : (isFive ? 15 : 9);
           const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
           line.setAttribute('x1', x);
@@ -918,7 +954,7 @@
             txt.setAttribute('font-size', '12');
             txt.setAttribute('font-weight', 'bold');
             txt.setAttribute('text-anchor', 'middle');
-            txt.textContent = val === 100 ? '100 مم' : val;
+            txt.textContent = i === 0 ? '8 م' : `8 م و ${i} سم`;
             g1.appendChild(txt);
           }
         }
@@ -947,7 +983,7 @@
             txt.setAttribute('font-size', '12');
             txt.setAttribute('font-weight', 'bold');
             txt.setAttribute('text-anchor', 'middle');
-            txt.textContent = i === 0 ? '0 مم' : i;
+            txt.textContent = i === 0 ? '1 م' : `1 م و ${i} سم`;
             g2.appendChild(txt);
           }
         }
@@ -1013,18 +1049,17 @@
 
     // ==================== القسم 1 ====================
     function checkQ6() {
+      const m = document.getElementById('ans-q6-m').value;
       const cm = document.getElementById('ans-q6-cm').value;
-      const mm = document.getElementById('ans-q6-mm').value;
-      const tot = document.getElementById('ans-q6-tot').value;
-      if (cm === '' || mm === '' || tot === '') {
-        markWrong('card-q6', 'fb-q6', 'املأ جميع الخانات الثلاث أولاً!');
+      if (m === '' || cm === '') {
+        markWrong('card-q6', 'fb-q6', 'املأ خانتي المتر والسنتيمتر أولاً!');
         return;
       }
-      if (Number(cm) === 1 && Number(mm) === 6 && Number(tot) === 16) {
-        showSuccessFb('fb-q6', 'ممتاز! 1 سم و 6 مم = 16 مم.');
+      if (Number(m) === 1 && Number(cm) === 16) {
+        showSuccessFb('fb-q6', 'ممتاز! الطول هو 1 م و 16 سم.');
         markSolved(['q6']);
       } else {
-        markWrong('card-q6', 'fb-q6', 'عدّ الشرطات بعد الـ 10 مم (1 سم): ستجدها 6 شرطات أي 1 سم و 6 مم = 16 مم.');
+        markWrong('card-q6', 'fb-q6', 'عدّ السنتيمترات بعد بداية المتر: السهم عند 16 سم، إذن 1 م و 16 سم.');
       }
     }
 
@@ -1461,17 +1496,9 @@
           <p class="font-black text-lg mb-3">الطول الذي يشير إليه السهم على المسطرة يمثل (م و سم):</p>
           <div class="bg-amber-50/70 p-4 rounded-2xl border-2 border-amber-200 mb-4 overflow-x-auto">
             <svg viewBox="0 0 340 90" class="w-full max-w-md mx-auto">
-              <polygon points="154,24 146,8 162,8" fill="#f43f5e" />
+              <polygon points="160,24 152,8 168,8" fill="#f43f5e" />
               <rect x="10" y="28" width="320" height="50" rx="8" fill="#fef9c3" stroke="#eab308" stroke-width="2" />
-              <line x1="30" y1="28" x2="30" y2="52" stroke="#1e293b" stroke-width="2" />
-              <text x="30" y="68" font-size="11" font-weight="bold" text-anchor="middle">0 م</text>
-              <line x1="120" y1="28" x2="120" y2="52" stroke="#1e293b" stroke-width="2" />
-              <text x="120" y="68" font-size="11" font-weight="bold" text-anchor="middle">10</text>
-              <line x1="210" y1="28" x2="210" y2="52" stroke="#1e293b" stroke-width="2" />
-              <text x="210" y="68" font-size="11" font-weight="bold" text-anchor="middle">20</text>
-              <line x1="300" y1="28" x2="300" y2="52" stroke="#1e293b" stroke-width="2" />
-              <text x="300" y="68" font-size="11" font-weight="bold" text-anchor="middle">30</text>
-              <line x1="154" y1="28" x2="154" y2="44" stroke="#ef4444" stroke-width="2" />
+              <g id="ex-b1-ruler-ticks" stroke="#1e293b"></g>
             </svg>
           </div>
           <div class="flex flex-wrap items-center justify-center gap-3">
@@ -1592,6 +1619,13 @@
             <span id="badge-ex_c1" class="text-2xl">⬜</span>
           </div>
           <p class="font-black text-lg mb-4">الطول الذي يشير إليه السهم على المسطرة يمثل (م و سم):</p>
+          <div class="bg-teal-50/70 p-4 rounded-2xl border-2 border-teal-200 mb-4 overflow-x-auto">
+            <svg viewBox="0 0 340 90" class="w-full max-w-md mx-auto">
+              <polygon points="160,24 152,8 168,8" fill="#ef4444" />
+              <rect x="10" y="28" width="320" height="50" rx="8" fill="#ccfbf1" stroke="#14b8a6" stroke-width="2" />
+              <g id="ex-c1-ruler-ticks" stroke="#1e293b"></g>
+            </svg>
+          </div>
           <div class="flex flex-wrap items-center justify-center gap-3">
             <input type="number" id="ans-ex_c1-m" placeholder="؟" class="w-20 py-2 rounded-2xl border-2 border-teal-300 bg-teal-50/40 text-xl">
             <span class="font-black">م و</span>
@@ -1846,7 +1880,6 @@
 
     // ==================== تهيئة الموقع عند التحميل ====================
     window.addEventListener('DOMContentLoaded', () => {
-      buildRulers();
       renderConversionList('conversions-top-container', topConversions);
       renderConversionList('conversions-bottom-container', bottomConversions);
       renderSportQuestions();
@@ -1855,6 +1888,7 @@
       renderPuzzles();
       renderWordProblems();
       renderExtraQuestions();
+      buildRulers();
       updateCounters();
     });
   </script>

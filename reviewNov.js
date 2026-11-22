@@ -1,0 +1,1280 @@
+const AudioContext = window.AudioContext || window.webkitAudioContext;
+        let audioCtx = null;
+        let soundEnabled = true;
+
+        function initAudio() {
+            if (!audioCtx) audioCtx = new AudioContext();
+        }
+
+        function playSound(type) {
+            if (!soundEnabled) return;
+            initAudio();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+
+            const now = audioCtx.currentTime;
+            if (type === 'correct') {
+                const freqs = [523.25, 659.25, 783.99, 1046.50];
+                freqs.forEach((freq, index) => {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(freq, now + index * 0.07);
+                    gain.gain.setValueAtTime(0.22, now + index * 0.07);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + index * 0.07 + 0.22);
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start(now + index * 0.07);
+                    osc.stop(now + index * 0.07 + 0.22);
+                });
+            } else if (type === 'wrong') {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(210, now);
+                osc.frequency.linearRampToValueAtTime(115, now + 0.28);
+                gain.gain.setValueAtTime(0.25, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.32);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start(now);
+                osc.stop(now + 0.32);
+            } else if (type === 'click') {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(480, now);
+                gain.gain.setValueAtTime(0.08, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start(now);
+                osc.stop(now + 0.04);
+            } else if (type === 'fanfare') {
+                const notes = [523.25, 659.25, 783.99, 1046.50, 1318.51];
+                notes.forEach((freq, idx) => {
+                    const o = audioCtx.createOscillator();
+                    const g = audioCtx.createGain();
+                    o.type = 'sine';
+                    o.frequency.setValueAtTime(freq, now + idx * 0.11);
+                    g.gain.setValueAtTime(0.28, now + idx * 0.11);
+                    g.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.11 + 0.38);
+                    o.connect(g);
+                    g.connect(audioCtx.destination);
+                    o.start(now + idx * 0.11);
+                    o.stop(now + idx * 0.11 + 0.38);
+                });
+            }
+        }
+
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            const icon = document.getElementById('sound-icon');
+            icon.className = soundEnabled
+                ? 'fa-solid fa-volume-high text-lg text-slate-700'
+                : 'fa-solid fa-volume-xmark text-lg text-red-500';
+        }
+
+// Helper to normalize Arabic/Eastern numerals & whitespace
+        function normalizeNum(val) {
+            if (val === null || val === undefined) return NaN;
+            const eastern = ['٠','١','٢','٣','٤','٥','٦','٧','٨','٩'];
+            let str = String(val).trim().replace(/[,،\s]/g, '');
+            eastern.forEach((d, idx) => { str = str.replace(new RegExp(d, 'g'), idx); });
+            return parseFloat(str);
+        }
+
+        function parseNumberList(str) {
+            if (!str) return [];
+            const eastern = ['٠','١','٢','٣','٤','٥','٦','٧','٨','٩'];
+            let clean = String(str);
+            eastern.forEach((d, idx) => { clean = clean.replace(new RegExp(d, 'g'), idx); });
+            const matches = clean.match(/\d+/g);
+            return matches ? matches.map(Number) : [];
+        }
+
+        const appSections = [
+            {
+                id: "sec1",
+                title: "أولاً: اختر الإجابة الصحيحة",
+                shortTitle: "أولاً: اختر الإجابة (13)",
+                icon: "fa-circle-check",
+                color: "from-playground-purple via-indigo-500 to-playground-pink",
+                desc: "13 سؤال اختيار من متعدد — اختر الإجابة الصحيحة واجمع الدرجات!",
+                questions: [
+                    {
+                        id: "s1_q1", num: 1, type: "mcq",
+                        question: "32 تساوي ............... أضعاف العدد 8 .",
+                        options: [
+                            { label: "(أ) 3", value: "3" },
+                            { label: "(ب) 4", value: "4" },
+                            { label: "(جـ) 5", value: "5" },
+                            { label: "(د) 6", value: "6" }
+                        ],
+                        answer: "4",
+                        explanation: "لأن 4 × 8 = 32، إذن 32 تساوي 4 أضعاف العدد 8."
+                    },
+                    {
+                        id: "s1_q2", num: 2, type: "mcq",
+                        question: "العدد ............... من عوامل العدد 14",
+                        options: [
+                            { label: "(أ) 3", value: "3" },
+                            { label: "(ب) 5", value: "5" },
+                            { label: "(جـ) 6", value: "6" },
+                            { label: "(د) 7", value: "7" }
+                        ],
+                        answer: "7",
+                        explanation: "عوامل العدد 14 هي: 1، 2، 7، 14 (لأن 2 × 7 = 14)."
+                    },
+                    {
+                        id: "s1_q3", num: 3, type: "mcq",
+                        question: "مربع طول ضلعه 8 سم، فإن مساحته = ............... سم²",
+                        options: [
+                            { label: "(أ) 36", value: "36" },
+                            { label: "(ب) 49", value: "49" },
+                            { label: "(جـ) 64", value: "64" },
+                            { label: "(د) 81", value: "81" }
+                        ],
+                        answer: "64",
+                        explanation: "مساحة المربع = طول الضلع × نفسه = 8 × 8 = 64 سم²."
+                    },
+                    {
+                        id: "s1_q4", num: 4, type: "mcq",
+                        question: "العدد ............... متعدد العوامل.",
+                        options: [
+                            { label: "(أ) 7", value: "7" },
+                            { label: "(ب) 12", value: "12" },
+                            { label: "(جـ) 11", value: "11" },
+                            { label: "(د) 17", value: "17" }
+                        ],
+                        answer: "12",
+                        explanation: "الأعداد 7، 11، 17 أعداد أولية (لها عاملان فقط)، بينما 12 له عوامل كثيرة (1، 2، 3، 4، 6، 12) فهو متعدد العوامل."
+                    },
+                    {
+                        id: "s1_q5", num: 5, type: "mcq",
+                        question: "مستطيل طوله 7 سم وعرضه 4 سم، فإن محيطه = ............... سم",
+                        options: [
+                            { label: "(أ) 22", value: "22" },
+                            { label: "(ب) 28", value: "28" },
+                            { label: "(جـ) 11", value: "11" },
+                            { label: "(د) 14", value: "14" }
+                        ],
+                        answer: "22",
+                        explanation: "محيط المستطيل = (الطول + العرض) × 2 = (7 + 4) × 2 = 11 × 2 = 22 سم."
+                    },
+                    {
+                        id: "s1_q6", num: 6, type: "mcq",
+                        question: "العدد ............... عامل مشترك للعددين 12 ، 21",
+                        options: [
+                            { label: "(أ) 5", value: "5" },
+                            { label: "(ب) 2", value: "2" },
+                            { label: "(جـ) 3", value: "3" },
+                            { label: "(د) 4", value: "4" }
+                        ],
+                        answer: "3",
+                        explanation: "12 = 3 × 4 ، و 21 = 3 × 7، إذن 3 عامل مشترك للعددين."
+                    },
+                    {
+                        id: "s1_q7", num: 7, type: "mcq",
+                        question: "العدد ............... عامل مشترك للعددين 32 ، 48",
+                        options: [
+                            { label: "(أ) 5", value: "5" },
+                            { label: "(ب) 8", value: "8" },
+                            { label: "(جـ) 6", value: "6" },
+                            { label: "(د) 3", value: "3" }
+                        ],
+                        answer: "8",
+                        explanation: "32 = 8 × 4 ، و 48 = 8 × 6، إذن 8 عامل مشترك للعددين."
+                    },
+                    {
+                        id: "s1_q8", num: 8, type: "mcq",
+                        question: "............... = 0 × 136",
+                        options: [
+                            { label: "(أ) 1,360", value: "1,360" },
+                            { label: "(ب) 136", value: "136" },
+                            { label: "(جـ) 0", value: "0" },
+                            { label: "(د) 13,600", value: "13,600" }
+                        ],
+                        answer: "0",
+                        explanation: "خاصية الضرب في صفر: ناتج ضرب أي عدد في صفر يساوي 0."
+                    },
+                    {
+                        id: "s1_q9", num: 9, type: "mcq",
+                        question: "المعادلة التي تُعبر عن: 36 تساوي 4 أضعاف عدد هي ...............",
+                        options: [
+                            { label: "(أ) a = 4 × 36", value: "a = 4 × 36" },
+                            { label: "(ب) 4 = a × 36", value: "4 = a × 36" },
+                            { label: "(جـ) 36 = 4 × a", value: "36 = 4 × a" },
+                            { label: "(د) a = 4 ÷ 36", value: "a = 4 ÷ 36" }
+                        ],
+                        answer: "36 = 4 × a",
+                        explanation: "36 تساوي (=) 4 أضعاف (4 ×) عدد ما (a)، فتكون المعادلة: 36 = 4 × a."
+                    },
+                    {
+                        id: "s1_q10", num: 10, type: "mcq",
+                        question: "مستطيل أبعاده هي 30 سم و 9 سم، فإن مساحته = ............... سم²",
+                        options: [
+                            { label: "(أ) 270", value: "270" },
+                            { label: "(ب) 39", value: "39" },
+                            { label: "(جـ) 78", value: "78" },
+                            { label: "(د) 210", value: "210" }
+                        ],
+                        answer: "270",
+                        explanation: "مساحة المستطيل = الطول × العرض = 30 × 9 = 270 سم²."
+                    },
+                    {
+                        id: "s1_q11", num: 11, type: "mcq",
+                        question: "مربع طول ضلعه 25 سم، فإن محيطه = ............... سم",
+                        options: [
+                            { label: "(أ) 5", value: "5" },
+                            { label: "(ب) 20", value: "20" },
+                            { label: "(جـ) 100", value: "100" },
+                            { label: "(د) 150", value: "150" }
+                        ],
+                        answer: "100",
+                        explanation: "محيط المربع = طول الضلع × 4 = 25 × 4 = 100 سم."
+                    },
+                    {
+                        id: "s1_q12", num: 12, type: "mcq",
+                        question: "العدد الأولي الذي مجموع عوامله 12 هو ...............",
+                        options: [
+                            { label: "(أ) 7", value: "7" },
+                            { label: "(ب) 5", value: "5" },
+                            { label: "(جـ) 13", value: "13" },
+                            { label: "(د) 11", value: "11" }
+                        ],
+                        answer: "11",
+                        explanation: "العدد 11 أولي وعوامله هي (1، 11)، ومجموع عوامله = 1 + 11 = 12."
+                    },
+                    {
+                        id: "s1_q13", num: 13, type: "mcq",
+                        question: "مستطيل محيطه 28 م، وطوله 10 م، فإن عرضه = ............... م",
+                        options: [
+                            { label: "(أ) 7", value: "7" },
+                            { label: "(ب) 6", value: "6" },
+                            { label: "(جـ) 5", value: "5" },
+                            { label: "(د) 4", value: "4" }
+                        ],
+                        answer: "4",
+                        explanation: "نصف المحيط = 28 ÷ 2 = 14 م. العرض = نصف المحيط - الطول = 14 - 10 = 4 م."
+                    }
+                ]
+            },
+            {
+                id: "sec2",
+                title: "ثانياً: أجب عن ما يأتي",
+                shortTitle: "ثانياً: أجب عن ما يأتي (25)",
+                icon: "fa-wand-magic-sparkles",
+                color: "from-sky-500 via-teal-500 to-emerald-500",
+                desc: "25 مسألة تفاعلية تشمل الرسومات الهندسية، مخطط الشرائط، قوس قزح العوامل والمضاعفات!",
+                questions: [
+                    // 1) Square perimeter 10mm
+                    {
+                        id: "s2_q1", num: 1, type: "svg_single",
+                        question: "احسب محيط المربع المقابل:",
+                        svg: `
+                        <svg viewBox="0 0 240 190" class="w-56 h-44 mx-auto">
+                            <rect x="65" y="40" width="110" height="110" rx="6" fill="#fef3c7" stroke="#d97706" stroke-width="4"/>
+                            <text x="120" y="28" text-anchor="middle" font-weight="900" font-size="15" fill="#1e293b">10 مم</text>
+                            <text x="120" y="172" text-anchor="middle" font-weight="900" font-size="15" fill="#1e293b">10 مم</text>
+                            <text x="32" y="100" text-anchor="middle" font-weight="900" font-size="15" fill="#1e293b">10 مم</text>
+                            <text x="208" y="100" text-anchor="middle" font-weight="900" font-size="15" fill="#1e293b">10 مم</text>
+                        </svg>`,
+                        inputLabel: "محيط المربع (مم) =",
+                        answer: 40,
+                        explanation: "محيط المربع = طول الضلع × 4 = 10 × 4 = 40 مم (أو 10 + 10 + 10 + 10 = 40 مم)."
+                    },
+                    // 2) Rectangle area 6m x 2m
+                    {
+                        id: "s2_q2", num: 2, type: "svg_single",
+                        question: "احسب مساحة المستطيل المقابل:",
+                        svg: `
+                        <svg viewBox="0 0 280 155" class="w-64 h-36 mx-auto">
+                            <rect x="55" y="42" width="170" height="68" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="4"/>
+                            <text x="140" y="30" text-anchor="middle" font-weight="900" font-size="15" fill="#1e293b">6 م</text>
+                            <text x="140" y="132" text-anchor="middle" font-weight="900" font-size="15" fill="#1e293b">6 م</text>
+                            <text x="30" y="82" text-anchor="middle" font-weight="900" font-size="15" fill="#1e293b">2 م</text>
+                            <text x="250" y="82" text-anchor="middle" font-weight="900" font-size="15" fill="#1e293b">2 م</text>
+                        </svg>`,
+                        inputLabel: "مساحة المستطيل (م²) =",
+                        answer: 12,
+                        explanation: "مساحة المستطيل = الطول × العرض = 6 × 2 = 12 م²."
+                    },
+                    // 3) Draw two different rectangles with area 24 cm²
+                    {
+                        id: "s2_q3", num: 3, type: "rect_builder",
+                        question: "ارسم مستطيلين مختلفين مساحة كل منهما 24 سم²، واكتب الطول والعرض على كل مستطيل.",
+                        explanation: "عوامل العدد 24 تعطينا مستطيلات مساحتها 24 سم² مثل: (الطول 6 سم × العرض 4 سم) ، (الطول 8 سم × العرض 3 سم) ، (الطول 12 سم × العرض 2 سم) ، (الطول 24 سم × العرض 1 سم)."
+                    },
+                    // 4) Rectangle area 40, width 5 -> length and perimeter
+                    {
+                        id: "s2_q4", num: 4, type: "multi_input",
+                        question: "مستطيل مساحته 40 سم²، وعرضه 5 سم، احسب طوله ومحيطه.",
+                        subQuestions: [
+                            { label: "طول المستطيل (سم) =", key: "l", answer: 8 },
+                            { label: "محيط المستطيل (سم) =", key: "p", answer: 26 }
+                        ],
+                        explanation: "الطول = المساحة ÷ العرض = 40 ÷ 5 = 8 سم.<br>المحيط = (الطول + العرض) × 2 = (8 + 5) × 2 = 13 × 2 = 26 سم."
+                    },
+                    // 5) Square perimeter 20 -> side and area
+                    {
+                        id: "s2_q5", num: 5, type: "multi_input",
+                        question: "مربع محيطه 20 سم، احسب طول ضلعه ومساحته.",
+                        subQuestions: [
+                            { label: "طول ضلع المربع (سم) =", key: "s", answer: 5 },
+                            { label: "مساحة المربع (سم²) =", key: "a", answer: 25 }
+                        ],
+                        explanation: "طول الضلع = المحيط ÷ 4 = 20 ÷ 4 = 5 سم.<br>المساحة = طول الضلع × نفسه = 5 × 5 = 25 سم²."
+                    },
+                    // 6) Square frame area 49 -> side and perimeter
+                    {
+                        id: "s2_q6", num: 6, type: "multi_input",
+                        question: "برواز على شكل مربع مساحته 49 سم²، فما طول ضلع البرواز؟ وما محيطه؟",
+                        subQuestions: [
+                            { label: "طول ضلع البرواز (سم) =", key: "s", answer: 7 },
+                            { label: "محيط البرواز (سم) =", key: "p", answer: 28 }
+                        ],
+                        explanation: "بما أن 7 × 7 = 49، إذن طول الضلع = 7 سم.<br>المحيط = 7 × 4 = 28 سم."
+                    },
+                    // 7) Compound L-shape perimeter using two methods
+                    {
+                        id: "s2_q7", num: 7, type: "svg_single",
+                        question: "احسب محيط الشكل المقابل باستخدام قانونين مختلفين:",
+                        svg: `
+                        <svg viewBox="0 0 320 205" class="w-72 h-48 mx-auto">
+                            <!-- L-shape polygon: top=150(15cm), right=60(6cm), bottom-right=70(7cm), inner-vert=40(4cm), bottom-left=80(8cm), left-top=20(2cm) -->
+                            <polygon points="75,35 225,35 225,95 155,95 155,55 75,55" fill="#fce7f3" stroke="#db2777" stroke-width="3.5" stroke-linejoin="round"/>
+                            <!-- Dashed enclosing rectangle lines to hint Method 2 -->
+                            <line x1="75" y1="55" x2="75" y2="95" stroke="#94a3b8" stroke-width="2" stroke-dasharray="4,4"/>
+                            <line x1="75" y1="95" x2="155" y2="95" stroke="#94a3b8" stroke-width="2" stroke-dasharray="4,4"/>
+                            <!-- Labels -->
+                            <text x="150" y="25" text-anchor="middle" font-weight="900" font-size="14" fill="#1e293b">15 سم</text>
+                            <text x="48" y="49" text-anchor="middle" font-weight="900" font-size="13" fill="#1e293b">2 سم</text>
+                            <text x="115" y="72" text-anchor="middle" font-weight="900" font-size="13" fill="#be185d">8 سم</text>
+                            <text x="255" y="70" text-anchor="middle" font-weight="900" font-size="14" fill="#1e293b">6 سم</text>
+                            <text x="190" y="114" text-anchor="middle" font-weight="800" font-size="12" fill="#64748b">(7 سم)</text>
+                            <text x="137" y="85" text-anchor="middle" font-weight="800" font-size="11" fill="#64748b">(4 سم)</text>
+                        </svg>`,
+                        inputLabel: "محيط الشكل (سم) =",
+                        answer: 42,
+                        explanation: "<b>الطريقة الأولى (مجموع أطوال الأضلاع):</b> الضلعان الناقصان هما 7 سم (15 - 8) و 4 سم (6 - 2). المحيط = 15 + 6 + 7 + 4 + 8 + 2 = 42 سم.<br><b>الطريقة الثانية (محيط المستطيل المكافئ):</b> P = (15 + 6) × 2 = 21 × 2 = 42 سم."
+                    },
+                    // 8) Strip model comparing 5 and 20
+                    {
+                        id: "s2_q8", num: 8, type: "strip_compare",
+                        question: "استخدم مخطط الشرائط للمقارنة بين العددين 5 ، 20",
+                        smallVal: 5, largeVal: 20, count: 4,
+                        explanation: "مخطط الشرائط يوضح أن العدد 20 يتكون من 4 شرائط قيمة كل منها 5، أي أن: 20 تساوي 4 أضعاف العدد 5."
+                    },
+                    // 9) Multiplication facts comparing 2 and 12
+                    {
+                        id: "s2_q9", num: 9, type: "mult_compare",
+                        question: "استخدم حقائق الضرب للمقارنة بين العددين 2 ، 12",
+                        explanation: "من حقائق الضرب: 12 = 2 × 6، إذن العدد 12 يساوي 6 أضعاف العدد 2."
+                    },
+                    // 10) 22 = a × 2
+                    {
+                        id: "s2_q10", num: 10, type: "single_number",
+                        question: "إذا كان: 22 = a × 2 ، أوجد قيمة a",
+                        inputLabel: "قيمة a =",
+                        answer: 11,
+                        explanation: "22 ÷ 2 = 11، لأن 11 × 2 = 22، إذن a = 11."
+                    },
+                    // 11) Car 4 seats, bus 28 seats
+                    {
+                        id: "s2_q11", num: 11, type: "bus_problem",
+                        question: "يبلغ عدد مقاعد السيارة 4 مقاعد، ويبلغ عدد مقاعد الأوتوبيس 28 مقعدًا. كم مرة يساوي عدد مقاعد الأوتوبيس عدد مقاعد السيارة؟ اكتب معادلة للمقارنة ثم حلها.",
+                        explanation: "المعادلة: 28 = 4 × a (أو 28 = a × 4).<br>الحل: a = 28 ÷ 4 = 7 مرات (أضعاف)."
+                    },
+                    // 12) Commutative property: 5 × a = 7 × 5
+                    {
+                        id: "s2_q12", num: 12, type: "single_number",
+                        question: "استخدم خاصية الإبدال في عملية الضرب لإيجاد القيمة المجهولة: 5 × a = 7 × 5",
+                        inputLabel: "قيمة a =",
+                        answer: 7,
+                        explanation: "باستخدام خاصية الإبدال في الضرب: 5 × 7 = 7 × 5، إذن a = 7."
+                    },
+                    // 13) Book price 55, 100 books
+                    {
+                        id: "s2_q13", num: 13, type: "single_number",
+                        question: "إذا كان ثمن كتاب واحد 55 جنيها، فكم يكون ثمن 100 كتاب من نفس النوع؟",
+                        inputLabel: "ثمن 100 كتاب (جنيهاً) =",
+                        answer: 5500,
+                        explanation: "ثمن 100 كتاب = 55 × 100 = 5,500 جنيه."
+                    },
+                    // 14) Associative property: 2 × 9 × 3
+                    {
+                        id: "s2_q14", num: 14, type: "single_number",
+                        question: "أوجد الناتج مستخدما خاصية الدمج: ............... = 2 × 9 × 3 «يمكنك كتابة العوامل بترتيب آخر»",
+                        inputLabel: "الناتج =",
+                        answer: 54,
+                        explanation: "(2 × 3) × 9 = 6 × 9 = 54 (أو 2 × (9 × 3) = 2 × 27 = 54)."
+                    },
+                    // 15) Factoring & Associative: 70 × 3
+                    {
+                        id: "s2_q15", num: 15, type: "assoc_steps",
+                        question: "استخدم تحليل العدد إلى عوامله وخاصية الدمج في عملية الضرب لحل المسألة: ............... = 70 × 3",
+                        stepText: "3 × 70 = 3 × (7 × 10) = (3 × 7) × 10 =",
+                        midLabel: "21 × 10 =",
+                        answer: 210,
+                        explanation: "نحلل 70 إلى (7 × 10)، ثم ندمج (3 × 7) × 10 = 21 × 10 = 210."
+                    },
+                    // 16) Tens in 180
+                    {
+                        id: "s2_q16", num: 16, type: "single_number",
+                        question: "كم عدد العشرات التي تُكَوِّن العدد 180 ؟",
+                        inputLabel: "عدد العشرات =",
+                        answer: 18,
+                        explanation: "180 ÷ 10 = 18 عشرة (لأن 18 × 10 = 180)."
+                    },
+                    // 17) Factoring & Associative: 9,000 × 6
+                    {
+                        id: "s2_q17", num: 17, type: "assoc_steps",
+                        question: "استخدم تحليل العدد إلى عوامله وخاصية الدمج في عملية الضرب لحل المسألة: ............... = 9,000 × 6",
+                        stepText: "6 × 9,000 = 6 × (9 × 1,000) = (6 × 9) × 1,000 =",
+                        midLabel: "54 × 1,000 =",
+                        answer: 54000,
+                        explanation: "نحلل 9,000 إلى (9 × 1,000)، ثم ندمج (6 × 9) × 1,000 = 54 × 1,000 = 54,000."
+                    },
+                    // 18) Factor Rainbow for 24
+                    {
+                        id: "s2_q18", num: 18, type: "factor_rainbow",
+                        question: "أوجد عوامل العدد 24 مستخدما قوس قزح:",
+                        explanation: "أزواج عوامل العدد 24 هي: (1 × 24)، (2 × 12)، (3 × 8)، (4 × 6). إذن عوامل 24 هي: 1، 2، 3، 4، 6، 8، 12، 24."
+                    },
+                    // 19) Is 6 a factor of 72?
+                    {
+                        id: "s2_q19", num: 19, type: "factor_check_72",
+                        question: "هل العدد 6 عامل من عوامل العدد 72 ؟ كيف عرفت؟",
+                        explanation: "نعم، العدد 6 عامل من عوامل العدد 72؛ لأن 6 × 12 = 72 (أي أن 72 تقبل القسمة على 6 بدون باقٍ)."
+                    },
+                    // 20) Factors of 27 & 19 + prime or composite
+                    {
+                        id: "s2_q20", num: 20, type: "prime_composite",
+                        question: "اكتب جميع عوامل العددين 27 ، 19 ثم اكتب ما إذا كان العدد أوليا أم متعدد العوامل.",
+                        explanation: "عوامل 27 هي: 1، 3، 9، 27 (له أكثر من عاملين ← متعدد العوامل).<br>عوامل 19 هي: 1، 19 (له عاملان فقط هما الواحد ونفسه ← عدد أولي)."
+                    },
+                    // 21) Factors of 21 & 14 + common factors
+                    {
+                        id: "s2_q21", num: 21, type: "common_factors",
+                        question: "اكتب جميع عوامل كل من العددين 21 ، 14 ثم اكتب العوامل المشتركة للعددين.",
+                        explanation: "عوامل 21: (1، 3، 7، 21).<br>عوامل 14: (1، 2، 7، 14).<br>العوامل المشتركة للعددين هي: 1 ، 7."
+                    },
+                    // 22) GCF (ع.م.أ) for (12, 20) and (16, 24)
+                    {
+                        id: "s2_q22", num: 22, type: "multi_input",
+                        question: "أوجد العامل المشترك الأكبر (ع.م.أ) لكل زوج من الأعداد:",
+                        subQuestions: [
+                            { label: "أ) (ع.م.أ) للعددين 12 ، 20 =", key: "gcf1", answer: 4 },
+                            { label: "ب) (ع.م.أ) للعددين 16 ، 24 =", key: "gcf2", answer: 8 }
+                        ],
+                        explanation: "أ) عوامل 12: (1,2,3,4,6,12) وعوامل 20: (1,2,4,5,10,20) ← (ع.م.أ) = 4.<br>ب) عوامل 16: (1,2,4,8,16) وعوامل 24: (1,2,3,4,6,8,12,24) ← (ع.م.أ) = 8."
+                    },
+                    // 23) Multiples of 4 between 11 and 49
+                    {
+                        id: "s2_q23", num: 23, type: "multiples_between",
+                        question: "اكتب مضاعفات العدد 4 المحصورة بين العددين 49 ، 11",
+                        explanation: "مضاعفات العدد 4 الأكبر من 11 والأصغر من 49 هي: 12 ، 16 ، 20 ، 24 ، 28 ، 32 ، 36 ، 40 ، 44 ، 48."
+                    },
+                    // 24) 3 common multiples for (2, 4) and (5, 6)
+                    {
+                        id: "s2_q24", num: 24, type: "common_multiples",
+                        question: "اكتب 3 مضاعفات مشتركة لكل زوج من الأعداد:",
+                        explanation: "أ) المضاعفات المشتركة للعددين 2 ، 4 هي مضاعفات 4 مثل: 4 ، 8 ، 12 (أو 16، 20...).<br>ب) المضاعفات المشتركة للعددين 5 ، 6 هي مضاعفات 30 مثل: 30 ، 60 ، 90."
+                    },
+                    // 25) Two sentences describing relationship for a) 7, 14, 28 and b) 2, 5, 10, 20
+                    {
+                        id: "s2_q25", num: 25, type: "number_relations",
+                        question: "اكتب جملتين تصفان العلاقة بين الأعداد في كل مجموعة:",
+                        explanation: "<b>أ) المجموعة (7 ، 14 ، 28):</b><br>1- العددان 14 ، 28 من مضاعفات العدد 7.<br>2- العدد 7 عامل من عوامل العددين 14 ، 28.<br><b>ب) المجموعة (2 ، 5 ، 10 ، 20):</b><br>1- العددان 2 ، 5 من عوامل العددين 10 ، 20.<br>2- العددان 10 ، 20 من المضاعفات المشتركة للعددين 2 ، 5."
+                    }
+                ]
+            }
+        ];
+
+        // State
+        let currentTab = 0;
+        let questionRevealObserver = null;
+        let solvedSet = new Set();
+        const answeredQuestions = new Set();
+        const questionsWithErrors = new Set();
+        const submittedSections = new Set();
+        let score = 0;
+
+        // Interactive widget state
+        let rectBuilderSelection = new Set(); // stores "6x4", "8x3", "12x2", "24x1"
+        let multiples23Selected = new Set();
+        let q19YesNo = null;
+        let q20Type27 = null;
+        let q20Type19 = null;
+
+        const happyQuotes = [
+            "عبقري يا بطل! إجابة نموذجية مئة بالمئة 🌟",
+            "رائع جداً! كابتن ماث فخور بذكائك 🚀",
+            "ممتاز! واصل التألق واجمع المزيد من الدرجات ⭐",
+            "أحسنت يا نجم الرياضيات! خطوة رائعة للأمام 🏆"
+        ];
+
+        const totalQuestions = appSections.reduce((acc, s) => acc + s.questions.length, 0);
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('total-questions').textContent = totalQuestions;
+            renderNav();
+            renderBadges();
+            renderSection(0);
+        });
+
+        function renderNav() {
+            const nav = document.getElementById('sections-nav');
+            nav.innerHTML = '';
+            appSections.forEach((sec, idx) => {
+                const answeredCount = sec.questions.filter(q => answeredQuestions.has(q.id)).length;
+                const done = submittedSections.has(sec.id);
+                const btn = document.createElement('button');
+                btn.className = `w-full text-right p-3.5 rounded-2xl font-bold text-sm transition flex items-center justify-between btn-kid border-2 ${
+                    idx === currentTab
+                        ? 'bg-slate-900 text-white border-slate-900 shadow-lg scale-[1.02]'
+                        : 'bg-white hover:bg-slate-50 text-slate-700 border-slate-200'
+                }`;
+                btn.onclick = () => { playSound('click'); renderSection(idx); };
+                btn.innerHTML = `
+                    <div class="flex items-center gap-2.5 overflow-hidden">
+                        <span class="w-9 h-9 rounded-xl flex items-center justify-center text-white bg-gradient-to-tr ${sec.color} shrink-0 shadow-sm">
+                            <i class="fa-solid ${sec.icon}"></i>
+                        </span>
+                        <span class="truncate font-black text-xs md:text-sm">${sec.shortTitle}</span>
+                    </div>
+                    <span class="text-xs px-2.5 py-1 rounded-full font-black ${done ? 'bg-emerald-500 text-white' : 'bg-slate-100 text-slate-700'}">
+                        ${answeredCount}/${sec.questions.length}
+                    </span>
+                `;
+                nav.appendChild(btn);
+            });
+        }
+
+        function updateAnswerProgress() {
+            document.getElementById('completed-count').textContent = answeredQuestions.size;
+            document.getElementById('overall-progress').style.width = `${(answeredQuestions.size / totalQuestions) * 100}%`;
+        }
+
+        function renderBadges() {
+            const box = document.getElementById('badges-container');
+            const badges = [
+                { title: "نجم الاختيارات", icon: "🎯", unlocked: appSections[0].questions.every(q => solvedSet.has(q.id)) },
+                { title: "بطل الهندسة", icon: "📐", unlocked: ["s2_q1","s2_q2","s2_q3","s2_q4","s2_q5","s2_q6","s2_q7"].every(id => solvedSet.has(id)) },
+                { title: "خبير الضرب", icon: "⚡", unlocked: ["s2_q8","s2_q9","s2_q10","s2_q11","s2_q12","s2_q13","s2_q14","s2_q15","s2_q16","s2_q17"].every(id => solvedSet.has(id)) },
+                { title: "سيد العوامل", icon: "🌈", unlocked: ["s2_q18","s2_q19","s2_q20","s2_q21","s2_q22","s2_q23","s2_q24","s2_q25"].every(id => solvedSet.has(id)) }
+            ];
+            box.innerHTML = badges.map(b => `
+                <div class="p-2.5 rounded-2xl border-2 flex flex-col items-center justify-center transition-all ${
+                    b.unlocked
+                        ? 'bg-amber-50 border-amber-300 text-amber-900 badge-shine animate-pop-in'
+                        : 'bg-slate-100 border-slate-200 text-slate-400 opacity-60 grayscale'
+                }">
+                    <span class="text-2xl mb-1">${b.icon}</span>
+                    <span class="text-[11px] font-black leading-tight">${b.title}</span>
+                </div>
+            `).join('');
+        }
+
+        function renderSection(index) {
+            currentTab = index;
+            const sec = appSections[index];
+
+            document.getElementById('section-badge').textContent = index === 0 ? 'القسم الأول (13 سؤالاً)' : 'القسم الثاني (25 سؤالاً)';
+            document.getElementById('section-title').textContent = sec.title;
+            document.getElementById('section-desc').textContent = sec.desc;
+            document.getElementById('section-icon').className = `fa-solid ${sec.icon}`;
+            document.getElementById('section-header').className = `kid-card p-6 text-white relative overflow-hidden bg-gradient-to-r ${sec.color} shadow-xl`;
+
+            const container = document.getElementById('questions-container');
+            container.innerHTML = '';
+            container.insertAdjacentHTML('beforeend', reviewFeedback.welcome(`reviewNov-${sec.id}`));
+
+            sec.questions.forEach(q => {
+                const isSolved = solvedSet.has(q.id);
+                const isAnswered = answeredQuestions.has(q.id);
+                const isWrong = isAnswered && !isSolved;
+                const card = document.createElement('div');
+                card.id = `card-${q.id}`;
+                card.className = `kid-card question-enter p-5 md:p-6 transition duration-300 ${isSolved ? 'border-4 border-emerald-400 bg-emerald-50/35' : isWrong ? 'border-4 border-rose-400 bg-rose-50/50' : ''}`;
+
+                card.innerHTML = `
+                    <div class="flex items-start justify-between gap-3">
+                        <div class="flex items-start gap-3">
+                            <span class="w-9 h-9 rounded-2xl bg-gradient-to-tr from-playground-purple to-playground-pink text-white flex items-center justify-center font-black text-base shadow-sm shrink-0 mt-0.5">
+                                ${q.num}
+                            </span>
+                            <h3 class="text-base md:text-lg font-black text-slate-800 leading-relaxed">${q.question}</h3>
+                        </div>
+                        ${isSolved ? '<span class="text-emerald-700 font-black text-xs bg-emerald-100 border-2 border-emerald-300 px-3 py-1 rounded-full shrink-0"><i class="fa-solid fa-star text-amber-500"></i> أحسنت!</span>' : isWrong ? '<span class="text-rose-700 font-black text-xs bg-rose-100 border-2 border-rose-300 px-3 py-1 rounded-full shrink-0">إجابة خاطئة ومقفلة</span>' : ''}
+                    </div>
+
+                    <div class="mt-4">${buildQuestionBody(q, isSolved)}</div>
+
+                    <div id="feedback-${q.id}" class="hidden mt-3 p-3 rounded-2xl text-sm font-black"></div>
+
+                    <div class="mt-4 pt-3 border-t-2 border-slate-100 flex items-center justify-between">
+                        <button onclick="toggleExplain('${q.id}')" class="text-xs font-black text-playground-purple hover:text-purple-800 flex items-center gap-1.5 transition">
+                            <i class="fa-regular fa-lightbulb text-amber-500 text-base"></i> اضغط هنا لرؤية شرح الحل 💡
+                        </button>
+                    </div>
+                    <div id="explain-${q.id}" class="hidden mt-3 p-4 bg-amber-50 rounded-2xl border-2 border-amber-200 text-xs md:text-sm text-amber-950 font-bold leading-relaxed">
+                        ${q.explanation}
+                    </div>
+                `;
+                container.appendChild(card);
+                if (isAnswered) reviewFeedback.lockQuestionControls(card);
+                if (isWrong) {
+                    const feedback = document.getElementById(`feedback-${q.id}`);
+                    feedback.textContent = 'تم تسجيل الإجابة خطأ ولا يمكن تعديلها.';
+                    feedback.className = 'mt-3 p-3 rounded-2xl text-xs md:text-sm font-black bg-rose-100 text-rose-800 border-2 border-rose-300';
+                }
+            });
+
+            const sendButton = document.createElement('button');
+            sendButton.type = 'button';
+            sendButton.className = 'w-full rounded-2xl bg-gradient-to-r from-playground-purple to-playground-pink px-6 py-4 text-lg font-black text-white shadow-lg transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60';
+            sendButton.disabled = submittedSections.has(sec.id);
+            sendButton.textContent = sendButton.disabled ? 'تم إرسال المجموعة' : 'إرسال المجموعة وعرض النتيجة';
+            sendButton.onclick = submitCurrentSection;
+            container.appendChild(sendButton);
+
+            revealQuestionCards(container);
+            renderNav();
+        }
+
+        function revealQuestionCards(container) {
+            if (questionRevealObserver) questionRevealObserver.disconnect();
+            const cards = container.querySelectorAll('.question-enter');
+
+            if (!('IntersectionObserver' in window) || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                cards.forEach(card => card.classList.add('is-visible'));
+                return;
+            }
+
+            questionRevealObserver = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (!entry.isIntersecting) return;
+                    entry.target.classList.add('is-visible');
+                    questionRevealObserver.unobserve(entry.target);
+                });
+            }, { threshold: 0.08, rootMargin: '0px 0px -8% 0px' });
+
+            cards.forEach(card => questionRevealObserver.observe(card));
+        }
+
+        function submitCurrentSection() {
+            const sec = appSections[currentTab];
+            if (submittedSections.has(sec.id)) return;
+
+            sec.questions.forEach(q => {
+                if (!answeredQuestions.has(q.id)) {
+                    answeredQuestions.add(q.id);
+                    questionsWithErrors.add(q.id);
+                }
+            });
+            submittedSections.add(sec.id);
+            updateAnswerProgress();
+            renderSection(currentTab);
+
+            const wrongQuestions = sec.questions.filter(q => questionsWithErrors.has(q.id)).length;
+            const points = sec.questions.filter(q => solvedSet.has(q.id)).length;
+            reviewFeedback.showResultPopup(
+                `reviewNov-${sec.id}`,
+                sec.title,
+                points,
+                sec.questions.length,
+                wrongQuestions,
+                submittedSections.size === appSections.length
+            );
+        }
+
+        function buildQuestionBody(q, isSolved) {
+            if (q.type === 'mcq') {
+                return `
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        ${q.options.map(opt => {
+                            const isCorrectOpt = isSolved && opt.value === q.answer;
+                            return `
+                            <button onclick="verifyMcq('${q.id}', '${opt.value}')" ${isSolved ? 'disabled' : ''}
+                                class="p-3.5 text-sm md:text-base font-black border-4 rounded-2xl transition text-right flex items-center justify-between btn-kid ${
+                                    isCorrectOpt
+                                        ? 'bg-emerald-500 text-white border-emerald-600'
+                                        : 'bg-white hover:border-playground-purple hover:bg-purple-50 border-slate-200 text-slate-800'
+                                }">
+                                <span>${opt.label}</span>
+                                ${isCorrectOpt ? '<i class="fa-solid fa-circle-check text-xl"></i>' : ''}
+                            </button>`;
+                        }).join('')}
+                    </div>
+                `;
+            }
+
+            if (q.type === 'svg_single') {
+                return `
+                    <div class="bg-slate-50 p-4 rounded-2xl border-2 border-slate-200 mb-3">
+                        ${q.svg}
+                    </div>
+                    <div class="flex flex-wrap items-center gap-3">
+                        <label class="font-black text-sm text-slate-700">${q.inputLabel}</label>
+                        <input type="text" id="in-${q.id}" value="${isSolved ? q.answer : ''}" placeholder="اكتب الإجابة..."
+                            class="w-36 px-4 py-2.5 rounded-2xl border-4 border-slate-200 focus:border-playground-purple focus:outline-none font-black text-xl text-center ${isSolved ? 'bg-emerald-100 border-emerald-400 text-emerald-900' : ''}"
+                            ${isSolved ? 'disabled' : ''}>
+                        <button onclick="verifySingle('${q.id}', ${q.answer})" ${isSolved ? 'disabled' : ''}
+                            class="px-6 py-3 bg-gradient-to-r from-playground-purple to-playground-pink text-white font-black rounded-2xl btn-kid disabled:opacity-50">
+                            ${isSolved ? 'صحيح ✓' : 'تحقق من الإجابة 🎯'}
+                        </button>
+                    </div>
+                `;
+            }
+
+            if (q.type === 'single_number') {
+                return `
+                    <div class="flex flex-wrap items-center gap-3">
+                        <label class="font-black text-sm text-slate-700">${q.inputLabel}</label>
+                        <input type="text" id="in-${q.id}" value="${isSolved ? q.answer : ''}" placeholder="؟"
+                            class="w-40 px-4 py-2.5 rounded-2xl border-4 border-slate-200 focus:border-playground-purple focus:outline-none font-black text-xl text-center ${isSolved ? 'bg-emerald-100 border-emerald-400 text-emerald-900' : ''}"
+                            ${isSolved ? 'disabled' : ''}>
+                        <button onclick="verifySingle('${q.id}', ${q.answer})" ${isSolved ? 'disabled' : ''}
+                            class="px-6 py-3 bg-gradient-to-r from-playground-purple to-playground-pink text-white font-black rounded-2xl btn-kid disabled:opacity-50">
+                            ${isSolved ? 'صحيح ✓' : 'تحقق من الإجابة 🎯'}
+                        </button>
+                    </div>
+                `;
+            }
+
+            if (q.type === 'multi_input') {
+                return `
+                    <div class="space-y-3">
+                        ${q.subQuestions.map(sq => `
+                            <div class="flex flex-wrap items-center justify-between bg-sky-50/70 p-3.5 rounded-2xl border-2 border-sky-200 gap-2">
+                                <label class="font-black text-sm text-sky-950">${sq.label}</label>
+                                <input type="text" id="sub-${q.id}-${sq.key}" value="${isSolved ? sq.answer : ''}" placeholder="؟"
+                                    class="w-32 px-3 py-2 border-3 border-sky-300 rounded-xl text-center font-black text-lg focus:border-playground-pink focus:outline-none bg-white ${isSolved ? 'bg-emerald-100 border-emerald-400' : ''}"
+                                    ${isSolved ? 'disabled' : ''}>
+                            </div>
+                        `).join('')}
+                        <button onclick="verifyMulti('${q.id}')" ${isSolved ? 'disabled' : ''}
+                            class="w-full py-3 bg-gradient-to-r from-playground-purple to-playground-pink text-white font-black rounded-2xl btn-kid disabled:opacity-50">
+                            ${isSolved ? 'تم التحقق بنجاح ✓' : 'تحقق من جميع الإجابات ✨'}
+                        </button>
+                    </div>
+                `;
+            }
+
+            if (q.type === 'rect_builder') {
+                const choices = [
+                    { key: "6x4", l: 6, w: 4, wPx: 120, hPx: 80, color: "bg-purple-200 border-purple-600 text-purple-950" },
+                    { key: "8x3", l: 8, w: 3, wPx: 160, hPx: 60, color: "bg-pink-200 border-pink-600 text-pink-950" },
+                    { key: "12x2", l: 12, w: 2, wPx: 210, hPx: 42, color: "bg-amber-200 border-amber-600 text-amber-950" },
+                    { key: "24x1", l: 24, w: 1, wPx: 250, hPx: 28, color: "bg-emerald-200 border-emerald-600 text-emerald-950" }
+                ];
+                if (isSolved && rectBuilderSelection.size < 2) {
+                    rectBuilderSelection.add("6x4");
+                    rectBuilderSelection.add("8x3");
+                }
+                return `
+                    <div class="p-4 bg-purple-50/70 rounded-2xl border-2 border-purple-200 space-y-4">
+                        <p class="text-xs md:text-sm font-black text-purple-900">اختر أبعاد مستطيلين مختلفين حاصل ضرب طولهما × عرضهما = 24 سم² ليتم رسمهما:</p>
+                        <div class="flex flex-wrap gap-2.5">
+                            ${choices.map(c => {
+                                const active = rectBuilderSelection.has(c.key);
+                                return `
+                                <button onclick="toggleRectChoice('${c.key}')" ${isSolved ? 'disabled' : ''}
+                                    class="px-4 py-2 rounded-xl font-black text-xs md:text-sm border-3 transition btn-kid ${
+                                        active ? 'bg-playground-purple text-white border-purple-800' : 'bg-white text-slate-700 border-slate-300'
+                                    }">
+                                    الطول ${c.l} سم × العرض ${c.w} سم
+                                </button>`;
+                            }).join('')}
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+                            ${Array.from(rectBuilderSelection).map(key => {
+                                const c = choices.find(x => x.key === key);
+                                return `
+                                <div class="bg-white p-4 rounded-2xl border-2 border-slate-200 flex flex-col items-center justify-center animate-pop-in">
+                                    <span class="text-xs font-black text-slate-600 mb-1">الطول = ${c.l} سم</span>
+                                    <div class="flex items-center gap-2">
+                                        <span class="text-xs font-black text-slate-600">العرض ${c.w} سم</span>
+                                        <div class="review-tile ${c.color} border-4 rounded-lg flex items-center justify-center font-black text-xs shadow-inner" data-width="${c.wPx}" data-height="${c.hPx}">
+                                            المساحة = ${c.l * c.w} سم²
+                                        </div>
+                                    </div>
+                                </div>`;
+                            }).join('')}
+                        </div>
+                        <button onclick="verifyRectBuilder('${q.id}')" ${isSolved ? 'disabled' : ''}
+                            class="w-full py-3 bg-gradient-to-r from-playground-purple to-playground-pink text-white font-black rounded-2xl btn-kid disabled:opacity-50">
+                            ${isSolved ? 'رسم رائع وصحيح ✓' : 'تأكيد رسم المستطيلين 🎨'}
+                        </button>
+                    </div>
+                `;
+            }
+
+            if (q.type === 'strip_compare') {
+                return `
+                    <div class="p-4 bg-amber-50 rounded-2xl border-2 border-amber-200 space-y-4">
+                        <div class="space-y-2.5">
+                            <div class="flex items-center gap-3">
+                                <span class="w-16 font-black text-sm text-slate-700">العدد 5:</span>
+                                <div class="w-14 h-11 bg-sky-500 text-white font-black rounded-xl flex items-center justify-center border-2 border-sky-700 shadow">5</div>
+                            </div>
+                            <div class="flex items-center gap-3 flex-wrap">
+                                <span class="w-16 font-black text-sm text-slate-700">العدد 20:</span>
+                                <div class="flex gap-1.5">
+                                    ${[1,2,3,4].map(() => `<div class="w-14 h-11 bg-playground-pink text-white font-black rounded-xl flex items-center justify-center border-2 border-pink-700 shadow">5</div>`).join('')}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex flex-wrap items-center gap-2 pt-2">
+                            <span class="font-black text-sm text-amber-950">إذن: العدد 20 يساوي</span>
+                            <input type="text" id="in-${q.id}" value="${isSolved ? 4 : ''}" placeholder="؟"
+                                class="w-20 px-3 py-1.5 rounded-xl border-3 border-amber-400 text-center font-black text-lg bg-white" ${isSolved ? 'disabled' : ''}>
+                            <span class="font-black text-sm text-amber-950">أضعاف العدد 5.</span>
+                            <button onclick="verifySingle('${q.id}', 4)" ${isSolved ? 'disabled' : ''}
+                                class="px-5 py-2 bg-amber-500 hover:bg-amber-600 text-white font-black rounded-xl btn-kid mr-auto">
+                                ${isSolved ? 'صحيح ✓' : 'تحقق ⭐'}
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+
+            if (q.type === 'mult_compare') {
+                return `
+                    <div class="p-4 bg-teal-50 rounded-2xl border-2 border-teal-200 flex flex-wrap items-center gap-2.5">
+                        <span class="font-black text-sm md:text-base text-teal-950">حقيقة الضرب: 12 = 2 ×</span>
+                        <input type="text" id="in-${q.id}" value="${isSolved ? 6 : ''}" placeholder="؟"
+                            class="w-20 px-3 py-1.5 rounded-xl border-3 border-teal-400 text-center font-black text-lg bg-white" ${isSolved ? 'disabled' : ''}>
+                        <span class="font-black text-sm text-teal-950">(أي أن 12 تساوي 6 أضعاف العدد 2)</span>
+                        <button onclick="verifySingle('${q.id}', 6)" ${isSolved ? 'disabled' : ''}
+                            class="px-5 py-2 bg-teal-600 text-white font-black rounded-xl btn-kid mr-auto">
+                            ${isSolved ? 'صحيح ✓' : 'تحقق ⭐'}
+                        </button>
+                    </div>
+                `;
+            }
+
+            if (q.type === 'bus_problem') {
+                return `
+                    <div class="p-4 bg-indigo-50 rounded-2xl border-2 border-indigo-200 space-y-3">
+                        <div class="flex flex-wrap items-center gap-2">
+                            <span class="font-black text-sm text-indigo-950">المعادلة: 28 = 4 × a &nbsp; ← &nbsp; إذن عدد المرات (a) =</span>
+                            <input type="text" id="in-${q.id}" value="${isSolved ? 7 : ''}" placeholder="؟"
+                                class="w-24 px-3 py-2 rounded-xl border-3 border-indigo-400 text-center font-black text-lg bg-white" ${isSolved ? 'disabled' : ''}>
+                            <button onclick="verifySingle('${q.id}', 7)" ${isSolved ? 'disabled' : ''}
+                                class="px-6 py-2.5 bg-indigo-600 text-white font-black rounded-xl btn-kid">
+                                ${isSolved ? 'صحيح ✓' : 'تحقق 🎯'}
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+
+            if (q.type === 'assoc_steps') {
+                return `
+                    <div class="p-4 bg-purple-50 rounded-2xl border-2 border-purple-200 space-y-3">
+                        <div class="text-sm font-black text-purple-900 bg-white p-3 rounded-xl border border-purple-200" dir="ltr">
+                            ${q.stepText} ...
+                        </div>
+                        <div class="flex flex-wrap items-center gap-3">
+                            <span class="font-black text-sm text-purple-950" dir="ltr">${q.midLabel}</span>
+                            <input type="text" id="in-${q.id}" value="${isSolved ? q.answer : ''}" placeholder="الناتج النهائي"
+                                class="w-36 px-3 py-2 rounded-xl border-3 border-purple-400 text-center font-black text-lg bg-white" ${isSolved ? 'disabled' : ''}>
+                            <button onclick="verifySingle('${q.id}', ${q.answer})" ${isSolved ? 'disabled' : ''}
+                                class="px-6 py-2.5 bg-playground-purple text-white font-black rounded-xl btn-kid">
+                                ${isSolved ? 'ممتاز ✓' : 'تحقق 🎯'}
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+
+            if (q.type === 'factor_rainbow') {
+                return `
+                    <div class="p-4 bg-gradient-to-b from-sky-50 to-pink-50 rounded-2xl border-2 border-purple-200 space-y-4">
+                        <svg viewBox="0 0 360 135" class="w-full max-w-md mx-auto">
+                            <!-- Rainbow arcs -->
+                            <path d="M 30 105 A 150 92 0 0 1 330 105" fill="none" stroke="#ef4444" stroke-width="5"/>
+                            <path d="M 72 105 A 108 68 0 0 1 288 105" fill="none" stroke="#f59e0b" stroke-width="5"/>
+                            <path d="M 114 105 A 66 44 0 0 1 246 105" fill="none" stroke="#10b981" stroke-width="5"/>
+                            <path d="M 156 105 A 24 20 0 0 1 204 105" fill="none" stroke="#3b82f6" stroke-width="5"/>
+                            <!-- Factor nodes -->
+                            ${[
+                                {x:30, v:"1", c:"#ef4444"}, {x:72, v:"2", c:"#f59e0b"}, {x:114, v:"3", c:"#10b981"}, {x:156, v:"4", c:"#3b82f6"},
+                                {x:204, v:"6", c:"#3b82f6"}, {x:246, v:"؟", c:"#10b981"}, {x:288, v:"12", c:"#f59e0b"}, {x:330, v:"؟", c:"#ef4444"}
+                            ].map(n => `
+                                <circle cx="${n.x}" cy="108" r="15" fill="${n.c}"/>
+                                <text x="${n.x}" y="113" text-anchor="middle" fill="#fff" font-weight="900" font-size="13">${isSolved && n.v==='؟' ? (n.x===246?'8':'24') : n.v}</text>
+                            `).join('')}
+                        </svg>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div class="flex items-center justify-between bg-white p-2.5 rounded-xl border-2 border-emerald-200">
+                                <span class="font-black text-xs text-slate-700">قوس 3 × ؟ = 24 :</span>
+                                <input type="text" id="rb-8" value="${isSolved ? 8 : ''}" placeholder="؟" class="w-20 px-2 py-1 border-2 border-emerald-400 rounded-lg text-center font-black" ${isSolved?'disabled':''}>
+                            </div>
+                            <div class="flex items-center justify-between bg-white p-2.5 rounded-xl border-2 border-red-200">
+                                <span class="font-black text-xs text-slate-700">قوس 1 × ؟ = 24 :</span>
+                                <input type="text" id="rb-24" value="${isSolved ? 24 : ''}" placeholder="؟" class="w-20 px-2 py-1 border-2 border-red-400 rounded-lg text-center font-black" ${isSolved?'disabled':''}>
+                            </div>
+                        </div>
+                        <button onclick="verifyRainbow('${q.id}')" ${isSolved ? 'disabled' : ''}
+                            class="w-full py-2.5 bg-gradient-to-r from-pink-500 via-amber-500 to-emerald-500 text-white font-black rounded-xl btn-kid">
+                            ${isSolved ? 'اكتمل قوس قزح العوامل 🌈✓' : 'تأكيد قوس قزح العوامل 🌈'}
+                        </button>
+                    </div>
+                `;
+            }
+
+            if (q.type === 'factor_check_72') {
+                if (isSolved) q19YesNo = 'yes';
+                return `
+                    <div class="p-4 bg-emerald-50/70 rounded-2xl border-2 border-emerald-200 space-y-3">
+                        <div class="flex flex-wrap items-center gap-3">
+                            <span class="font-black text-sm text-slate-800">اختر الإجابة:</span>
+                            <button onclick="setQ19('yes')" ${isSolved?'disabled':''} class="px-5 py-2 rounded-xl font-black text-sm border-2 btn-kid ${q19YesNo==='yes' ? 'bg-emerald-600 text-white border-emerald-700' : 'bg-white border-slate-300'}">نعم، عامل</button>
+                            <button onclick="setQ19('no')" ${isSolved?'disabled':''} class="px-5 py-2 rounded-xl font-black text-sm border-2 btn-kid ${q19YesNo==='no' ? 'bg-red-500 text-white border-red-600' : 'bg-white border-slate-300'}">لا، ليس عاملاً</button>
+                        </div>
+                        <div class="flex flex-wrap items-center gap-2">
+                            <span class="font-black text-sm text-slate-700">السبب: لأن 6 ×</span>
+                            <input type="text" id="in-${q.id}" value="${isSolved ? 12 : ''}" placeholder="؟" class="w-20 px-3 py-1.5 rounded-xl border-3 border-emerald-400 text-center font-black bg-white" ${isSolved?'disabled':''}>
+                            <span class="font-black text-sm text-slate-700">= 72</span>
+                            <button onclick="verifyQ19('${q.id}')" ${isSolved?'disabled':''} class="px-5 py-2 bg-emerald-600 text-white font-black rounded-xl btn-kid mr-auto">
+                                ${isSolved ? 'صحيح ✓' : 'تحقق 🎯'}
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+
+            if (q.type === 'prime_composite') {
+                if (isSolved) { q20Type27 = 'composite'; q20Type19 = 'prime'; }
+                return `
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="p-4 bg-amber-50 rounded-2xl border-2 border-amber-200 space-y-2.5">
+                            <div class="font-black text-base text-amber-900">العدد 27:</div>
+                            <input type="text" id="f27" value="${isSolved ? '1, 3, 9, 27' : ''}" placeholder="اكتب عوامله (مثال: 1, 3...)"
+                                class="w-full px-3 py-2 rounded-xl border-2 border-amber-300 font-bold text-sm bg-white" ${isSolved?'disabled':''}>
+                            <div class="flex gap-2">
+                                <button onclick="setQ20('27','prime')" ${isSolved?'disabled':''} class="flex-1 py-1.5 rounded-xl text-xs font-black border-2 ${q20Type27==='prime'?'bg-amber-600 text-white border-amber-700':'bg-white border-slate-300'}">أولي</button>
+                                <button onclick="setQ20('27','composite')" ${isSolved?'disabled':''} class="flex-1 py-1.5 rounded-xl text-xs font-black border-2 ${q20Type27==='composite'?'bg-amber-600 text-white border-amber-700':'bg-white border-slate-300'}">متعدد العوامل</button>
+                            </div>
+                        </div>
+                        <div class="p-4 bg-sky-50 rounded-2xl border-2 border-sky-200 space-y-2.5">
+                            <div class="font-black text-base text-sky-900">العدد 19:</div>
+                            <input type="text" id="f19" value="${isSolved ? '1, 19' : ''}" placeholder="اكتب عوامله (مثال: 1, 19)"
+                                class="w-full px-3 py-2 rounded-xl border-2 border-sky-300 font-bold text-sm bg-white" ${isSolved?'disabled':''}>
+                            <div class="flex gap-2">
+                                <button onclick="setQ20('19','prime')" ${isSolved?'disabled':''} class="flex-1 py-1.5 rounded-xl text-xs font-black border-2 ${q20Type19==='prime'?'bg-sky-600 text-white border-sky-700':'bg-white border-slate-300'}">أولي</button>
+                                <button onclick="setQ20('19','composite')" ${isSolved?'disabled':''} class="flex-1 py-1.5 rounded-xl text-xs font-black border-2 ${q20Type19==='composite'?'bg-sky-600 text-white border-sky-700':'bg-white border-slate-300'}">متعدد العوامل</button>
+                            </div>
+                        </div>
+                        <button onclick="verifyQ20('${q.id}')" ${isSolved?'disabled':''} class="md:col-span-2 py-3 bg-gradient-to-r from-playground-purple to-playground-pink text-white font-black rounded-2xl btn-kid">
+                            ${isSolved ? 'إجابة صحيحة ✓' : 'تحقق من العوامل والنوع 🎯'}
+                        </button>
+                    </div>
+                `;
+            }
+
+            if (q.type === 'common_factors') {
+                return `
+                    <div class="space-y-3 bg-slate-50 p-4 rounded-2xl border-2 border-slate-200">
+                        <div class="flex flex-wrap items-center justify-between gap-2">
+                            <label class="font-black text-sm text-slate-800">عوامل العدد 21:</label>
+                            <input type="text" id="cf-21" value="${isSolved ? '1, 3, 7, 21' : ''}" placeholder="مثال: 1, 3, 7, 21" class="w-56 px-3 py-1.5 rounded-xl border-2 border-slate-300 font-bold text-sm bg-white" ${isSolved?'disabled':''}>
+                        </div>
+                        <div class="flex flex-wrap items-center justify-between gap-2">
+                            <label class="font-black text-sm text-slate-800">عوامل العدد 14:</label>
+                            <input type="text" id="cf-14" value="${isSolved ? '1, 2, 7, 14' : ''}" placeholder="مثال: 1, 2, 7, 14" class="w-56 px-3 py-1.5 rounded-xl border-2 border-slate-300 font-bold text-sm bg-white" ${isSolved?'disabled':''}>
+                        </div>
+                        <div class="flex flex-wrap items-center justify-between gap-2 bg-emerald-50 p-2.5 rounded-xl border border-emerald-300">
+                            <label class="font-black text-sm text-emerald-900">العوامل المشتركة للعددين:</label>
+                            <input type="text" id="cf-both" value="${isSolved ? '1, 7' : ''}" placeholder="مثال: 1, 7" class="w-56 px-3 py-1.5 rounded-xl border-2 border-emerald-400 font-black text-sm bg-white" ${isSolved?'disabled':''}>
+                        </div>
+                        <button onclick="verifyQ21('${q.id}')" ${isSolved?'disabled':''} class="w-full py-2.5 bg-emerald-600 text-white font-black rounded-xl btn-kid">
+                            ${isSolved ? 'صحيح ✓' : 'تحقق من العوامل المشتركة 🎯'}
+                        </button>
+                    </div>
+                `;
+            }
+
+            if (q.type === 'multiples_between') {
+                const candidates = [8, 12, 14, 16, 20, 22, 24, 28, 30, 32, 36, 40, 44, 48, 52];
+                const correctNums = [12, 16, 20, 24, 28, 32, 36, 40, 44, 48];
+                if (isSolved && multiples23Selected.size === 0) {
+                    correctNums.forEach(n => multiples23Selected.add(n));
+                }
+                return `
+                    <div class="p-4 bg-purple-50/70 rounded-2xl border-2 border-purple-200 space-y-3">
+                        <p class="text-xs font-black text-purple-900">اضغط على جميع مضاعفات العدد 4 المحصورة بين 11 و 49:</p>
+                        <div class="flex flex-wrap gap-2 justify-center">
+                            ${candidates.map(n => {
+                                const sel = multiples23Selected.has(n);
+                                return `
+                                <button onclick="toggleMult23(${n})" ${isSolved?'disabled':''}
+                                    class="w-12 h-12 rounded-2xl font-black text-base border-3 transition btn-kid ${
+                                        sel ? 'bg-playground-purple text-white border-purple-800 scale-105' : 'bg-white text-slate-700 border-slate-300'
+                                    }">${n}</button>`;
+                            }).join('')}
+                        </div>
+                        <button onclick="verifyQ23('${q.id}')" ${isSolved?'disabled':''} class="w-full py-2.5 bg-playground-purple text-white font-black rounded-xl btn-kid">
+                            ${isSolved ? 'رائع! اخترت جميع المضاعفات الصحيحة ✓' : 'تحقق من المضاعفات المختارة ⭐'}
+                        </button>
+                    </div>
+                `;
+            }
+
+            if (q.type === 'common_multiples') {
+                return `
+                    <div class="space-y-3 bg-amber-50/70 p-4 rounded-2xl border-2 border-amber-200">
+                        <div class="flex flex-wrap items-center justify-between gap-2">
+                            <label class="font-black text-sm text-amber-950">أ) 3 مضاعفات مشتركة للعددين (2 ، 4):</label>
+                            <input type="text" id="cm-a" value="${isSolved ? '4, 8, 12' : ''}" placeholder="مثال: 4, 8, 12" class="w-56 px-3 py-1.5 rounded-xl border-2 border-amber-400 font-bold text-sm bg-white" ${isSolved?'disabled':''}>
+                        </div>
+                        <div class="flex flex-wrap items-center justify-between gap-2">
+                            <label class="font-black text-sm text-amber-950">ب) 3 مضاعفات مشتركة للعددين (5 ، 6):</label>
+                            <input type="text" id="cm-b" value="${isSolved ? '30, 60, 90' : ''}" placeholder="مثال: 30, 60, 90" class="w-56 px-3 py-1.5 rounded-xl border-2 border-amber-400 font-bold text-sm bg-white" ${isSolved?'disabled':''}>
+                        </div>
+                        <button onclick="verifyQ24('${q.id}')" ${isSolved?'disabled':''} class="w-full py-2.5 bg-amber-500 hover:bg-amber-600 text-white font-black rounded-xl btn-kid">
+                            ${isSolved ? 'ممتاز ✓' : 'تحقق من المضاعفات المشتركة 🎯'}
+                        </button>
+                    </div>
+                `;
+            }
+
+            if (q.type === 'number_relations') {
+                return `
+                    <div class="space-y-4">
+                        <div class="p-4 bg-pink-50 rounded-2xl border-2 border-pink-200 space-y-2.5">
+                            <div class="font-black text-sm text-pink-900">أ) المجموعة (7 ، 14 ، 28):</div>
+                            <div class="text-xs md:text-sm font-bold text-slate-800 space-y-2">
+                                <div>• الجملة 1: العددان 14 ، 28 من
+                                    <select id="rel-a1" ${isSolved?'disabled':''} class="px-2 py-1 rounded-lg border-2 border-pink-400 font-black bg-white">
+                                        <option value="">اختر...</option>
+                                        <option value="multiples" ${isSolved?'selected':''}>مضاعفات</option>
+                                        <option value="factors">عوامل</option>
+                                    </select>
+                                    العدد 7.
+                                </div>
+                                <div>• الجملة 2: العدد 7
+                                    <select id="rel-a2" ${isSolved?'disabled':''} class="px-2 py-1 rounded-lg border-2 border-pink-400 font-black bg-white">
+                                        <option value="">اختر...</option>
+                                        <option value="factor" ${isSolved?'selected':''}>عامل</option>
+                                        <option value="multiple">مضاعف</option>
+                                    </select>
+                                    من عوامل العددين 14 ، 28.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-4 bg-sky-50 rounded-2xl border-2 border-sky-200 space-y-2.5">
+                            <div class="font-black text-sm text-sky-900">ب) المجموعة (2 ، 5 ، 10 ، 20):</div>
+                            <div class="text-xs md:text-sm font-bold text-slate-800 space-y-2">
+                                <div>• الجملة 1: العددان 2 ، 5 من
+                                    <select id="rel-b1" ${isSolved?'disabled':''} class="px-2 py-1 rounded-lg border-2 border-sky-400 font-black bg-white">
+                                        <option value="">اختر...</option>
+                                        <option value="factors" ${isSolved?'selected':''}>عوامل</option>
+                                        <option value="multiples">مضاعفات</option>
+                                    </select>
+                                    العددين 10 ، 20.
+                                </div>
+                                <div>• الجملة 2: العددان 10 ، 20 من
+                                    <select id="rel-b2" ${isSolved?'disabled':''} class="px-2 py-1 rounded-lg border-2 border-sky-400 font-black bg-white">
+                                        <option value="">اختر...</option>
+                                        <option value="multiples" ${isSolved?'selected':''}>المضاعفات المشتركة</option>
+                                        <option value="factors">العوامل الأولية</option>
+                                    </select>
+                                    للعددين 2 ، 5.
+                                </div>
+                            </div>
+                        </div>
+                        <button onclick="verifyQ25('${q.id}')" ${isSolved?'disabled':''} class="w-full py-3 bg-gradient-to-r from-playground-purple to-playground-pink text-white font-black rounded-2xl btn-kid">
+                            ${isSolved ? 'رائع! جملتان دقيقتان ✓' : 'تحقق من الجملتين 🎯'}
+                        </button>
+                    </div>
+                `;
+            }
+
+            return '';
+        }
+
+        // Verification Handlers
+        function verifyMcq(qId, chosen) {
+            const q = findQ(qId);
+            if (chosen === q.answer) markSuccess(qId);
+            else markError(qId, "إجابة غير صحيحة! فكر مرة أخرى أو اضغط على زر الشرح 💡");
+        }
+
+        function verifySingle(qId, expected) {
+            const val = normalizeNum(document.getElementById(`in-${qId}`).value);
+            if (val === expected) markSuccess(qId);
+            else markError(qId, "تأكد من حساباتك وحاول مجدداً يا بطل! 💪");
+        }
+
+        function verifyMulti(qId) {
+            const q = findQ(qId);
+            const allOk = q.subQuestions.every(sq => {
+                const v = normalizeNum(document.getElementById(`sub-${qId}-${sq.key}`).value);
+                return v === sq.answer;
+            });
+            if (allOk) markSuccess(qId);
+            else markError(qId, "تحقق من كل خانة بدقة وحاول مرة أخرى! 🔍");
+        }
+
+        function toggleRectChoice(key) {
+            playSound('click');
+            if (rectBuilderSelection.has(key)) rectBuilderSelection.delete(key);
+            else rectBuilderSelection.add(key);
+            renderSection(currentTab);
+        }
+
+        function verifyRectBuilder(qId) {
+            if (rectBuilderSelection.size >= 2) markSuccess(qId);
+            else markError(qId, "اختر مستطيلين مختلفين على الأقل مساحة كل منهما 24 سم²!");
+        }
+
+        function verifyRainbow(qId) {
+            const v8 = normalizeNum(document.getElementById('rb-8').value);
+            const v24 = normalizeNum(document.getElementById('rb-24').value);
+            if (v8 === 8 && v24 === 24) markSuccess(qId);
+            else markError(qId, "تذكر: 3 × 8 = 24 ، و 1 × 24 = 24 🌈");
+        }
+
+        function setQ19(ans) {
+            playSound('click');
+            q19YesNo = ans;
+            renderSection(currentTab);
+        }
+
+        function verifyQ19(qId) {
+            const v = normalizeNum(document.getElementById(`in-${qId}`).value);
+            if (q19YesNo === 'yes' && v === 12) markSuccess(qId);
+            else markError(qId, "اختر (نعم) واكتب العدد الذي إذا ضرب في 6 يساوي 72 (وهو 12).");
+        }
+
+        function setQ20(num, type) {
+            playSound('click');
+            if (num === '27') q20Type27 = type;
+            else q20Type19 = type;
+            renderSection(currentTab);
+        }
+
+        function verifyQ20(qId) {
+            const f27 = parseNumberList(document.getElementById('f27').value);
+            const f19 = parseNumberList(document.getElementById('f19').value);
+            const ok27 = [1,3,9,27].every(x => f27.includes(x)) && f27.length === 4 && q20Type27 === 'composite';
+            const ok19 = [1,19].every(x => f19.includes(x)) && f19.length === 2 && q20Type19 === 'prime';
+            if (ok27 && ok19) markSuccess(qId);
+            else markError(qId, "تأكد من كتابة جميع العوامل: 27 عوامله (1، 3، 9، 27) وهو متعدد، و 19 عوامله (1، 19) وهو أولي.");
+        }
+
+        function verifyQ21(qId) {
+            const f21 = parseNumberList(document.getElementById('cf-21').value);
+            const f14 = parseNumberList(document.getElementById('cf-14').value);
+            const fBoth = parseNumberList(document.getElementById('cf-both').value);
+            const ok21 = [1,3,7,21].every(x => f21.includes(x)) && f21.length === 4;
+            const ok14 = [1,2,7,14].every(x => f14.includes(x)) && f14.length === 4;
+            const okBoth = [1,7].every(x => fBoth.includes(x)) && fBoth.length === 2;
+            if (ok21 && ok14 && okBoth) markSuccess(qId);
+            else markError(qId, "تأكد من عوامل 21 (1، 3، 7، 21) وعوامل 14 (1، 2، 7، 14) والمشتركة (1، 7).");
+        }
+
+        function toggleMult23(n) {
+            playSound('click');
+            if (multiples23Selected.has(n)) multiples23Selected.delete(n);
+            else multiples23Selected.add(n);
+            renderSection(currentTab);
+        }
+
+        function verifyQ23(qId) {
+            const correct = [12, 16, 20, 24, 28, 32, 36, 40, 44, 48];
+            const ok = correct.every(x => multiples23Selected.has(x)) && multiples23Selected.size === correct.length;
+            if (ok) markSuccess(qId);
+            else markError(qId, "تأكد من اختيار جميع مضاعفات 4 بين 11 و 49 فقط (من 12 إلى 48).");
+        }
+
+        function verifyQ24(qId) {
+            const listA = Array.from(new Set(parseNumberList(document.getElementById('cm-a').value)));
+            const listB = Array.from(new Set(parseNumberList(document.getElementById('cm-b').value)));
+            const okA = listA.length >= 3 && listA.every(n => n > 0 && n % 4 === 0);
+            const okB = listB.length >= 3 && listB.every(n => n > 0 && n % 30 === 0);
+            if (okA && okB) markSuccess(qId);
+            else markError(qId, "أدخل 3 أعداد مختلفة لكل زوج: مضاعفات 4 للزوج الأول (مثل 4, 8, 12) ومضاعفات 30 للزوج الثاني (مثل 30, 60, 90).");
+        }
+
+        function verifyQ25(qId) {
+            const a1 = document.getElementById('rel-a1').value;
+            const a2 = document.getElementById('rel-a2').value;
+            const b1 = document.getElementById('rel-b1').value;
+            const b2 = document.getElementById('rel-b2').value;
+            if (a1 === 'multiples' && a2 === 'factor' && b1 === 'factors' && b2 === 'multiples') markSuccess(qId);
+            else markError(qId, "راجع الفرق بين (العوامل) و (المضاعفات) في القوائم المنسدلة!");
+        }
+
+        function findQ(qId) {
+            for (const s of appSections) {
+                const found = s.questions.find(q => q.id === qId);
+                if (found) return found;
+            }
+            return null;
+        }
+
+        function toggleExplain(qId) {
+            playSound('click');
+            const el = document.getElementById(`explain-${qId}`);
+            if (el) el.classList.toggle('hidden');
+        }
+
+        function markSuccess(qId) {
+            if (answeredQuestions.has(qId)) return;
+            answeredQuestions.add(qId);
+            solvedSet.add(qId);
+            if (!questionsWithErrors.has(qId)) score += 1;
+            playSound('correct');
+
+            document.getElementById('mascot-speech').textContent = happyQuotes[Math.floor(Math.random() * happyQuotes.length)];
+            document.getElementById('score').textContent = score;
+            updateAnswerProgress();
+
+            confetti({ particleCount: 75, spread: 80, origin: { y: 0.65 } });
+
+            const sec = appSections[currentTab];
+            if (sec.questions.every(q => solvedSet.has(q.id))) {
+                setTimeout(() => {
+                    playSound('fanfare');
+                    confetti({ particleCount: 160, spread: 110, origin: { y: 0.45 } });
+                }, 300);
+            }
+
+            renderBadges();
+            renderSection(currentTab);
+        }
+
+        function markError(qId, msg) {
+            if (answeredQuestions.has(qId)) return;
+            answeredQuestions.add(qId);
+            questionsWithErrors.add(qId);
+            playSound('wrong');
+            document.getElementById('mascot-speech').textContent = "تم تسجيل الخطأ ولا يمكن تعديل الإجابة. انتقل للسؤال التالي 💡";
+            const card = document.getElementById(`card-${qId}`);
+            const fb = document.getElementById(`feedback-${qId}`);
+            if (card) {
+                card.classList.remove('shake');
+                card.classList.add('border-4', 'border-rose-400', 'bg-rose-50/50');
+                reviewFeedback.lockQuestionControls(card);
+                card.classList.add('shake');
+                setTimeout(() => card.classList.remove('shake'), 480);
+            }
+            if (fb) {
+                fb.textContent = 'إجابة غير صحيحة. تم تثبيت الإجابة ولا يمكن تعديلها.';
+                fb.className = "mt-3 p-3 rounded-2xl text-xs md:text-sm font-black bg-rose-100 text-rose-800 border-2 border-rose-300";
+            }
+            updateAnswerProgress();
+            renderNav();
+        }
+const reviewTileObserver = new MutationObserver(() => {
+  document.querySelectorAll('.review-tile[data-width][data-height]').forEach(tile => {
+    tile.style.width = `${tile.dataset.width}px`;
+    tile.style.height = `${tile.dataset.height}px`;
+  });
+});
+reviewTileObserver.observe(document.documentElement, { childList: true, subtree: true });
